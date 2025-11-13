@@ -1,4 +1,4 @@
-namespace Nory.Data;
+namespace Nory.Infrastructure.Persistence;
 
 public class ApplicationDbContextFactory : IDesignTimeDbContextFactory<ApplicationDbContext>
 {
