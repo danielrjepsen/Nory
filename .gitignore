@@ -12,6 +12,7 @@
 
 # Production
 /build
+/backend/obj
 
 # Misc
 .DS_Store
