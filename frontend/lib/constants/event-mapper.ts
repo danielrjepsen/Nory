@@ -1,6 +1,6 @@
-import type { EventSummary } from '@/services/analytics';
-import type { EventData, EventStatus } from '@/types/event';
-import { DATE_FORMAT_OPTIONS } from '@/lib/constants/dashboard';
+import type { EventSummary } from '@/app/dashboard/_types/analytics';
+import type { EventData, EventStatus } from '@/app/dashboard/_types/events';
+import { DATE_FORMAT_OPTIONS } from '@/lib/mappers/dashboard';
 
 function formatEventDate(dateStr: string | null | undefined): string {
     if (!dateStr) return 'Date TBD';

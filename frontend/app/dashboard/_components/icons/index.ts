@@ -1,0 +1,9 @@
+export { DashboardIcon } from './DashboardIcon';
+export { CalendarIcon } from './CalendarIcon';
+export { PhotoIcon } from './PhotoIcon';
+export { QRCodeIcon } from './QRCodeIcon';
+export { ChartIcon } from './ChartIcon';
+export { SettingsIcon } from './SettingsIcon';
+export { LogoutIcon } from './LogoutIcon';
+export { MenuIcon } from './MenuIcon';
+export { PlusIcon } from './PlusIcon';

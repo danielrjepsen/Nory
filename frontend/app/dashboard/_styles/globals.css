@@ -1,0 +1,94 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Base styles */
+@layer base {
+  * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+
+  body {
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+    background: #fafafa;
+    min-height: 100vh;
+    position: relative;
+    overflow-x: hidden;
+  }
+}
+
+/* Glass effect utilities */
+@layer utilities {
+  .backdrop-blur-md {
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+  }
+
+  .bg-glass {
+    background: rgba(255, 255, 255, 0.7);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+  }
+
+  .bg-glass-dark {
+    background: rgba(0, 0, 0, 0.3);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+  }
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(0, 0, 0, 0.2);
+  border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(0, 0, 0, 0.3);
+}
+
+/* Smooth transitions for all interactive elements */
+* {
+  transition-property: color, background-color, border-color, text-decoration-color, fill, stroke, opacity, box-shadow, transform, filter, backdrop-filter;
+  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+  transition-duration: 150ms;
+}
+
+/* Ambient light animations */
+@keyframes ambientGlow {
+  0%, 85% {
+    opacity: 0;
+    transform: scale(0.8);
+  }
+  15%, 40% {
+    opacity: 1;
+    transform: scale(1.2);
+  }
+  55%, 70% {
+    opacity: 0.3;
+    transform: scale(1);
+  }
+}
+
+.animate-ambient-glow-1 { animation: ambientGlow 8s infinite ease-in-out 0s; }
+.animate-ambient-glow-2 { animation: ambientGlow 8s infinite ease-in-out 2s; }
+.animate-ambient-glow-3 { animation: ambientGlow 8s infinite ease-in-out 4s; }
+.animate-ambient-glow-4 { animation: ambientGlow 8s infinite ease-in-out 6s; }
+.animate-ambient-glow-5 { animation: ambientGlow 8s infinite ease-in-out 1s; }
+.animate-ambient-glow-6 { animation: ambientGlow 8s infinite ease-in-out 3s; }
+.animate-ambient-glow-7 { animation: ambientGlow 8s infinite ease-in-out 5s; }
+.animate-ambient-glow-8 { animation: ambientGlow 8s infinite ease-in-out 7s; }
