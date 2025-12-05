@@ -1,0 +1,56 @@
+'use client';
+
+import { useMemo } from 'react';
+import { useTranslation } from 'react-i18next';
+import {
+  DashboardIcon,
+  CalendarIcon,
+  PhotoIcon,
+  QRCodeIcon,
+  ChartIcon,
+  SettingsIcon
+} from '../_components/icons';
+import type { NavigationItem } from '../_types';
+
+export function useNavigationItems(): NavigationItem[] {
+  const { t } = useTranslation('dashboard');
+
+  return useMemo(() => [
+    {
+      id: 'dashboard',
+      label: t('navigation.dashboard'),
+      icon: <DashboardIcon />,
+      path: '/'
+    },
+    {
+      id: 'events',
+      label: t('navigation.events'),
+      icon: <CalendarIcon />,
+      path: '/'
+    },
+    {
+      id: 'galleries',
+      label: t('navigation.galleries'),
+      icon: <PhotoIcon />,
+      path: '/galleries'
+    },
+    {
+      id: 'qr',
+      label: t('navigation.qrCodes'),
+      icon: <QRCodeIcon />,
+      path: '/qr-codes'
+    },
+    {
+      id: 'analytics',
+      label: t('navigation.analytics'),
+      icon: <ChartIcon />,
+      path: '/analytics'
+    },
+    {
+      id: 'settings',
+      label: t('navigation.settings'),
+      icon: <SettingsIcon />,
+      path: '/settings'
+    }
+  ], [t]);
+}

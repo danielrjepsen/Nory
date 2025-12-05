@@ -1,3 +1,6 @@
+'use client';
+
+import { useTranslation } from 'react-i18next';
 import { LogoutIcon } from './icons';
 import type { User } from '../_types';
 
@@ -7,6 +10,7 @@ interface UserProfileProps {
 }
 
 export const UserProfile = ({ user, onLogout }: UserProfileProps) => {
+  const { t } = useTranslation('dashboard');
   const initial = user?.name?.charAt(0).toUpperCase() || 'U';
 
   return (
@@ -17,7 +21,7 @@ export const UserProfile = ({ user, onLogout }: UserProfileProps) => {
         </div>
         <div className="flex-1 min-w-0">
           <div className="text-sm font-semibold text-gray-900 truncate">
-            {user?.name || 'User'}
+            {user?.name || t('user.profile.defaultName')}
           </div>
           <div className="text-xs text-gray-500 truncate">
             {user?.email || ''}
@@ -29,7 +33,7 @@ export const UserProfile = ({ user, onLogout }: UserProfileProps) => {
         className="flex items-center justify-center gap-2 w-full mt-3 px-4 py-2.5 bg-transparent text-red-600 border border-red-600 rounded-lg text-sm font-semibold transition-all hover:bg-red-600 hover:text-white"
       >
         <LogoutIcon />
-        Logout
+        {t('user.logout.button')}
       </button>
     </div>
   );

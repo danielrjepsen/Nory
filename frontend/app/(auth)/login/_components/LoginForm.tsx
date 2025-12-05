@@ -2,9 +2,10 @@
 
 import { useState, useCallback } from 'react';
 import Link from 'next/link';
+import { useTranslation } from 'react-i18next';
 import { AuthHeader } from '@/app/(auth)/login/_components/AuthHeader';
 import { FormInput } from '@/components/auth/FormInput';
-import { Checkbox } from '@/components/auth//Checkbox';
+import { Checkbox } from '@/components/auth/Checkbox';
 import { SubmitButton } from '@/components/auth/SubmitButton';
 import { FormDivider } from '@/components/auth/FormDivider';
 import { ErrorAlert } from '@/components/auth/ErrorAlert';
@@ -13,12 +14,12 @@ import type { LoginCredentials } from '@/app/dashboard/_types/auth';
 
 interface LoginFormProps {
     onSubmit: (credentials: LoginCredentials) => Promise<void>;
-    onGoogleSignIn: (credential: string) => Promise<void>;
     loading: boolean;
     error: string;
 }
 
-export function LoginForm({ onSubmit, onGoogleSignIn, loading, error }: LoginFormProps) {
+export function LoginForm({ onSubmit, loading, error }: LoginFormProps) {
+    const { t } = useTranslation('auth');
     const [formData, setFormData] = useState<LoginCredentials>({
         email: '',
         password: '',
@@ -30,7 +31,7 @@ export function LoginForm({ onSubmit, onGoogleSignIn, loading, error }: LoginFor
         e: React.ChangeEvent<HTMLInputElement>
     ) => {
         setFormData(prev => ({ ...prev, [field]: e.target.value }));
-        // Clear field error on change
+        // clear field error on change
         if (fieldErrors[field]) {
             setFieldErrors(prev => ({ ...prev, [field]: undefined }));
         }
@@ -62,18 +63,18 @@ export function LoginForm({ onSubmit, onGoogleSignIn, loading, error }: LoginFor
     return (
         <>
             <AuthHeader
-                title="Welcome back"
-                subtitle="Sign in to access your event galleries and create shared memories."
+                title={t('login.title')}
+                subtitle={t('login.subtitle')}
             />
 
             <ErrorAlert message={error} />
 
             <form onSubmit={handleSubmit} noValidate>
                 <FormInput
-                    label="Email"
+                    label={t('login.emailLabel')}
                     type="email"
                     name="email"
-                    placeholder="your.email@example.com"
+                    placeholder={t('login.emailPlaceholder')}
                     value={formData.email}
                     onChange={handleChange('email')}
                     error={fieldErrors.email}
@@ -82,10 +83,10 @@ export function LoginForm({ onSubmit, onGoogleSignIn, loading, error }: LoginFor
                 />
 
                 <FormInput
-                    label="Password"
+                    label={t('login.passwordLabel')}
                     type="password"
                     name="password"
-                    placeholder="Enter your password"
+                    placeholder={t('login.passwordPlaceholder')}
                     value={formData.password}
                     onChange={handleChange('password')}
                     error={fieldErrors.password}
@@ -97,22 +98,22 @@ export function LoginForm({ onSubmit, onGoogleSignIn, loading, error }: LoginFor
                     <Checkbox
                         checked={rememberMe}
                         onChange={() => setRememberMe(!rememberMe)}
-                        label="Remember me"
+                        label={t('login.rememberMe')}
                     />
                     <Link
                         href="/forgot-password"
                         className="text-blue-400 font-medium hover:underline"
                     >
-                        Forgot password?
+                        {t('login.forgotPassword')}
                     </Link>
                 </div>
 
                 <SubmitButton
                     loading={loading}
-                    loadingText="Signing in..."
+                    loadingText={t('login.submitting')}
                     disabled={!isFormValid || loading}
                 >
-                    Log in
+                    {t('login.submit')}
                 </SubmitButton>
 
                 <FormDivider />

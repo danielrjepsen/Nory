@@ -1,0 +1,22 @@
+{
+  "noPhotos": "Ingen billeder endnu",
+  "grid": {
+    "noPhotos": "Ingen billeder endnu",
+    "loadMore": "Indlæs flere",
+    "downloading": "Downloader...",
+    "download": "Download",
+    "delete": "Slet",
+    "deleteConfirm": "Er du sikker på, at du vil slette dette billede?",
+    "uploadedBy": "Uploadet af {{name}}",
+    "uploadedAt": "Uploadet {{date}}"
+  },
+  "upload": {
+    "title": "Upload billeder",
+    "dragDrop": "Træk og slip billeder her",
+    "or": "eller",
+    "browse": "Vælg filer",
+    "uploading": "Uploader...",
+    "success": "Billeder uploadet",
+    "error": "Fejl ved upload"
+  }
+}

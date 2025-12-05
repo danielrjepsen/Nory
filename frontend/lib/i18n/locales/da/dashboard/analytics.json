@@ -1,0 +1,27 @@
+{
+  "title": "Statistik",
+  "overview": "Oversigt",
+  "photos": "Billeder",
+  "guests": "Gæster",
+  "engagement": "Engagement",
+  "metrics": {
+    "totalPhotos": "Totalt antal billeder",
+    "totalGuests": "Totalt antal gæster",
+    "activeEvents": "Aktive begivenheder",
+    "peakHours": "Spidsbelastningstimer"
+  },
+  "sections": {
+    "popularEvents": "Populære begivenheder",
+    "recentActivity": "Seneste aktivitet",
+    "uploadTrends": "Upload tendenser",
+    "guestActivity": "Gæsteaktivitet"
+  },
+  "noData": "Ingen data tilgængelig",
+  "timeRanges": {
+    "today": "I dag",
+    "week": "Denne uge",
+    "month": "Denne måned",
+    "year": "Dette år",
+    "all": "Alle"
+  }
+}

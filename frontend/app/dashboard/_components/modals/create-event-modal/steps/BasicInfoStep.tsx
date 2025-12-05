@@ -1,4 +1,7 @@
+'use client';
+
 import React from 'react';
+import { useTranslation } from 'react-i18next';
 import { Input, Textarea } from '../../../form';
 
 interface BasicInfoStepProps {
@@ -14,30 +17,32 @@ export function BasicInfoStep({
   onNameChange,
   onDescriptionChange,
 }: BasicInfoStepProps) {
+  const { t } = useTranslation('dashboard');
+
   return (
     <div>
       <h2 className="text-3xl font-extrabold text-gray-900 mb-3 tracking-tight leading-tight bg-gradient-to-r from-gray-900 to-gray-600 bg-clip-text text-transparent">
-        What's your event?
+        {t('eventCreation.basicInfo.title')}
       </h2>
       <p className="text-sm text-gray-500 mb-10 leading-relaxed font-normal">
-        Tell us the basic details about your event
+        {t('eventCreation.basicInfo.subtitle')}
       </p>
 
       <Input
-        label="Event Name *"
+        label={t('eventCreation.basicInfo.eventNameLabel') + ' *'}
         value={name}
         onChange={(e) => onNameChange(e.target.value)}
-        placeholder="e.g., Sarah's Birthday Party"
+        placeholder={t('eventCreation.basicInfo.eventNamePlaceholder')}
         fullWidth
       />
 
       <Textarea
-        label="Description"
+        label={t('eventCreation.basicInfo.descriptionLabel')}
         value={description}
         onChange={(e) => onDescriptionChange(e.target.value)}
-        placeholder="Tell your guests what this event is about..."
+        placeholder={t('eventCreation.basicInfo.descriptionPlaceholder')}
         rows={4}
-        hint="This will be visible to your guests on the event page"
+        hint={t('eventCreation.basicInfo.descriptionHint')}
         fullWidth
       />
     </div>

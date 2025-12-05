@@ -1,0 +1,32 @@
+{
+  "title": "Opret konto",
+  "subtitle": "Kom i gang med Nory i dag og skab fantastiske begivenheder.",
+  "fullNameLabel": "Fulde navn",
+  "fullNamePlaceholder": "Indtast dit fulde navn",
+  "emailLabel": "E-mail",
+  "emailPlaceholder": "din.email@eksempel.dk",
+  "passwordLabel": "Adgangskode",
+  "passwordPlaceholder": "Min. 8 tegn, store og små bogstaver, tal",
+  "confirmPasswordLabel": "Bekræft adgangskode",
+  "confirmPasswordPlaceholder": "Gentag din adgangskode",
+  "orgNameLabel": "Organisationsnavn",
+  "orgNamePlaceholder": "Dit firma eller organisation",
+  "orgTypeLabel": "Organisationstype",
+  "orgTypes": {
+    "individual": "Privatperson",
+    "company": "Virksomhed",
+    "agency": "Bureau"
+  },
+  "termsAgreement": "Jeg accepterer vilkår og betingelser samt privatlivspolitikken",
+  "termsLink": "Vilkår og betingelser",
+  "privacyLink": "Privatlivspolitik",
+  "submit": "Opret konto",
+  "submitting": "Opretter konto...",
+  "hasAccount": "Har du allerede en konto?",
+  "signIn": "Log ind",
+  "errors": {
+    "termsRequired": "Du skal acceptere vilkår og betingelser",
+    "emailExists": "Der findes allerede en konto med denne e-mail",
+    "weakPassword": "Adgangskoden er for svag"
+  }
+}

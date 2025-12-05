@@ -1,6 +1,7 @@
 'use client';
 
 import React from 'react';
+import { useTranslation } from 'react-i18next';
 import ThemeSelector from '../../theme/ThemeSelector';
 import ThemePreview from '../../theme/ThemePreview';
 import CustomThemeEditor from '../../theme/CustomThemeEditor';
@@ -17,6 +18,7 @@ interface CreateEventModalProps {
 }
 
 export default function CreateEventModal({ isOpen, onClose }: CreateEventModalProps) {
+  const { t } = useTranslation('dashboard');
   const {
     activeStep,
     loading,
@@ -143,7 +145,7 @@ export default function CreateEventModal({ isOpen, onClose }: CreateEventModalPr
         <div className="bg-white rounded-lg shadow-xl max-w-4xl w-full max-h-[90vh] overflow-y-auto">
           {/* Temporary placeholder - replace with StepperModal */}
           <div className="p-6">
-            <h2 className="text-2xl font-bold mb-4">Create New Event</h2>
+            <h2 className="text-2xl font-bold mb-4">{t('eventCreation.modal.title')}</h2>
             {error && <div className="bg-red-100 text-red-700 p-3 rounded mb-4">{error}</div>}
 
             {renderStepContent(activeStep)}
@@ -155,7 +157,7 @@ export default function CreateEventModal({ isOpen, onClose }: CreateEventModalPr
                   className="px-4 py-2 border rounded hover:bg-gray-100"
                   disabled={loading}
                 >
-                  Back
+                  {t('eventCreation.modal.back')}
                 </button>
               )}
 
@@ -165,7 +167,7 @@ export default function CreateEventModal({ isOpen, onClose }: CreateEventModalPr
                   className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 ml-auto"
                   disabled={!canProceed() || loading}
                 >
-                  Next
+                  {t('eventCreation.modal.next')}
                 </button>
               ) : (
                 <button
@@ -173,7 +175,7 @@ export default function CreateEventModal({ isOpen, onClose }: CreateEventModalPr
                   className="px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700 ml-auto"
                   disabled={!canProceed() || loading}
                 >
-                  {loading ? 'Creating...' : 'Create Event'}
+                  {loading ? t('eventCreation.modal.creating') : t('eventCreation.modal.submit')}
                 </button>
               )}
             </div>

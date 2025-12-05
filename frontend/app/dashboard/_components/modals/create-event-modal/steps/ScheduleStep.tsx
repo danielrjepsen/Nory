@@ -1,4 +1,7 @@
+'use client';
+
 import React from 'react';
+import { useTranslation } from 'react-i18next';
 import { DayPicker } from 'react-day-picker';
 import { format } from 'date-fns';
 import 'react-day-picker/dist/style.css';
@@ -10,21 +13,23 @@ interface ScheduleStepProps {
 }
 
 export function ScheduleStep({ startDate, onDateSelect, isMultiDay }: ScheduleStepProps) {
+  const { t } = useTranslation('dashboard');
+
   return (
     <div className="p-8">
       <div className="bg-white rounded-xl p-6 shadow-sm">
         <div className="mb-6 pb-4 border-b border-gray-100">
           <h3 className="text-lg font-semibold text-gray-900 mb-1">
-            Event Schedule
+            {t('eventCreation.schedule.title')}
           </h3>
           <p className="text-sm text-gray-600">
-            When does your event take place?
+            {t('eventCreation.schedule.subtitle')}
           </p>
         </div>
 
         <div>
           <label className="block mb-3 text-sm font-semibold text-gray-700">
-            Select Date *
+            {t('eventCreation.schedule.selectDate')} *
           </label>
 
           <div className="border border-gray-200 rounded-lg p-4 bg-gray-50">
@@ -39,7 +44,7 @@ export function ScheduleStep({ startDate, onDateSelect, isMultiDay }: ScheduleSt
 
           {startDate && (
             <p className="text-xs text-emerald-600 mt-2 font-medium">
-              ✓ Selected: {format(startDate, 'EEEE, MMMM d, yyyy')}
+              ✓ {t('eventCreation.schedule.selected', { date: format(startDate, 'EEEE, MMMM d, yyyy') })}
             </p>
           )}
         </div>

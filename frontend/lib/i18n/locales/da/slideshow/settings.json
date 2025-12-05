@@ -1,0 +1,21 @@
+{
+  "title": "Slideshow indstillinger",
+  "duration": "Varighed per billede",
+  "durationSeconds": "{{seconds}} sekunder",
+  "transition": "Overgang",
+  "transitions": {
+    "fade": "Fade",
+    "slide": "Slide",
+    "zoom": "Zoom",
+    "none": "Ingen"
+  },
+  "autoplay": "Automatisk afspilning",
+  "loop": "Gentag",
+  "shuffle": "Tilfældig rækkefølge",
+  "showCaptions": "Vis billedtekster",
+  "showTimestamps": "Vis tidsstempler",
+  "showUploader": "Vis hvem der uploadede",
+  "backgroundColor": "Baggrundsfarve",
+  "musicEnabled": "Baggrundsmusik",
+  "musicVolume": "Musikvolumen"
+}

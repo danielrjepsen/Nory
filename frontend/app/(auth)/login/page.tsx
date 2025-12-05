@@ -2,12 +2,14 @@
 
 import { useCallback, useState } from 'react';
 import Link from 'next/link';
+import { useTranslation } from 'react-i18next';
 import { useAuth } from '@/app/dashboard/_contexts/AuthContext';
 import { AuthLayout } from './_components/AuthLayout';
 import { LoginForm } from './_components/LoginForm';
 import type { LoginCredentials } from '@/app/dashboard/_types/auth';
 
 export default function LoginPage() {
+    const { t } = useTranslation('auth');
     const { login } = useAuth();
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState('');
@@ -26,32 +28,17 @@ export default function LoginPage() {
         }
     }, [login]);
 
-    const handleGoogleSignIn = useCallback(async (credential: string) => {
-        setError('');
-        setLoading(true);
-
-        try {
-            // TODO: Implement Google sign-in
-            console.log('Google sign-in:', credential);
-        } catch (err) {
-            setError(err instanceof Error ? err.message : 'Google sign-in failed');
-        } finally {
-            setLoading(false);
-        }
-    }, []);
-
     return (
         <AuthLayout>
             <LoginForm
                 onSubmit={handleLogin}
-                onGoogleSignIn={handleGoogleSignIn}
                 loading={loading}
                 error={error}
             />
             <div className="text-center text-[#636e72] text-sm mt-4">
-                Don't have an account?{' '}
+                {t('login.noAccount')}{' '}
                 <Link href="/register" className="text-[#74b9ff] font-semibold hover:underline cursor-pointer">
-                    Sign up
+                    {t('login.signUp')}
                 </Link>
             </div>
         </AuthLayout>

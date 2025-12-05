@@ -1,4 +1,7 @@
+'use client';
+
 import React from 'react';
+import { useTranslation } from 'react-i18next';
 
 interface QRButtonProps {
   onClick?: (e: React.MouseEvent) => void;
@@ -6,12 +9,14 @@ interface QRButtonProps {
 }
 
 export function QRButton({ onClick, className = '' }: QRButtonProps) {
+  const { t } = useTranslation('dashboard');
+
   return (
     <div className={`flex justify-center ${className}`}>
       <button
         onClick={onClick}
         className="w-12 h-12 border-2 border-gray-300 rounded-xl flex items-center justify-center transition-all duration-200 hover:border-gray-900 hover:bg-gray-900 group focus:outline-none focus:ring-2 focus:ring-gray-900 focus:ring-offset-2"
-        aria-label="View QR Code"
+        aria-label={t('events.viewQRCode')}
       >
         <svg
           width="24"

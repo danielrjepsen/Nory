@@ -1,5 +1,6 @@
 export { useActiveNav } from './useActiveNav';
 export { useNavigation } from './useNavigation';
+export { useNavigationItems } from './useNavigationItems';
 export { usePageTitle } from './usePageTitle';
 export { useClickOutside } from './useClickOutside';
 export { useAuthenticatedImage } from './useAuthenticatedImage';

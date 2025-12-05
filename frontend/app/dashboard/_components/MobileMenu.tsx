@@ -1,4 +1,7 @@
+'use client';
+
 import { forwardRef } from 'react';
+import { useTranslation } from 'react-i18next';
 import { NavButton } from './NavButton';
 import { LogoutIcon } from './icons';
 import type { NavigationItem } from '../types';
@@ -14,6 +17,8 @@ interface MobileMenuProps {
 
 export const MobileMenu = forwardRef<HTMLDivElement, MobileMenuProps>(
   ({ isOpen, navigationItems, activeNav, onNavClick, onLogout, onClose }, ref) => {
+    const { t } = useTranslation('dashboard');
+
     if (!isOpen) return null;
 
     return (
@@ -40,7 +45,7 @@ export const MobileMenu = forwardRef<HTMLDivElement, MobileMenuProps>(
           className="flex items-center gap-3 w-full px-4 py-3 bg-transparent text-red-600 rounded-xl text-base font-semibold"
         >
           <LogoutIcon />
-          Logout
+          {t('user.logout.button')}
         </button>
       </div>
     );

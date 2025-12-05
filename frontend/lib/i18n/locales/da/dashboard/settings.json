@@ -1,0 +1,40 @@
+{
+  "title": "Indstillinger",
+  "profile": {
+    "title": "Profil",
+    "name": "Navn",
+    "email": "E-mail",
+    "phone": "Telefon",
+    "avatar": "Profilbillede",
+    "changeAvatar": "Skift profilbillede",
+    "save": "Gem ændringer"
+  },
+  "organization": {
+    "title": "Organisation",
+    "name": "Organisationsnavn",
+    "type": "Organisationstype",
+    "logo": "Logo",
+    "changeLogo": "Skift logo"
+  },
+  "notifications": {
+    "title": "Notifikationer",
+    "email": "E-mail notifikationer",
+    "push": "Push notifikationer",
+    "newPhoto": "Nye billeder",
+    "newGuest": "Nye gæster",
+    "eventReminders": "Begivenhedspåmindelser"
+  },
+  "privacy": {
+    "title": "Privatliv",
+    "dataExport": "Eksporter mine data",
+    "deleteAccount": "Slet konto",
+    "deleteAccountWarning": "Denne handling kan ikke fortrydes. Alle dine data vil blive slettet permanent."
+  },
+  "billing": {
+    "title": "Fakturering",
+    "currentPlan": "Nuværende plan",
+    "upgrade": "Opgrader",
+    "invoices": "Fakturaer",
+    "paymentMethod": "Betalingsmetode"
+  }
+}

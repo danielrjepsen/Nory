@@ -1,0 +1,38 @@
+{
+  "photoBy": "Billede af {{name}}",
+  "uploadedAt": "Uploadet {{time}}",
+  "photoCount": "{{current}} af {{total}}",
+  "noPhotos": "Ingen billeder at vise",
+  "noPhotosDescription": "Vent på at gæster uploader billeder til galleriet",
+  "loading": "Indlæser billeder...",
+  "error": "Kunne ikke indlæse billeder",
+  "qrOverlay": {
+    "title": "Del dine billeder!",
+    "subtitle": "Scan QR-koden for at uploade billeder",
+    "eventCode": "Begivenhedskode: {{code}}",
+    "hide": "Skjul QR-kode",
+    "show": "Vis QR-kode"
+  },
+  "liveIndicator": {
+    "live": "LIVE",
+    "connected": "Forbundet",
+    "disconnected": "Afbrudt",
+    "reconnecting": "Genopretter forbindelse...",
+    "newPhotos": "{{count}} nye billeder",
+    "newPhotos_one": "{{count}} nyt billede"
+  },
+  "welcome": {
+    "title": "Velkommen til slideshowet",
+    "subtitle": "Billeder vil blive vist her, når gæster uploader dem",
+    "waitingForPhotos": "Venter på billeder...",
+    "scanToUpload": "Scan for at uploade billeder",
+    "startSlideshow": "Start slideshow"
+  },
+  "errors": {
+    "loadFailed": "Kunne ikke indlæse slideshow",
+    "connectionLost": "Forbindelsen blev afbrudt",
+    "tryAgain": "Prøv igen",
+    "eventNotFound": "Begivenhed ikke fundet",
+    "accessDenied": "Adgang nægtet"
+  }
+}

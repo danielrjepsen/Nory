@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
+import { useTranslation } from 'react-i18next';
 import { EventsService } from '../../_services/events';
 import { useIntersectionObserver } from '../../_hooks/useIntersectionObserver';
 import { StatusBadge } from '../StatusBadge';
@@ -15,6 +16,7 @@ interface EventCardProps {
 }
 
 const EventCard: React.FC<EventCardProps> = ({ event, isOwner = false }) => {
+  const { t } = useTranslation('dashboard');
   const router = useRouter();
   const [eventPhotos, setEventPhotos] = useState<EventPhoto[]>([]);
   const [loadingPhotos, setLoadingPhotos] = useState(true);
@@ -79,7 +81,7 @@ const EventCard: React.FC<EventCardProps> = ({ event, isOwner = false }) => {
           {event.name}
         </h2>
         <p className="text-sm text-gray-500 mb-1">
-          {event.location || 'Location TBD'}
+          {event.location || t('events.locationTbd')}
         </p>
         <p className="text-sm text-gray-500">
           {event.date}

@@ -1,0 +1,35 @@
+{
+  "title": "Temtilpasning",
+  "loading": "Indlæser temaer...",
+  "selectTheme": "Vælg tema",
+  "custom": {
+    "title": "Brugerdefineret tema",
+    "description": "Opret din egen farvepalet",
+    "configured": "Konfigureret",
+    "configure": "Klik for at konfigurere"
+  },
+  "editor": {
+    "title": "Brugerdefineret tema editor",
+    "subtitle": "Opret den perfekte farvepalet til din begivenhed",
+    "colorConfiguration": "Farvekonfiguration",
+    "primaryColor": "Primær farve",
+    "secondaryColor": "Sekundær farve",
+    "accentColor": "Accent farve",
+    "backgroundColor1": "Baggrundsfarve 1",
+    "backgroundColor2": "Baggrundsfarve 2",
+    "textColor": "Tekstfarve",
+    "cancel": "Annuller",
+    "save": "Gem brugerdefineret tema",
+    "reset": "Nulstil til standard"
+  },
+  "presets": {
+    "wedding": "Bryllup",
+    "birthday": "Fødselsdag",
+    "corporate": "Erhverv",
+    "party": "Fest",
+    "elegant": "Elegant",
+    "modern": "Moderne",
+    "rustic": "Rustik",
+    "minimal": "Minimalistisk"
+  }
+}

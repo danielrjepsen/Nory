@@ -1,0 +1,13 @@
+{
+  "profile": {
+    "defaultName": "Bruger",
+    "logout": "Log ud",
+    "settings": "Indstillinger",
+    "profile": "Profil"
+  },
+  "logout": {
+    "button": "Log ud",
+    "confirmTitle": "Log ud",
+    "confirmMessage": "Er du sikker på, at du vil logge ud?"
+  }
+}

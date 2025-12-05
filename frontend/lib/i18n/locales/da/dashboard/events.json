@@ -1,0 +1,30 @@
+{
+  "title": "Begivenheder",
+  "createNew": "Opret ny begivenhed",
+  "createNewDescription": "Begynd at indsamle billeder til din næste begivenhed",
+  "noEvents": "Ingen begivenheder endnu",
+  "noEventsDescription": "Opret din første begivenhed for at komme i gang!",
+  "createButton": "Opret begivenhed",
+  "locationTbd": "Lokation følger",
+  "viewQRCode": "Se QR-kode",
+  "noPhotos": "Ingen billeder endnu",
+  "photosCount": "{{count}} billeder",
+  "photosCount_one": "{{count}} billede",
+  "guestsCount": "{{count}} gæster",
+  "guestsCount_one": "{{count}} gæst",
+  "status": {
+    "live": "Aktiv",
+    "ended": "Afsluttet",
+    "draft": "Kladde",
+    "scheduled": "Planlagt"
+  },
+  "actions": {
+    "edit": "Rediger",
+    "delete": "Slet",
+    "duplicate": "Dupliker",
+    "share": "Del",
+    "viewGallery": "Se galleri",
+    "manageGuests": "Administrer gæster",
+    "downloadPhotos": "Download billeder"
+  }
+}

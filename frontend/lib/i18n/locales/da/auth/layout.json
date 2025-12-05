@@ -1,0 +1,23 @@
+{
+  "brandName": "Nory",
+  "headline": "Skab magiske begivenheder",
+  "description": "Forvandl dine begivenheder med interaktive QR-oplevelser, realtidsgallerier og problemfri gæsteengagement.",
+  "features": {
+    "liveGallery": {
+      "title": "Live galleri",
+      "description": "Realtids fotodeling"
+    },
+    "customThemes": {
+      "title": "Tilpassede temaer",
+      "description": "Match dit brand"
+    },
+    "instantSetup": {
+      "title": "Hurtig opsætning",
+      "description": "Gå live på få minutter"
+    },
+    "analytics": {
+      "title": "Statistik",
+      "description": "Følg engagement"
+    }
+  }
+}

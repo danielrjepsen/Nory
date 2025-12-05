@@ -1,9 +1,10 @@
 'use client';
 
 import { useState, useCallback } from 'react';
+import Link from 'next/link';
+import { useTranslation } from 'react-i18next';
 import { AuthHeader } from '@/app/(auth)/login/_components/AuthHeader';
 import { FormInput } from '@/components/auth/FormInput';
-import { FormSelect } from '@/components/auth/FormSelect';
 import { Checkbox } from '@/components/auth/Checkbox';
 import { SubmitButton } from '@/components/auth/SubmitButton';
 import { FormDivider } from '@/components/auth/FormDivider';
@@ -14,42 +15,28 @@ import {
     validateName,
     getPasswordError,
 } from '@/lib/validators/auth-validators';
-import type { RegisterData } from '@/types/auth';
+import type { RegisterData } from '@/app/dashboard/_types/auth';
 
 interface RegisterFormProps {
     onSubmit: (data: RegisterData) => Promise<void>;
     loading: boolean;
     error: string;
-    selectedPlan?: { name: string; price: string } | null;
 }
 
-const ORG_TYPE_OPTIONS = [
-    { value: 'individual', label: 'Individual' },
-    { value: 'company', label: 'Company' },
-    { value: 'agency', label: 'Agency' },
-];
-
-export function RegisterForm({
-    onSubmit,
-    loading,
-    error,
-    selectedPlan,
-}: RegisterFormProps) {
+export function RegisterForm({ onSubmit, loading, error }: RegisterFormProps) {
+    const { t } = useTranslation('auth');
     const [formData, setFormData] = useState<RegisterData>({
         email: '',
         password: '',
         name: '',
-        orgName: '',
-        orgType: 'individual',
     });
     const [agreedToTerms, setAgreedToTerms] = useState(false);
-    const [fieldErrors, setFieldErrors] = useState<Partial<Record<keyof RegisterData, string>>>({});
+    const [fieldErrors, setFieldErrors] = useState<Partial<Record<keyof RegisterData | 'terms', string>>>({});
 
     const handleChange = useCallback((field: keyof RegisterData) => (
-        e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
+        e: React.ChangeEvent<HTMLInputElement>
     ) => {
         setFormData(prev => ({ ...prev, [field]: e.target.value }));
-        // Clear field error on change
         if (fieldErrors[field]) {
             setFieldErrors(prev => ({ ...prev, [field]: undefined }));
         }
@@ -79,13 +66,13 @@ export function RegisterForm({
         if (!agreedToTerms) {
             setFieldErrors(prev => ({
                 ...prev,
-                terms: 'You must agree to the Terms of Service',
+                terms: t('register.errors.termsRequired'),
             }));
             return;
         }
 
         await onSubmit(formData);
-    }, [formData, agreedToTerms, validateForm, onSubmit]);
+    }, [formData, agreedToTerms, validateForm, onSubmit, t]);
 
     const isFormValid =
         !validateName(formData.name) &&
@@ -96,19 +83,18 @@ export function RegisterForm({
     return (
         <>
             <AuthHeader
-                title="Create Account"
-                subtitle="Get started with Nory today and create amazing event experiences."
+                title={t('register.title')}
+                subtitle={t('register.subtitle')}
             />
-
 
             <ErrorAlert message={error} />
 
             <form onSubmit={handleSubmit} noValidate>
                 <FormInput
-                    label="Full Name"
+                    label={t('register.fullNameLabel')}
                     type="text"
                     name="name"
-                    placeholder="Enter your full name"
+                    placeholder={t('register.fullNamePlaceholder')}
                     value={formData.name}
                     onChange={handleChange('name')}
                     error={fieldErrors.name}
@@ -117,10 +103,10 @@ export function RegisterForm({
                 />
 
                 <FormInput
-                    label="Email"
+                    label={t('register.emailLabel')}
                     type="email"
                     name="email"
-                    placeholder="your.email@example.com"
+                    placeholder={t('register.emailPlaceholder')}
                     value={formData.email}
                     onChange={handleChange('email')}
                     error={fieldErrors.email}
@@ -129,10 +115,10 @@ export function RegisterForm({
                 />
 
                 <FormInput
-                    label="Password"
+                    label={t('register.passwordLabel')}
                     type="password"
                     name="password"
-                    placeholder="Min 8 chars, uppercase, lowercase, digit"
+                    placeholder={t('register.passwordPlaceholder')}
                     value={formData.password}
                     onChange={handleChange('password')}
                     error={fieldErrors.password}
@@ -140,29 +126,16 @@ export function RegisterForm({
                     required
                 />
 
-                <FormInput
-                    label="Organization Name (Optional)"
-                    type="text"
-                    name="orgName"
-                    placeholder="Your company or organization name"
-                    value={formData.orgName}
-                    onChange={handleChange('orgName')}
-                    autoComplete="organization"
-                />
-
-                <FormSelect
-                    label="Organization Type"
-                    name="orgType"
-                    value={formData.orgType}
-                    onChange={handleChange('orgType')}
-                    options={ORG_TYPE_OPTIONS}
-                />
-
                 <div className="mb-8">
                     <Checkbox
                         checked={agreedToTerms}
-                        onChange={() => setAgreedToTerms(!agreedToTerms)}
-                        label="I agree to the Terms of Service and Privacy Policy"
+                        onChange={() => {
+                            setAgreedToTerms(!agreedToTerms);
+                            if (fieldErrors.terms) {
+                                setFieldErrors(prev => ({ ...prev, terms: undefined }));
+                            }
+                        }}
+                        label={t('register.termsAgreement')}
                     />
                     {fieldErrors.terms && (
                         <p className="mt-2 text-sm text-red-600">{fieldErrors.terms}</p>
@@ -171,13 +144,20 @@ export function RegisterForm({
 
                 <SubmitButton
                     loading={loading}
-                    loadingText="Creating Account..."
+                    loadingText={t('register.submitting')}
                     disabled={!isFormValid || loading}
                 >
-                    Create Account
+                    {t('register.submit')}
                 </SubmitButton>
 
                 <FormDivider />
+
+                <p className="text-center text-sm text-gray-600">
+                    {t('register.hasAccount')}{' '}
+                    <Link href="/login" className="text-blue-400 font-medium hover:underline">
+                        {t('register.signIn')}
+                    </Link>
+                </p>
             </form>
         </>
     );

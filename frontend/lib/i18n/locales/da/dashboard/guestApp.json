@@ -1,0 +1,73 @@
+{
+  "builder": {
+    "title": "Gæsteapp builder",
+    "exportJson": "Eksporter JSON",
+    "generateQR": "Generer QR-kode",
+    "eventDetails": "Begivenhedsdetaljer",
+    "eventName": "Begivenhedsnavn",
+    "eventNamePlaceholder": "Sarah & Johns bryllup",
+    "welcomeMessage": "Velkomstbesked",
+    "welcomeMessagePlaceholder": "Velkommen til vores særlige dag",
+    "exportNotice": "Konfiguration eksporteret til konsol (tjek DevTools)",
+    "qrNotice": "QR-kodegenerering ville blive implementeret her",
+    "addComponent": "Tilføj komponent",
+    "removeComponent": "Fjern komponent"
+  },
+  "components": {
+    "remote": {
+      "name": "Fjernbetjening",
+      "description": "Styr præsentationen"
+    },
+    "guestbook": {
+      "name": "Gæstebog",
+      "description": "Lad gæster skrive beskeder"
+    },
+    "lists": {
+      "name": "Lister",
+      "description": "Vis lister til gæster"
+    },
+    "gallery": {
+      "name": "Galleri",
+      "description": "Vis og upload billeder"
+    },
+    "schedule": {
+      "name": "Program",
+      "description": "Vis begivenhedens program"
+    },
+    "polls": {
+      "name": "Afstemninger",
+      "description": "Opret interaktive afstemninger"
+    },
+    "custom": {
+      "name": "Brugerdefineret",
+      "description": "Tilføj brugerdefineret indhold"
+    }
+  },
+  "modal": {
+    "steps": {
+      "chooseType": "Vælg type",
+      "configure": "Konfigurer"
+    },
+    "selectType": "Vælg komponenttype",
+    "selectTypeDescription": "Vælg hvilken funktion du vil tilføje til din gæsteapp",
+    "configureComponent": "Konfigurer komponent",
+    "configureComponentDescription": "Tilpas, hvordan denne komponent skal vises",
+    "preview": "Live forhåndsvisning",
+    "previewTitle": "Komponentforhåndsvisning",
+    "previewDescription": "Se hvordan det ser ud",
+    "selectPreview": "Vælg en komponent for at se forhåndsvisning",
+    "actions": {
+      "cancel": "Annuller",
+      "back": "Tilbage",
+      "next": "Næste",
+      "add": "Tilføj komponent"
+    }
+  },
+  "form": {
+    "addItem": "Tilføj element",
+    "add": "Tilføj",
+    "remove": "Fjern",
+    "moveUp": "Flyt op",
+    "moveDown": "Flyt ned"
+  }
+}

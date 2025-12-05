@@ -1,9 +1,15 @@
+'use client';
+
+import { useTranslation } from 'react-i18next';
+
 interface AuthLayoutProps {
     children: React.ReactNode;
     showContentPanel?: boolean;
 }
 
 export function AuthLayout({ children, showContentPanel = true }: AuthLayoutProps) {
+    const { t } = useTranslation('auth');
+
     return (
         <div className="relative min-h-screen overflow-x-hidden">
             {/* Ambient lights around edges */}
@@ -87,57 +93,41 @@ export function AuthLayout({ children, showContentPanel = true }: AuthLayoutProp
                     <div className="hidden md:flex md:flex-[0.8] flex-col justify-center items-center p-8 bg-[#f8f9fa]/95 backdrop-blur-[10px]">
                         <div className="text-center max-w-[450px]">
                             <h1 className="text-[2.8rem] font-bold mb-6 text-[#2d3436]">
-                                Nory
+                                {t('layout.brandName')}
                             </h1>
 
                             <h2 className="text-[1.8rem] font-semibold leading-tight mb-4 text-[#2d3436]">
-                                Create Magical Event Experiences
+                                {t('layout.headline')}
                             </h2>
 
                             <p className="text-base mb-8 text-[#636e72] leading-relaxed">
-                                Transform your events with interactive QR experiences, real-time galleries, and seamless guest engagement.
+                                {t('layout.description')}
                             </p>
 
                             {/* Feature grid */}
-                            <div className="grid grid-cols-2 gap-4 mb-8">
+                            <div className="grid grid-cols-2 gap-4">
                                 <div className="bg-white/80 border border-[#e9ecef]/60 p-5 rounded-xl text-center transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_8px_25px_rgba(0,0,0,0.1)]">
                                     <span className="text-[1.8rem] block mb-2">📸</span>
-                                    <div className="text-sm font-semibold mb-1 text-[#2d3436]">Live Gallery</div>
-                                    <div className="text-xs text-[#636e72]">Real-time photo sharing</div>
+                                    <div className="text-sm font-semibold mb-1 text-[#2d3436]">{t('layout.features.liveGallery.title')}</div>
+                                    <div className="text-xs text-[#636e72]">{t('layout.features.liveGallery.description')}</div>
                                 </div>
 
                                 <div className="bg-white/80 border border-[#e9ecef]/60 p-5 rounded-xl text-center transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_8px_25px_rgba(0,0,0,0.1)]">
                                     <span className="text-[1.8rem] block mb-2">🎨</span>
-                                    <div className="text-sm font-semibold mb-1 text-[#2d3436]">Custom Themes</div>
-                                    <div className="text-xs text-[#636e72]">Match your brand</div>
+                                    <div className="text-sm font-semibold mb-1 text-[#2d3436]">{t('layout.features.customThemes.title')}</div>
+                                    <div className="text-xs text-[#636e72]">{t('layout.features.customThemes.description')}</div>
                                 </div>
 
                                 <div className="bg-white/80 border border-[#e9ecef]/60 p-5 rounded-xl text-center transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_8px_25px_rgba(0,0,0,0.1)]">
                                     <span className="text-[1.8rem] block mb-2">⚡</span>
-                                    <div className="text-sm font-semibold mb-1 text-[#2d3436]">Instant Setup</div>
-                                    <div className="text-xs text-[#636e72]">Go live in minutes</div>
+                                    <div className="text-sm font-semibold mb-1 text-[#2d3436]">{t('layout.features.instantSetup.title')}</div>
+                                    <div className="text-xs text-[#636e72]">{t('layout.features.instantSetup.description')}</div>
                                 </div>
 
                                 <div className="bg-white/80 border border-[#e9ecef]/60 p-5 rounded-xl text-center transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_8px_25px_rgba(0,0,0,0.1)]">
                                     <span className="text-[1.8rem] block mb-2">📊</span>
-                                    <div className="text-sm font-semibold mb-1 text-[#2d3436]">Analytics</div>
-                                    <div className="text-xs text-[#636e72]">Track engagement</div>
-                                </div>
-                            </div>
-
-                            {/* Stats */}
-                            <div className="flex justify-between bg-white/80 border border-[#e9ecef]/60 rounded-xl p-5">
-                                <div className="text-center">
-                                    <div className="text-[1.3rem] font-bold text-[#2d3436] mb-1">10K+</div>
-                                    <div className="text-xs text-[#636e72]">Events</div>
-                                </div>
-                                <div className="text-center">
-                                    <div className="text-[1.3rem] font-bold text-[#2d3436] mb-1">500K+</div>
-                                    <div className="text-xs text-[#636e72]">Photos</div>
-                                </div>
-                                <div className="text-center">
-                                    <div className="text-[1.3rem] font-bold text-[#2d3436] mb-1">2M+</div>
-                                    <div className="text-xs text-[#636e72]">Guests</div>
+                                    <div className="text-sm font-semibold mb-1 text-[#2d3436]">{t('layout.features.analytics.title')}</div>
+                                    <div className="text-xs text-[#636e72]">{t('layout.features.analytics.description')}</div>
                                 </div>
                             </div>
                         </div>

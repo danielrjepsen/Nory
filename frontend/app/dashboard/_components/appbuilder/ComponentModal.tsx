@@ -1,4 +1,7 @@
+'use client';
+
 import React from 'react';
+import { useTranslation } from 'react-i18next';
 import { componentRegistry } from './componentRegistry';
 import { ComponentTypeCard } from './ComponentTypeCard';
 import { ConfigurationForm } from './ConfigurationForm';
@@ -31,6 +34,8 @@ export function ComponentModal({
   onBack,
   onAdd,
 }: ComponentModalProps) {
+  const { t } = useTranslation('dashboard');
+
   if (!isOpen) return null;
 
   return (
@@ -57,7 +62,7 @@ export function ComponentModal({
             </div>
             <div>
               <p className={`text-xs font-medium ${currentStep === 0 ? 'text-black' : 'text-gray-400'}`}>
-                Choose Type
+                {t('guestApp.modal.steps.chooseType')}
               </p>
             </div>
             <div className="flex-1 h-px bg-gray-200" />
@@ -66,7 +71,7 @@ export function ComponentModal({
             </div>
             <div>
               <p className={`text-xs font-medium ${currentStep === 1 ? 'text-black' : 'text-gray-400'}`}>
-                Configure
+                {t('guestApp.modal.steps.configure')}
               </p>
             </div>
           </div>
@@ -74,8 +79,8 @@ export function ComponentModal({
           {currentStep === 0 && (
             <div>
               <div className="mb-4">
-                <h2 className="text-xl font-semibold mb-1">Select Component Type</h2>
-                <p className="text-sm text-gray-600">Choose which feature to add to your guest app</p>
+                <h2 className="text-xl font-semibold mb-1">{t('guestApp.modal.selectType')}</h2>
+                <p className="text-sm text-gray-600">{t('guestApp.modal.selectTypeDescription')}</p>
               </div>
 
               <div className="grid grid-cols-2 gap-3">
@@ -94,8 +99,8 @@ export function ComponentModal({
           {currentStep === 1 && selectedComponentType && (
             <div>
               <div className="mb-4">
-                <h2 className="text-xl font-semibold mb-1">Configure Component</h2>
-                <p className="text-sm text-gray-600">Customize how this component will appear</p>
+                <h2 className="text-xl font-semibold mb-1">{t('guestApp.modal.configureComponent')}</h2>
+                <p className="text-sm text-gray-600">{t('guestApp.modal.configureComponentDescription')}</p>
               </div>
 
               <ConfigurationForm
@@ -108,7 +113,7 @@ export function ComponentModal({
         </div>
 
         <div className="w-96 bg-gray-50 p-6 flex flex-col items-center justify-center">
-          <p className="text-sm text-gray-600 mb-4 text-center">Live Preview</p>
+          <p className="text-sm text-gray-600 mb-4 text-center">{t('guestApp.modal.preview')}</p>
           <div className="w-72 bg-white rounded-[20px] shadow-[0_4px_20px_rgba(0,0,0,0.08)] overflow-hidden">
             <div
               className="p-4 text-white text-center"
@@ -116,15 +121,15 @@ export function ComponentModal({
                 background: `linear-gradient(135deg, ${themeColors.primaryColor} 0%, ${themeColors.secondaryColor} 100%)`,
               }}
             >
-              <p className="text-base mb-1">Component Preview</p>
-              <p className="text-xs opacity-90">See how it looks</p>
+              <p className="text-base mb-1">{t('guestApp.modal.previewTitle')}</p>
+              <p className="text-xs opacity-90">{t('guestApp.modal.previewDescription')}</p>
             </div>
             <div className="p-4 min-h-[300px] bg-gray-50">
               {selectedComponentType ? (
                 <ComponentPreview componentType={selectedComponentType} config={componentConfig} />
               ) : (
                 <div className="text-center text-gray-500 py-8">
-                  <p className="text-sm">Select a component to preview</p>
+                  <p className="text-sm">{t('guestApp.modal.selectPreview')}</p>
                 </div>
               )}
             </div>
@@ -137,14 +142,14 @@ export function ComponentModal({
           className="px-4 py-2 text-sm text-gray-600 hover:text-gray-900 transition-colors"
           onClick={onClose}
         >
-          Cancel
+          {t('guestApp.modal.actions.cancel')}
         </button>
         {currentStep > 0 && (
           <button
             className="px-4 py-2 text-sm bg-gray-100 hover:bg-gray-200 rounded-lg transition-colors flex items-center gap-2"
             onClick={onBack}
           >
-            ← Back
+            ← {t('guestApp.modal.actions.back')}
           </button>
         )}
         {currentStep === 0 && (
@@ -153,7 +158,7 @@ export function ComponentModal({
             onClick={onNext}
             disabled={!selectedComponentType}
           >
-            Next →
+            {t('guestApp.modal.actions.next')} →
           </button>
         )}
         {currentStep === 1 && (
@@ -161,7 +166,7 @@ export function ComponentModal({
             className="px-4 py-2 text-sm bg-black text-white rounded-lg hover:bg-gray-800 transition-colors"
             onClick={onAdd}
           >
-            Add Component
+            {t('guestApp.modal.actions.add')}
           </button>
         )}
       </div>

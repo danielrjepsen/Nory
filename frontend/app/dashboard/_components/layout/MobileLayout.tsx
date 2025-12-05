@@ -5,8 +5,7 @@ import { useRouter } from 'next/navigation';
 import { useAuth } from '../../_contexts/AuthContext';
 import { MobileMenu } from '../MobileMenu';
 import { MenuIcon, PlusIcon } from '../icons';
-import { useNavigation, usePageTitle, useClickOutside } from '@/app/dashboard/_hooks';
-import { navigationItems } from '@/app/dashboard/_config/navigationConfig';
+import { useNavigation, usePageTitle, useClickOutside, useNavigationItems } from '@/app/dashboard/_hooks';
 
 interface MobileLayoutProps {
   children: React.ReactNode;
@@ -17,6 +16,7 @@ export const MobileLayout = ({ children }: MobileLayoutProps) => {
   const { logout } = useAuth();
   const { activeNav, handleNavClick } = useNavigation();
   const pageTitle = usePageTitle();
+  const navigationItems = useNavigationItems();
   const [showMenu, setShowMenu] = useState(false);
   const menuRef = useClickOutside<HTMLDivElement>(() => setShowMenu(false));
 

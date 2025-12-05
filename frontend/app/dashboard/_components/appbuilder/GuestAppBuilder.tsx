@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useState, useEffect, useRef } from 'react';
+import { useTranslation } from 'react-i18next';
 import { themeService } from '../../services/themes';
 import { componentRegistry, type ComponentInstance } from './componentRegistry';
 import { AppSlot } from './AppSlot';
@@ -19,6 +20,7 @@ const GuestAppBuilder: React.FC<GuestAppBuilderProps> = ({
   initialConfig,
   selectedTheme = 'wedding',
 }) => {
+  const { t } = useTranslation('dashboard');
   const initialApps = initialConfig?.components || [];
 
   const [installedApps, setInstalledApps] = useState<ComponentInstance[]>(initialApps);
@@ -175,11 +177,11 @@ const GuestAppBuilder: React.FC<GuestAppBuilderProps> = ({
     };
 
     console.log('Configuration JSON:', JSON.stringify(config, null, 2));
-    alert('Configuration exported to console (check DevTools)');
+    alert(t('guestApp.builder.exportNotice'));
   };
 
   const showQRModal = () => {
-    alert('QR Code generation would be implemented here');
+    alert(t('guestApp.builder.qrNotice'));
   };
 
   const renderGrid = () => {
@@ -218,13 +220,13 @@ const GuestAppBuilder: React.FC<GuestAppBuilderProps> = ({
           onClick={exportConfig}
         >
           <span>💾</span>
-          Export JSON
+          {t('guestApp.builder.exportJson')}
         </button>
         <button
           className="px-4 py-2 text-sm bg-black text-white rounded-lg hover:bg-gray-800 transition-colors font-medium"
           onClick={showQRModal}
         >
-          Generate QR Code
+          {t('guestApp.builder.generateQR')}
         </button>
       </div>
 
@@ -264,27 +266,27 @@ const GuestAppBuilder: React.FC<GuestAppBuilderProps> = ({
         {/* properties */}
         <div className="w-[360px] rounded-2xl border border-gray-200 p-6 shadow-[0_2px_8px_rgba(0,0,0,0.04)] mt-6 h-fit max-h-[calc(100vh-120px)] overflow-auto">
           <div className="mb-6">
-            <h3 className="text-sm font-semibold mb-4">Event Details</h3>
+            <h3 className="text-sm font-semibold mb-4">{t('guestApp.builder.eventDetails')}</h3>
             <div className="mb-4">
               <label className="block text-[0.8125rem] font-medium text-gray-600 mb-1">
-                Event Name
+                {t('guestApp.builder.eventName')}
               </label>
               <input
                 type="text"
                 className="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-black focus:border-transparent"
-                placeholder="Sarah & John's Wedding"
+                placeholder={t('guestApp.builder.eventNamePlaceholder')}
                 value={eventName}
                 onChange={(e) => setEventName(e.target.value)}
               />
             </div>
             <div>
               <label className="block text-[0.8125rem] font-medium text-gray-600 mb-1">
-                Welcome Message
+                {t('guestApp.builder.welcomeMessage')}
               </label>
               <input
                 type="text"
                 className="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-black focus:border-transparent"
-                placeholder="Welcome to our special day"
+                placeholder={t('guestApp.builder.welcomeMessagePlaceholder')}
                 value={welcomeMessage}
                 onChange={(e) => setWelcomeMessage(e.target.value)}
               />

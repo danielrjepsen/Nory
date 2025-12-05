@@ -1,11 +1,11 @@
 'use client';
 
 import { useRouter } from 'next/navigation';
+import { useTranslation } from 'react-i18next';
 import { useAuth } from '../../_contexts/AuthContext';
 import { DesktopSidebar } from '../DesktopSidebar';
 import { PlusIcon } from '@/app/dashboard/_components/icons';
-import { useNavigation, usePageTitle } from '@/app/dashboard/_hooks';
-import { navigationItems } from '@/app/dashboard/_config/navigationConfig';
+import { useNavigation, usePageTitle, useNavigationItems } from '@/app/dashboard/_hooks';
 
 interface DesktopLayoutProps {
   children: React.ReactNode;
@@ -13,9 +13,11 @@ interface DesktopLayoutProps {
 
 export const DesktopLayout = ({ children }: DesktopLayoutProps) => {
   const router = useRouter();
+  const { t } = useTranslation('dashboard');
   const { user, logout } = useAuth();
   const { activeNav, handleNavClick } = useNavigation();
   const pageTitle = usePageTitle();
+  const navigationItems = useNavigationItems();
 
   const handleLogout = async () => {
     try {
@@ -45,7 +47,7 @@ export const DesktopLayout = ({ children }: DesktopLayoutProps) => {
             className="flex items-center gap-2 px-5 py-2.5 bg-gray-900 text-white rounded-lg text-sm font-semibold transition-all hover:bg-gray-800"
           >
             <PlusIcon />
-            Create Event
+            {t('events.createButton')}
           </button>
         </div>
 

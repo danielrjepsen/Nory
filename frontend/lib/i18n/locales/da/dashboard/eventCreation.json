@@ -1,0 +1,71 @@
+{
+  "modal": {
+    "title": "Opret ny begivenhed",
+    "back": "Tilbage",
+    "next": "Næste",
+    "creating": "Opretter...",
+    "submit": "Opret begivenhed"
+  },
+  "eventType": {
+    "title": "Hvad vil du bruge Nory til?",
+    "subtitle": "Vælg den løsning, der passer bedst til dine behov",
+    "singleEvent": {
+      "title": "Enkelt begivenhed",
+      "description": "Jeg planlægger et bryllup, fødselsdag eller anden fejring"
+    },
+    "eventOrganizer": {
+      "title": "Eventarrangør",
+      "description": "Jeg arrangerer flere begivenheder og har brug for en professionel løsning"
+    }
+  },
+  "basicInfo": {
+    "title": "Hvad er din begivenhed?",
+    "subtitle": "Fortæl os de grundlæggende detaljer om din begivenhed",
+    "eventNameLabel": "Begivenhedsnavn",
+    "eventNamePlaceholder": "F.eks. Saras fødselsdagsfest",
+    "descriptionLabel": "Beskrivelse",
+    "descriptionPlaceholder": "Fortæl dine gæster, hvad begivenheden handler om...",
+    "descriptionHint": "Dette vil være synligt for dine gæster på begivenhedssiden"
+  },
+  "schedule": {
+    "title": "Tidsplan",
+    "subtitle": "Hvornår finder din begivenhed sted?",
+    "selectDate": "Vælg dato",
+    "selectTime": "Vælg tidspunkt",
+    "startDate": "Startdato",
+    "endDate": "Slutdato",
+    "allDay": "Hele dagen",
+    "selected": "Valgt: {{date}}"
+  },
+  "settings": {
+    "title": "Begivenhedsindstillinger",
+    "subtitle": "Konfigurer, hvordan din begivenhed fungerer",
+    "publicEvent": "Offentlig begivenhed",
+    "publicEventDescription": "Når aktiveret, kan gæster finde din begivenhed via søgning. Når deaktiveret, er din begivenhed kun på invitation.",
+    "allowUploads": "Tillad uploads",
+    "allowUploadsDescription": "Lad gæster uploade billeder til galleriet",
+    "moderatePhotos": "Moderer billeder",
+    "moderatePhotosDescription": "Gennemgå billeder før de vises i galleriet",
+    "allowComments": "Tillad kommentarer",
+    "allowCommentsDescription": "Lad gæster kommentere på billeder"
+  },
+  "guestApp": {
+    "title": "Tilpas gæsteapp",
+    "subtitle": "Konfigurer, hvordan dine gæster interagerer med din begivenhed"
+  },
+  "review": {
+    "title": "Gennemse og opret",
+    "subtitle": "Gennemse dine begivenhedsdetaljer og opret din begivenhed",
+    "name": "Navn:",
+    "defaultName": "Unavngivet begivenhed",
+    "description": "Beskrivelse:",
+    "noDescription": "Ingen beskrivelse angivet",
+    "start": "Start:",
+    "end": "Slut:",
+    "visibility": "Synlighed:",
+    "public": "Offentlig",
+    "private": "Privat",
+    "theme": "Tema:",
+    "settings": "Indstillinger:"
+  }
+}
