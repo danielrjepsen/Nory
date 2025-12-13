@@ -1,11 +1,15 @@
+using System.Text.Json;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.ChangeTracking;
+using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
+using Nory.Infrastructure.Identity;
 using Nory.Infrastructure.Persistence.Models;
 
 namespace Nory.Infrastructure.Persistence;
 
-public class ApplicationDbContext : IdentityDbContext<UserDbModel, IdentityRole<Guid>, Guid>
+public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
 {
     public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
         : base(options) { }
@@ -25,18 +29,17 @@ public class ApplicationDbContext : IdentityDbContext<UserDbModel, IdentityRole<
     {
         base.OnModelCreating(builder);
 
-        builder.Entity<UserDbModel>().ToTable("Users");
+        builder.Entity<ApplicationUser>().ToTable("Users");
         builder.Entity<EventDbModel>().ToTable("Events");
         builder.Entity<EventPhotoDbModel>().ToTable("EventPhotos");
         builder.Entity<EventCategoryDbModel>().ToTable("EventCategories");
         builder.Entity<EventAppDbModel>().ToTable("EventApps");
         builder.Entity<AppTypeDbModel>().ToTable("AppTypes");
 
-        // Analytics tables
         builder.Entity<ActivityLogDbModel>().ToTable("ActivityLogs");
         builder.Entity<EventMetricsDbModel>().ToTable("EventMetrics");
 
-        // indexes
+        // event indexes
         builder
             .Entity<EventPhotoDbModel>()
             .HasIndex(p => p.EventId)
@@ -73,7 +76,7 @@ public class ApplicationDbContext : IdentityDbContext<UserDbModel, IdentityRole<
             .HasIndex(m => new { m.EventId, m.PeriodType })
             .HasDatabaseName("IX_EventMetrics_EventId_PeriodType");
 
-        // relationships
+        // event
         builder
             .Entity<EventDbModel>()
             .HasMany(e => e.Photos)
@@ -95,7 +98,7 @@ public class ApplicationDbContext : IdentityDbContext<UserDbModel, IdentityRole<
             .HasForeignKey(ea => ea.EventId)
             .OnDelete(DeleteBehavior.Cascade);
 
-        // Analytics relationships
+        // Analytics
         builder
             .Entity<ActivityLogDbModel>()
             .HasOne(a => a.Event)
@@ -113,5 +116,41 @@ public class ApplicationDbContext : IdentityDbContext<UserDbModel, IdentityRole<
         builder.Entity<ActivityLogDbModel>().Property(a => a.Data).HasColumnType("jsonb");
 
         builder.Entity<EventMetricsDbModel>().Property(m => m.FeatureUsage).HasColumnType("jsonb");
+
+        // guestAppConfig as json column (value converter)
+        var dictionaryConverter = new ValueConverter<Dictionary<string, object>?, string?>(
+            v => v == null ? null : JsonSerializer.Serialize(v, (JsonSerializerOptions?)null),
+            v =>
+                v == null
+                    ? null
+                    : JsonSerializer.Deserialize<Dictionary<string, object>>(
+                        v,
+                        (JsonSerializerOptions?)null
+                    )
+        );
+
+        var dictionaryComparer = new ValueComparer<Dictionary<string, object>?>(
+            (c1, c2) =>
+                JsonSerializer.Serialize(c1, (JsonSerializerOptions?)null)
+                == JsonSerializer.Serialize(c2, (JsonSerializerOptions?)null),
+            c =>
+                c == null
+                    ? 0
+                    : JsonSerializer.Serialize(c, (JsonSerializerOptions?)null).GetHashCode(),
+            c =>
+                c == null
+                    ? null
+                    : JsonSerializer.Deserialize<Dictionary<string, object>>(
+                        JsonSerializer.Serialize(c, (JsonSerializerOptions?)null),
+                        (JsonSerializerOptions?)null
+                    )
+        );
+
+        builder
+            .Entity<EventDbModel>()
+            .Property(e => e.GuestAppConfig)
+            .HasColumnType("jsonb")
+            .HasConversion(dictionaryConverter)
+            .Metadata.SetValueComparer(dictionaryComparer);
     }
 }

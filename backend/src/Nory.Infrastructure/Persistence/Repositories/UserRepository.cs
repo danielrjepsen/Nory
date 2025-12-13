@@ -2,15 +2,16 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Nory.Core.Domain.Entities;
 using Nory.Core.Domain.Repositories;
+using Nory.Infrastructure.Identity;
 using Nory.Infrastructure.Persistence.Models;
 
 namespace Nory.Infrastructure.Persistence.Repositories;
 
 public class UserRepository : IUserRepository
 {
-    private readonly UserManager<UserDbModel> _userManager;
+    private readonly UserManager<ApplicationUser> _userManager;
 
-    public UserRepository(UserManager<UserDbModel> userManager)
+    public UserRepository(UserManager<ApplicationUser> userManager)
     {
         _userManager = userManager;
     }
@@ -61,14 +62,22 @@ public class UserRepository : IUserRepository
         }
     }
 
-    private User MapToDomain(UserDbModel dbModel)
+    private User MapToDomain(ApplicationUser dbModel)
     {
-        return new User(dbModel.Email, dbModel.Name, dbModel.Locale);
+        return new User(
+            id: dbModel.Id,
+            email: dbModel.Email ?? string.Empty,
+            name: dbModel.Name,
+            locale: dbModel.Locale,
+            profilePicture: dbModel.ProfilePicture,
+            createdAt: dbModel.CreatedAt,
+            updatedAt: dbModel.UpdatedAt
+        );
     }
 
-    private UserDbModel MapToDbModel(User domainUser)
+    private ApplicationUser MapToDbModel(User domainUser)
     {
-        return new UserDbModel
+        return new ApplicationUser
         {
             Id = domainUser.Id,
             Email = domainUser.Email,

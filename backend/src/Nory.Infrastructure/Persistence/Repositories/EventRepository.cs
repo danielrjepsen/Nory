@@ -1,5 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using Nory.Core.Domain.Entities;
+using Nory.Core.Domain.Enums;
 using Nory.Core.Domain.Repositories;
 using Nory.Infrastructure.Persistence.Extensions;
 
@@ -14,66 +15,68 @@ public class EventRepository : IEventRepository
         _context = context;
     }
 
-    public async Task<List<Event>> GetEventsAsync()
+    public async Task<IReadOnlyList<Event>> GetByUserIdAsync(string userId, CancellationToken cancellationToken = default)
     {
-        var dbModels = await _context.Events.OrderByDescending(e => e.CreatedAt).ToListAsync();
+        var dbModels = await _context.Events
+            .Where(e => e.UserId == userId && e.Status != EventStatus.Archived)
+            .OrderByDescending(e => e.CreatedAt)
+            .AsNoTracking()
+            .ToListAsync(cancellationToken);
 
         return dbModels.MapToDomain();
     }
 
-    public async Task<Event?> GetEventByIdAsync(Guid id)
+    public async Task<Event?> GetByIdAsync(Guid eventId, CancellationToken cancellationToken = default)
     {
-        var dbModel = await _context.Events.FindAsync(id);
+        var dbModel = await _context.Events
+            .AsNoTracking()
+            .FirstOrDefaultAsync(e => e.Id == eventId, cancellationToken);
+
         return dbModel?.MapToDomain();
     }
 
-    public async Task<Event> AddAsync(Event eventEntity)
+    public async Task<Event?> GetByIdWithPhotosAsync(Guid eventId, CancellationToken cancellationToken = default)
+    {
+        var dbModel = await _context.Events
+            .Include(e => e.Photos)
+            .AsNoTracking()
+            .FirstOrDefaultAsync(e => e.Id == eventId, cancellationToken);
+
+        return dbModel?.MapToDomain();
+    }
+
+    public async Task<bool> ExistsAsync(Guid eventId, CancellationToken cancellationToken = default)
+    {
+        return await _context.Events.AnyAsync(e => e.Id == eventId, cancellationToken);
+    }
+
+    public async Task<int> CountByUserIdAsync(string userId, CancellationToken cancellationToken = default)
+    {
+        return await _context.Events
+            .Where(e => e.UserId == userId && e.Status != EventStatus.Archived)
+            .CountAsync(cancellationToken);
+    }
+
+    public void Add(Event eventEntity)
     {
         var dbModel = eventEntity.MapToDbModel();
         _context.Events.Add(dbModel);
-        return eventEntity;
     }
 
-    public async Task UpdateAsync(Event eventEntity)
+    public void Update(Event eventEntity)
     {
-        var existingDbModel = await _context.Events.FindAsync(eventEntity.Id);
-        if (existingDbModel != null)
-        {
-            var updatedDbModel = eventEntity.MapToDbModel();
-
-            existingDbModel.Name = updatedDbModel.Name;
-            existingDbModel.Description = updatedDbModel.Description;
-            existingDbModel.StartsAt = updatedDbModel.StartsAt;
-            existingDbModel.EndsAt = updatedDbModel.EndsAt;
-            existingDbModel.Status = updatedDbModel.Status;
-            existingDbModel.HasContent = updatedDbModel.HasContent;
-            existingDbModel.UpdatedAt = updatedDbModel.UpdatedAt;
-
-            _context.Events.Update(existingDbModel);
-        }
+        var dbModel = eventEntity.MapToDbModel();
+        _context.Events.Update(dbModel);
     }
 
-    public async Task DeleteAsync(Guid id)
+    public void Remove(Event eventEntity)
     {
-        var dbModel = await _context.Events.FindAsync(id);
-        if (dbModel != null)
-        {
-            _context.Events.Remove(dbModel);
-        }
+        var dbModel = eventEntity.MapToDbModel();
+        _context.Events.Remove(dbModel);
     }
 
-    public async Task<bool> ExistsAsync(Guid id)
+    public async Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
     {
-        return await _context.Events.AnyAsync(e => e.Id == id);
-    }
-
-    public async Task<int> CountAsync()
-    {
-        return await _context.Events.CountAsync();
-    }
-
-    public async Task SaveChangesAsync()
-    {
-        await _context.SaveChangesAsync();
+        return await _context.SaveChangesAsync(cancellationToken);
     }
 }

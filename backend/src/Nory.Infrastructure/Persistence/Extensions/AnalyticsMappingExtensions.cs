@@ -9,18 +9,15 @@ public static class AnalyticsMappingExtensions
     // ActivityLog mappings
     public static ActivityLog MapToDomain(this ActivityLogDbModel dbModel)
     {
-        var activity = new ActivityLog(
-            dbModel.EventId,
-            dbModel.Type,
-            dbModel.Data,
-            dbModel.SessionId
+        return new ActivityLog(
+            id: dbModel.Id,
+            eventId: dbModel.EventId,
+            type: dbModel.Type,
+            data: dbModel.Data,
+            sessionId: dbModel.SessionId,
+            createdAt: dbModel.CreatedAt,
+            isProcessed: dbModel.IsProcessed
         );
-
-        activity.Id = dbModel.Id;
-        activity.CreatedAt = dbModel.CreatedAt;
-        activity.IsProcessed = dbModel.IsProcessed;
-
-        return activity;
     }
 
     public static ActivityLogDbModel MapToDbModel(this ActivityLog domainActivity)
@@ -40,25 +37,22 @@ public static class AnalyticsMappingExtensions
     // EventMetrics mappings
     public static EventMetrics MapToDomain(this EventMetricsDbModel dbModel)
     {
-        var metrics = new EventMetrics(
-            dbModel.EventId,
-            dbModel.PeriodType,
-            dbModel.PeriodStart,
-            dbModel.PeriodEnd
+        return new EventMetrics(
+            id: dbModel.Id,
+            eventId: dbModel.EventId,
+            periodType: dbModel.PeriodType,
+            periodStart: dbModel.PeriodStart,
+            periodEnd: dbModel.PeriodEnd,
+            totalPhotosUploaded: dbModel.TotalPhotosUploaded,
+            totalGuestAppOpens: dbModel.TotalGuestAppOpens,
+            totalQrScans: dbModel.TotalQrScans,
+            totalSlideshowViews: dbModel.TotalSlideshowViews,
+            totalGalleryViews: dbModel.TotalGalleryViews,
+            liveGuestCount: dbModel.LiveGuestCount,
+            featureUsage: dbModel.FeatureUsage,
+            createdAt: dbModel.CreatedAt,
+            updatedAt: dbModel.UpdatedAt
         );
-
-        metrics.Id = dbModel.Id;
-        metrics.TotalPhotosUploaded = dbModel.TotalPhotosUploaded;
-        metrics.TotalGuestAppOpens = dbModel.TotalGuestAppOpens;
-        metrics.TotalQrScans = dbModel.TotalQrScans;
-        metrics.TotalSlideshowViews = dbModel.TotalSlideshowViews;
-        metrics.TotalGalleryViews = dbModel.TotalGalleryViews;
-        metrics.LiveGuestCount = dbModel.LiveGuestCount;
-        metrics.FeatureUsage = dbModel.FeatureUsage;
-        metrics.CreatedAt = dbModel.CreatedAt;
-        metrics.UpdatedAt = dbModel.UpdatedAt;
-
-        return metrics;
     }
 
     public static EventMetricsDbModel MapToDbModel(this EventMetrics domainMetrics)
