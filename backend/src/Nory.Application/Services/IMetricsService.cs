@@ -7,4 +7,5 @@ public interface IMetricsService
 {
     Task<AggregatedEventMetricsDto> GetAggregatedMetricsForEventsAsync(List<Guid> eventIds);
     Task<EventMetricsDto> GetEventMetricsAsync(Guid eventId, MetricsPeriodType periodType);
+    Task UpdateMetricsForEventsAsync(List<Guid> eventIds);
 }

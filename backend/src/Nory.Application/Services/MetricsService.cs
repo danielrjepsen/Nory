@@ -2,6 +2,7 @@ using Nory.Application.DTOs;
 using Nory.Application.Extensions;
 using Nory.Core.Domain.Enums;
 using Nory.Core.Domain.Repositories;
+using Microsoft.Extensions.Logging;
 
 namespace Nory.Application.Services;
 
@@ -71,5 +72,86 @@ public class MetricsService : IMetricsService
         }
 
         return metrics.MapToDto();
+    }
+
+    public async Task UpdateMetricsForEventsAsync(List<Guid> eventIds)
+    {
+        _logger.LogInformation("Updating metrics for {EventCount} events", eventIds.Count);
+
+        // Get unprocessed activities
+        var unprocessedActivities = await _analyticsRepository.GetUnprocessedActivitiesAsync();
+
+        if (!unprocessedActivities.Any())
+        {
+            _logger.LogInformation("No unprocessed activities to process");
+            return;
+        }
+
+        // Filter activities for the specified events
+        var relevantActivities = unprocessedActivities
+            .Where(a => eventIds.Contains(a.EventId))
+            .ToList();
+
+        if (!relevantActivities.Any())
+        {
+            _logger.LogInformation("No relevant activities for the specified events");
+            return;
+        }
+
+        // Group activities by event
+        var activitiesByEvent = relevantActivities.GroupBy(a => a.EventId);
+
+        foreach (var eventGroup in activitiesByEvent)
+        {
+            var eventId = eventGroup.Key;
+
+            // Get or create total metrics for this event
+            var metrics = await _analyticsRepository.GetMetricsAsync(eventId, MetricsPeriodType.Total)
+                ?? Core.Domain.Entities.EventMetrics.Create(eventId, MetricsPeriodType.Total);
+
+            // Process each activity and update metrics
+            foreach (var activity in eventGroup)
+            {
+                switch (activity.Type)
+                {
+                    case ActivityType.PhotoUploaded:
+                        metrics.IncrementPhotoUploads();
+                        break;
+                    case ActivityType.GuestAppOpened:
+                        metrics.IncrementGuestAppOpens();
+                        break;
+                    case ActivityType.QrCodeScanned:
+                        metrics.IncrementQrScans();
+                        break;
+                    case ActivityType.SlideshowViewed:
+                        metrics.IncrementSlideshowViews();
+                        break;
+                    case ActivityType.GalleryViewed:
+                        metrics.IncrementGalleryViews();
+                        break;
+                }
+            }
+
+            // Save updated metrics
+            await _analyticsRepository.UpsertMetricsAsync(metrics);
+
+            _logger.LogInformation(
+                "Updated metrics for event {EventId}: {ActivityCount} activities processed",
+                eventId,
+                eventGroup.Count()
+            );
+        }
+
+        // Mark all processed activities as processed
+        var activityIds = relevantActivities.Select(a => a.Id).ToList();
+        await _analyticsRepository.MarkActivitiesAsProcessedAsync(activityIds);
+
+        await _analyticsRepository.SaveChangesAsync();
+
+        _logger.LogInformation(
+            "Successfully processed {ActivityCount} activities for {EventCount} events",
+            relevantActivities.Count,
+            activitiesByEvent.Count()
+        );
     }
 }

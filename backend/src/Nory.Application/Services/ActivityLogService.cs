@@ -4,6 +4,7 @@ using Nory.Core.Domain.Entities;
 using Nory.Core.Domain.Enums;
 using Nory.Core.Domain.Repositories;
 using System.Text.Json;
+using Microsoft.Extensions.Logging;
 
 namespace Nory.Application.Services;
 
@@ -49,7 +50,7 @@ public class ActivityLogService : IActivityLogService
         JsonDocument? data = null,
         string? sessionId = null)
     {
-        var activity = new ActivityLog(eventId, type, data, sessionId);
+        var activity = ActivityLog.Create(eventId, type, data, sessionId);
         await _analyticsRepository.AddActivityAsync(activity);
         await _analyticsRepository.SaveChangesAsync();
 

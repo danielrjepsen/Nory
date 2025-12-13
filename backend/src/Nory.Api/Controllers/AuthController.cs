@@ -7,14 +7,11 @@ using Nory.Application.Services;
 namespace Nory.Controllers;
 
 [ApiController]
-[Route("api/auth")]
+[Route("api/v1/auth")]
 public class AuthController : ControllerBase
 {
     private readonly IAuthService _authService;
     private readonly ILogger<AuthController> _logger;
-
-    private const int RefreshTokenExpiryDays = 7;
-    private const int AccessTokenExpirySeconds = 3600;
 
     public AuthController(IAuthService authService, ILogger<AuthController> logger)
     {
@@ -37,16 +34,8 @@ public class AuthController : ControllerBase
                 return BadRequest(new { errors = result.Errors });
             }
 
-            SetRefreshTokenCookie(result.RefreshToken!);
-
-            return Ok(
-                new
-                {
-                    token = result.Token,
-                    user = result.User,
-                    expiresIn = AccessTokenExpirySeconds,
-                }
-            );
+            // Cookie-based auth: SignInManager already set the auth cookie
+            return Ok(new { user = result.User });
         }
         catch (Exception ex)
         {
@@ -70,16 +59,8 @@ public class AuthController : ControllerBase
                 return BadRequest(new { errors = result.Errors });
             }
 
-            SetRefreshTokenCookie(result.RefreshToken!);
-
-            return Ok(
-                new
-                {
-                    token = result.Token,
-                    user = result.User,
-                    expiresIn = AccessTokenExpirySeconds,
-                }
-            );
+            // Cookie-based auth: SignInManager already set the auth cookie
+            return Ok(new { user = result.User });
         }
         catch (Exception ex)
         {
@@ -88,45 +69,48 @@ public class AuthController : ControllerBase
         }
     }
 
-    /// <summary>
-    /// Refresh access token using refresh token
-    /// </summary>
-    [HttpPost("refresh")]
-    public async Task<IActionResult> RefreshToken()
-    {
-        try
-        {
-            var refreshToken = Request.Cookies["refreshToken"];
-            if (string.IsNullOrEmpty(refreshToken))
-            {
-                return Unauthorized(new { error = "Refresh token not found" });
-            }
-
-            var result = await _authService.RefreshTokenAsync(refreshToken);
-
-            if (!result.Success)
-            {
-                ClearRefreshTokenCookie();
-                return Unauthorized(new { errors = result.Errors });
-            }
-
-            SetRefreshTokenCookie(result.RefreshToken!);
-
-            return Ok(
-                new
-                {
-                    token = result.Token,
-                    user = result.User,
-                    expiresIn = AccessTokenExpirySeconds,
-                }
-            );
-        }
-        catch (Exception ex)
-        {
-            _logger.LogError(ex, "Token refresh failed");
-            return StatusCode(500, new { error = "Token refresh failed" });
-        }
-    }
+    // NOTE: RefreshToken endpoint not needed for cookie-based authentication
+    // Cookie-based auth uses persistent sessions - no JWT refresh tokens required
+    //
+    // /// <summary>
+    // /// Refresh access token using refresh token
+    // /// </summary>
+    // [HttpPost("refresh")]
+    // public async Task<IActionResult> RefreshToken()
+    // {
+    //     try
+    //     {
+    //         var refreshToken = Request.Cookies["refreshToken"];
+    //         if (string.IsNullOrEmpty(refreshToken))
+    //         {
+    //             return Unauthorized(new { error = "Refresh token not found" });
+    //         }
+    //
+    //         var result = await _authService.RefreshTokenAsync(refreshToken);
+    //
+    //         if (!result.Success)
+    //         {
+    //             ClearRefreshTokenCookie();
+    //             return Unauthorized(new { errors = result.Errors });
+    //         }
+    //
+    //         SetRefreshTokenCookie(result.RefreshToken!);
+    //
+    //         return Ok(
+    //             new
+    //             {
+    //                 token = result.Token,
+    //                 user = result.User,
+    //                 expiresIn = AccessTokenExpirySeconds,
+    //             }
+    //         );
+    //     }
+    //     catch (Exception ex)
+    //     {
+    //         _logger.LogError(ex, "Token refresh failed");
+    //         return StatusCode(500, new { error = "Token refresh failed" });
+    //     }
+    // }
 
     /// <summary>
     /// Verify email address with token
@@ -313,8 +297,7 @@ public class AuthController : ControllerBase
                 await _authService.LogoutAsync(userId);
             }
 
-            ClearRefreshTokenCookie();
-
+            // Cookie-based auth: SignOutAsync already cleared the auth cookie
             return Ok(new { message = "Logged out successfully" });
         }
         catch (Exception ex)
@@ -327,33 +310,5 @@ public class AuthController : ControllerBase
     private string? GetCurrentUserId()
     {
         return User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
-    }
-
-    private void SetRefreshTokenCookie(string refreshToken)
-    {
-        var cookieOptions = new CookieOptions
-        {
-            HttpOnly = true,
-            Secure = true,
-            SameSite = SameSiteMode.Strict,
-            Expires = DateTime.UtcNow.AddDays(RefreshTokenExpiryDays),
-            Path = "/",
-        };
-
-        Response.Cookies.Append("refreshToken", refreshToken, cookieOptions);
-    }
-
-    private void ClearRefreshTokenCookie()
-    {
-        Response.Cookies.Delete(
-            "refreshToken",
-            new CookieOptions
-            {
-                HttpOnly = true,
-                Secure = true,
-                SameSite = SameSiteMode.Strict,
-                Path = "/",
-            }
-        );
     }
 }

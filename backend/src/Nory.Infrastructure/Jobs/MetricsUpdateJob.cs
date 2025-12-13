@@ -1,46 +1,40 @@
-// Infrastructure/Jobs/MetricsUpdateJob.cs
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 using Nory.Application.Services;
+using Nory.Core.Domain.Enums;
+using Nory.Infrastructure.Persistence;
 
 namespace Nory.Infrastructure.Jobs;
 
-public class MetricsUpdateJob
+public class MetricsUpdateJob(
+    IMetricsService metricsService,
+    ApplicationDbContext dbContext,
+    ILogger<MetricsUpdateJob> logger)
 {
-    private readonly IMetricsService _metricsService;
-    private readonly IEventService _eventService;
-    private readonly ILogger<MetricsUpdateJob> _logger;
-
-    public MetricsUpdateJob(
-        IMetricsService metricsService,
-        IEventService eventService,
-        ILogger<MetricsUpdateJob> logger
-    )
-    {
-        _metricsService = metricsService;
-        _eventService = eventService;
-        _logger = logger;
-    }
-
     public async Task UpdateAllMetricsAsync()
     {
-        _logger.LogInformation("Starting metrics update job");
+        logger.LogInformation("Starting metrics update job");
 
         try
         {
-            var events = await _eventService.GetEventsAsync();
-            var eventIds = events.Select(e => e.Id).ToList();
+            // Get all active event IDs directly from DB for background job
+            var eventIds = await dbContext.Events
+                .Where(e => e.Status != EventStatus.Archived)
+                .Select(e => e.Id)
+                .ToListAsync();
 
-            if (!eventIds.Any())
+            if (eventIds.Count == 0)
             {
-                _logger.LogInformation("No events to update metrics for");
+                logger.LogInformation("No events to update metrics for");
                 return;
             }
 
-            await _metricsService.UpdateMetricsForEventsAsync(eventIds);
-            _logger.LogInformation("Metrics updated for {EventCount} events", eventIds.Count);
+            await metricsService.UpdateMetricsForEventsAsync(eventIds);
+            logger.LogInformation("Metrics updated for {EventCount} events", eventIds.Count);
         }
         catch (Exception ex)
         {
-            _logger.LogError(ex, "Failed to update metrics");
+            logger.LogError(ex, "Failed to update metrics");
             throw; // Hangfire will retry
         }
     }

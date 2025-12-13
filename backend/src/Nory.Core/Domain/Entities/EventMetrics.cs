@@ -5,49 +5,83 @@ namespace Nory.Core.Domain.Entities;
 
 public class EventMetrics
 {
-    public Guid Id { get; internal set; }
-    public Guid EventId { get; internal set; }
-    public MetricsPeriodType PeriodType { get; internal set; }
-    public DateTime? PeriodStart { get; internal set; }
-    public DateTime? PeriodEnd { get; internal set; }
+    public Guid Id { get; private set; }
+    public Guid EventId { get; private set; }
+    public MetricsPeriodType PeriodType { get; private set; }
+    public DateTime? PeriodStart { get; private set; }
+    public DateTime? PeriodEnd { get; private set; }
 
-    public int TotalPhotosUploaded { get; internal set; }
-    public int TotalGuestAppOpens { get; internal set; }
-    public int TotalQrScans { get; internal set; }
-    public int TotalSlideshowViews { get; internal set; }
-    public int TotalGalleryViews { get; internal set; }
-    public int LiveGuestCount { get; internal set; }
+    public int TotalPhotosUploaded { get; private set; }
+    public int TotalGuestAppOpens { get; private set; }
+    public int TotalQrScans { get; private set; }
+    public int TotalSlideshowViews { get; private set; }
+    public int TotalGalleryViews { get; private set; }
+    public int LiveGuestCount { get; private set; }
 
-    public JsonDocument? FeatureUsage { get; internal set; }
+    public JsonDocument? FeatureUsage { get; private set; }
 
-    public DateTime CreatedAt { get; internal set; }
-    public DateTime UpdatedAt { get; internal set; }
+    public DateTime CreatedAt { get; private set; }
+    public DateTime UpdatedAt { get; private set; }
 
+    // Constructor for EF Core reconstitution
     public EventMetrics(
+        Guid id,
         Guid eventId,
         MetricsPeriodType periodType,
-        DateTime? periodStart = null,
-        DateTime? periodEnd = null
-    )
+        DateTime? periodStart,
+        DateTime? periodEnd,
+        int totalPhotosUploaded,
+        int totalGuestAppOpens,
+        int totalQrScans,
+        int totalSlideshowViews,
+        int totalGalleryViews,
+        int liveGuestCount,
+        JsonDocument? featureUsage,
+        DateTime createdAt,
+        DateTime updatedAt)
     {
-        if (eventId == Guid.Empty)
-            throw new ArgumentException("EventId is required", nameof(eventId));
-
-        Id = Guid.NewGuid();
+        Id = id;
         EventId = eventId;
         PeriodType = periodType;
         PeriodStart = periodStart;
         PeriodEnd = periodEnd;
+        TotalPhotosUploaded = totalPhotosUploaded;
+        TotalGuestAppOpens = totalGuestAppOpens;
+        TotalQrScans = totalQrScans;
+        TotalSlideshowViews = totalSlideshowViews;
+        TotalGalleryViews = totalGalleryViews;
+        LiveGuestCount = liveGuestCount;
+        FeatureUsage = featureUsage;
+        CreatedAt = createdAt;
+        UpdatedAt = updatedAt;
+    }
 
-        TotalPhotosUploaded = 0;
-        TotalGuestAppOpens = 0;
-        TotalQrScans = 0;
-        TotalSlideshowViews = 0;
-        TotalGalleryViews = 0;
-        LiveGuestCount = 0;
+    // Static factory method for creating new metrics
+    public static EventMetrics Create(
+        Guid eventId,
+        MetricsPeriodType periodType,
+        DateTime? periodStart = null,
+        DateTime? periodEnd = null)
+    {
+        if (eventId == Guid.Empty)
+            throw new ArgumentException("EventId is required", nameof(eventId));
 
-        CreatedAt = DateTime.UtcNow;
-        UpdatedAt = DateTime.UtcNow;
+        return new EventMetrics(
+            id: Guid.NewGuid(),
+            eventId: eventId,
+            periodType: periodType,
+            periodStart: periodStart,
+            periodEnd: periodEnd,
+            totalPhotosUploaded: 0,
+            totalGuestAppOpens: 0,
+            totalQrScans: 0,
+            totalSlideshowViews: 0,
+            totalGalleryViews: 0,
+            liveGuestCount: 0,
+            featureUsage: null,
+            createdAt: DateTime.UtcNow,
+            updatedAt: DateTime.UtcNow
+        );
     }
 
     // Business methods

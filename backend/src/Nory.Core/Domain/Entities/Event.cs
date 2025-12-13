@@ -4,33 +4,137 @@ using Nory.Core.Domain.Enums;
 
 public class Event
 {
-    public Guid Id { get; internal set; }
-    public string Name { get; internal set; }
-    public string? Description { get; internal set; }
-    public DateTime? StartsAt { get; internal set; }
-    public DateTime? EndsAt { get; internal set; }
-    public EventStatus Status { get; internal set; }
-    public bool HasContent { get; internal set; }
-    public DateTime CreatedAt { get; internal set; }
-    public DateTime UpdatedAt { get; internal set; }
+    public Guid Id { get; private set; }
+    public string UserId { get; private set; } = string.Empty;
+    public string Name { get; private set; } = string.Empty;
+    public string? Description { get; private set; }
+    public string? Location { get; private set; }
+    public DateTime? StartsAt { get; private set; }
+    public DateTime? EndsAt { get; private set; }
+    public EventStatus Status { get; private set; }
+    public bool IsPublic { get; private set; }
+    public bool HasContent { get; private set; }
+    public Dictionary<string, object>? GuestAppConfig { get; private set; }
+    public string? ThemeName { get; private set; }
+    public DateTime CreatedAt { get; private set; }
+    public DateTime UpdatedAt { get; private set; }
 
     private readonly List<Photo> _photos = new();
     public IReadOnlyCollection<Photo> Photos => _photos.AsReadOnly();
 
-    public Event(string name, DateTime? startsAt, DateTime? endsAt)
+    // Private constructor for EF Core
+    private Event() { }
+
+    // Constructor for reconstitution from persistence
+    public Event(
+        Guid id,
+        string userId,
+        string name,
+        string? description,
+        string? location,
+        DateTime? startsAt,
+        DateTime? endsAt,
+        EventStatus status,
+        bool isPublic,
+        bool hasContent,
+        Dictionary<string, object>? guestAppConfig,
+        string? themeName,
+        DateTime createdAt,
+        DateTime updatedAt)
     {
-        if (string.IsNullOrWhiteSpace(name))
-            throw new ArgumentException("Event name is required");
-
-        if (startsAt.HasValue && endsAt.HasValue && endsAt < startsAt)
-            throw new ArgumentException("End date cannot be before start date");
-
-        Id = Guid.NewGuid();
+        Id = id;
+        UserId = userId;
         Name = name;
+        Description = description;
+        Location = location;
         StartsAt = startsAt;
         EndsAt = endsAt;
-        Status = EventStatus.Draft;
-        CreatedAt = DateTime.UtcNow;
+        Status = status;
+        IsPublic = isPublic;
+        HasContent = hasContent;
+        GuestAppConfig = guestAppConfig;
+        ThemeName = themeName;
+        CreatedAt = createdAt;
+        UpdatedAt = updatedAt;
+    }
+
+    // Factory method for creating new events
+    public static Event Create(
+        string userId,
+        string name,
+        string? description = null,
+        string? location = null,
+        DateTime? startsAt = null,
+        DateTime? endsAt = null,
+        bool isPublic = true,
+        string? themeName = null,
+        Dictionary<string, object>? guestAppConfig = null)
+    {
+        ValidateName(name);
+        ValidateDateRange(startsAt, endsAt);
+
+        return new Event(
+            id: Guid.NewGuid(),
+            userId: userId,
+            name: name.Trim(),
+            description: description?.Trim(),
+            location: location?.Trim(),
+            startsAt: startsAt,
+            endsAt: endsAt,
+            status: EventStatus.Draft,
+            isPublic: isPublic,
+            hasContent: false,
+            guestAppConfig: guestAppConfig,
+            themeName: themeName,
+            createdAt: DateTime.UtcNow,
+            updatedAt: DateTime.UtcNow
+        );
+    }
+
+    // Business methods
+    public void UpdateDetails(
+        string? name = null,
+        string? description = null,
+        string? location = null,
+        DateTime? startsAt = null,
+        DateTime? endsAt = null,
+        bool? isPublic = null,
+        Dictionary<string, object>? guestAppConfig = null,
+        string? themeName = null)
+    {
+        if (Status == EventStatus.Archived)
+            throw new InvalidOperationException("Cannot modify an archived event");
+
+        if (name is not null)
+        {
+            ValidateName(name);
+            Name = name.Trim();
+        }
+
+        if (description is not null)
+            Description = description.Trim();
+
+        if (location is not null)
+            Location = location.Trim();
+
+        if (startsAt.HasValue || endsAt.HasValue)
+        {
+            var newStartsAt = startsAt ?? StartsAt;
+            var newEndsAt = endsAt ?? EndsAt;
+            ValidateDateRange(newStartsAt, newEndsAt);
+            StartsAt = newStartsAt;
+            EndsAt = newEndsAt;
+        }
+
+        if (isPublic.HasValue)
+            IsPublic = isPublic.Value;
+
+        if (guestAppConfig is not null)
+            GuestAppConfig = guestAppConfig;
+
+        if (themeName is not null)
+            ThemeName = themeName;
+
         UpdatedAt = DateTime.UtcNow;
     }
 
@@ -52,6 +156,15 @@ public class Event
         UpdatedAt = DateTime.UtcNow;
     }
 
+    public void Archive()
+    {
+        if (Status == EventStatus.Live)
+            throw new InvalidOperationException("Cannot archive a live event. End it first.");
+
+        Status = EventStatus.Archived;
+        UpdatedAt = DateTime.UtcNow;
+    }
+
     public void AddPhoto(Photo photo)
     {
         if (Status != EventStatus.Live)
@@ -62,13 +175,21 @@ public class Event
         UpdatedAt = DateTime.UtcNow;
     }
 
-    public void UpdateDetails(string name, string? description)
+    public bool BelongsTo(string userId) => UserId == userId;
+
+    // Validation helpers
+    private static void ValidateName(string name)
     {
         if (string.IsNullOrWhiteSpace(name))
-            throw new ArgumentException("Event name is required");
+            throw new ArgumentException("Event name is required", nameof(name));
 
-        Name = name;
-        Description = description;
-        UpdatedAt = DateTime.UtcNow;
+        if (name.Length > 200)
+            throw new ArgumentException("Event name cannot exceed 200 characters", nameof(name));
+    }
+
+    private static void ValidateDateRange(DateTime? startsAt, DateTime? endsAt)
+    {
+        if (startsAt.HasValue && endsAt.HasValue && endsAt < startsAt)
+            throw new ArgumentException("End date cannot be before start date");
     }
 }

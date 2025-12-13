@@ -4,10 +4,18 @@ using Nory.Core.Domain.Entities;
 
 public interface IEventRepository
 {
-    Task<List<Event>> GetEventsAsync();
-    Task<Event?> GetEventByIdAsync(Guid id);
-    Task<Event> AddAsync(Event eventEntity);
-    Task DeleteAsync(Guid id);
-    Task<bool> ExistsAsync(Guid id);
-    Task<int> CountAsync();
+    // Queries
+    Task<IReadOnlyList<Event>> GetByUserIdAsync(string userId, CancellationToken cancellationToken = default);
+    Task<Event?> GetByIdAsync(Guid eventId, CancellationToken cancellationToken = default);
+    Task<Event?> GetByIdWithPhotosAsync(Guid eventId, CancellationToken cancellationToken = default);
+    Task<bool> ExistsAsync(Guid eventId, CancellationToken cancellationToken = default);
+    Task<int> CountByUserIdAsync(string userId, CancellationToken cancellationToken = default);
+
+    // Commands
+    void Add(Event eventEntity);
+    void Update(Event eventEntity);
+    void Remove(Event eventEntity);
+
+    // Unit of Work
+    Task<int> SaveChangesAsync(CancellationToken cancellationToken = default);
 }

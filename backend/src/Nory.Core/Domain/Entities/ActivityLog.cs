@@ -5,33 +5,60 @@ namespace Nory.Core.Domain.Entities;
 
 public class ActivityLog
 {
-    public Guid Id { get; internal set; }
-    public Guid EventId { get; internal set; }
-    public ActivityType Type { get; internal set; }
-    public JsonDocument? Data { get; internal set; }
-    public string? SessionId { get; internal set; }
-    public DateTime CreatedAt { get; internal set; }
-    public bool IsProcessed { get; internal set; }
+    public Guid Id { get; private set; }
+    public Guid EventId { get; private set; }
+    public ActivityType Type { get; private set; }
+    public JsonDocument? Data { get; private set; }
+    public string? SessionId { get; private set; }
+    public DateTime CreatedAt { get; private set; }
+    public bool IsProcessed { get; private set; }
 
-    public Event? Event { get; internal set; }
+    public Event? Event { get; private set; }
 
+    // Constructor for EF Core reconstitution
     public ActivityLog(
+        Guid id,
         Guid eventId,
         ActivityType type,
-        JsonDocument? data = null,
-        string? sessionId = null
-    )
+        JsonDocument? data,
+        string? sessionId,
+        DateTime createdAt,
+        bool isProcessed)
     {
-        if (eventId == Guid.Empty)
-            throw new ArgumentException("EventId is required");
-
-        Id = Guid.NewGuid();
+        Id = id;
         EventId = eventId;
         Type = type;
         Data = data;
         SessionId = sessionId;
-        CreatedAt = DateTime.UtcNow;
-        IsProcessed = false;
+        CreatedAt = createdAt;
+        IsProcessed = isProcessed;
+    }
+
+    // Static factory method for creating new activity logs
+    public static ActivityLog Create(
+        Guid eventId,
+        ActivityType type,
+        JsonDocument? data = null,
+        string? sessionId = null)
+    {
+        if (eventId == Guid.Empty)
+            throw new ArgumentException("EventId is required");
+
+        return new ActivityLog(
+            id: Guid.NewGuid(),
+            eventId: eventId,
+            type: type,
+            data: data,
+            sessionId: sessionId,
+            createdAt: DateTime.UtcNow,
+            isProcessed: false
+        );
+    }
+
+    // Business methods
+    public void MarkAsProcessed()
+    {
+        IsProcessed = true;
     }
 
     public string GetDescription()
@@ -55,11 +82,6 @@ public class ActivityLog
     public string GetEventName()
     {
         return Event?.Name ?? "Unknown Event";
-    }
-
-    public void MarkAsProcessed()
-    {
-        IsProcessed = true;
     }
 
     public bool IsPhotoActivity()

@@ -1,8 +1,10 @@
-using Nory.Application.DTOs;
+using Nory.Application.DTOs.Events;
+
+namespace Nory.Application.DTOs;
 
 public class DashboardOverviewDto
 {
-    public List<EventDto> Events { get; set; } = new();
-    public AggregatedEventMetricsDto Analytics { get; set; } = new();
-    public List<ActivityLogDto> RecentActivities { get; set; } = new();
+    public List<EventDto> Events { get; init; } = [];
+    public AggregatedEventMetricsDto Analytics { get; init; } = new();
+    public List<ActivityLogDto> RecentActivity { get; init; } = [];
 }
