@@ -1,10 +1,13 @@
-interface IUserRepository {
+namespace Nory.Core.Domain.Repositories;
+
+using Nory.Core.Domain.Entities;
+
+public interface IUserRepository
+{
+    Task<User?> GetByIdAsync(Guid id);
+    Task<User?> GetByEmailAsync(string email);
     Task<List<User>> GetUsersAsync();
-    Task<User?> GetUserByIdAsync(Guid id);
-    Task<User?> GetUserByEmailAsync(string email);
     Task<User> AddAsync(User user);
     Task UpdateAsync(User user);
     Task DeleteAsync(Guid id);
-    Task<bool> ExistsAsync(Guid id);
-    Task<bool> EmailExistsAsync(string email);
 }
