@@ -1,0 +1,21 @@
+{
+  "title": "QR-koder",
+  "subtitle": "Administrer QR-koder til dine begivenheder",
+  "guestUploadLink": "Gæste-uploadlink",
+  "slideshowLink": "Slideshow-link",
+  "copyLink": "Kopier link",
+  "copied": "Kopieret!",
+  "open": "Åbn",
+  "download": "Download QR",
+  "print": "Print",
+  "photos": "fotos",
+  "scanToUpload": "Scan for at uploade fotos",
+  "noEvents": "Ingen begivenheder",
+  "noEventsDescription": "Opret en begivenhed for at generere QR-koder",
+  "howToUse": "Sådan bruger du",
+  "instructions": {
+    "print": "Print eller vis QR-koden ved din begivenhed",
+    "scan": "Gæster scanner for at uploade fotos direkte",
+    "instant": "Fotos vises øjeblikkeligt i slideshowet"
+  }
+}

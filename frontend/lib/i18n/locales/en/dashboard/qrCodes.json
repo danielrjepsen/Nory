@@ -1,0 +1,21 @@
+{
+  "title": "QR Codes",
+  "subtitle": "Manage QR codes for your events",
+  "guestUploadLink": "Guest Upload Link",
+  "slideshowLink": "Slideshow Link",
+  "copyLink": "Copy Link",
+  "copied": "Copied!",
+  "open": "Open",
+  "download": "Download QR",
+  "print": "Print",
+  "photos": "photos",
+  "scanToUpload": "Scan to Upload Photos",
+  "noEvents": "No events",
+  "noEventsDescription": "Create an event to generate QR codes",
+  "howToUse": "How to use",
+  "instructions": {
+    "print": "Print or display the QR code at your event",
+    "scan": "Guests scan to upload photos directly",
+    "instant": "Photos appear instantly on the slideshow"
+  }
+}

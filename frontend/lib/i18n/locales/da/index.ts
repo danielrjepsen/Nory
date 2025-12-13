@@ -10,7 +10,9 @@ import dashboardGuestApp from './dashboard/guestApp.json';
 import dashboardThemes from './dashboard/themes.json';
 import dashboardPhotos from './dashboard/photos.json';
 import dashboardAnalytics from './dashboard/analytics.json';
+import dashboardGalleries from './dashboard/galleries.json';
 import dashboardSettings from './dashboard/settings.json';
+import dashboardQrCodes from './dashboard/qrCodes.json';
 import dashboardUser from './dashboard/user.json';
 import slideshowControls from './slideshow/controls.json';
 import slideshowSettings from './slideshow/settings.json';
@@ -32,7 +34,9 @@ export default {
     themes: dashboardThemes,
     photos: dashboardPhotos,
     analytics: dashboardAnalytics,
+    galleries: dashboardGalleries,
     settings: dashboardSettings,
+    qrCodes: dashboardQrCodes,
     user: dashboardUser,
   },
   slideshow: {

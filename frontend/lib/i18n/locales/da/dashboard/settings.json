@@ -1,13 +1,30 @@
 {
   "title": "Indstillinger",
+  "subtitle": "Administrer din konto og præferencer",
+  "profileUpdated": "Profil opdateret",
+  "profileUpdateFailed": "Kunne ikke opdatere profil",
+  "passwordChanged": "Adgangskode ændret",
+  "passwordChangeFailed": "Kunne ikke ændre adgangskode",
   "profile": {
-    "title": "Profil",
+    "title": "Profiloplysninger",
+    "subtitle": "Opdater dine personlige oplysninger",
     "name": "Navn",
     "email": "E-mail",
+    "emailHint": "E-mail kan ikke ændres",
     "phone": "Telefon",
     "avatar": "Profilbillede",
     "changeAvatar": "Skift profilbillede",
-    "save": "Gem ændringer"
+    "save": "Gem profil"
+  },
+  "password": {
+    "title": "Skift adgangskode",
+    "subtitle": "Opdater din adgangskode for at holde din konto sikker",
+    "current": "Nuværende adgangskode",
+    "new": "Ny adgangskode",
+    "confirm": "Bekræft ny adgangskode",
+    "update": "Opdater adgangskode",
+    "mismatch": "Adgangskoderne matcher ikke",
+    "tooShort": "Adgangskoden skal være mindst 8 tegn"
   },
   "organization": {
     "title": "Organisation",

@@ -1,0 +1,8 @@
+{
+  "title": "Fotogallerier",
+  "subtitle": "Gennemse og administrer fotos fra dine begivenheder",
+  "selectEvent": "Vælg en begivenhed",
+  "photos": "fotos",
+  "noEvents": "Ingen begivenheder",
+  "noEventsDescription": "Opret en begivenhed for at begynde at samle fotos"
+}
