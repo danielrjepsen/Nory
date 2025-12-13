@@ -1,95 +1,93 @@
+using System.Security.Claims;
 using System.Text.Json;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Caching.Distributed;
+using Nory.Application.DTOs;
 using Nory.Application.Services;
 
-namespace Nory.Controllers;
+namespace Nory.Api.Controllers;
 
 [Authorize]
 [ApiController]
-[Route("api/[controller]")]
-public class DashboardController : ControllerBase
+[Route("api/v1/dashboard")]
+public class DashboardController(
+    IEventService eventService,
+    IMetricsService metricsService,
+    IActivityLogService activityLogService,
+    IDistributedCache cache,
+    ILogger<DashboardController> logger
+) : ControllerBase
 {
-    private readonly IEventService _eventService;
-    private readonly IMetricsService _metricsService;
-    private readonly IActivityLogService _activityLogService;
-    private readonly IDistributedCache _cache;
-    private readonly ILogger<DashboardController> _logger;
-
     private const int DashboardOverviewCacheTtlSeconds = 60;
-
-    public DashboardController(
-        IEventService eventService,
-        IMetricsService metricsService,
-        IActivityLogService activityLogService,
-        IDistributedCache cache,
-        ILogger<DashboardController> logger
-    )
-    {
-        _eventService = eventService;
-        _metricsService = metricsService;
-        _activityLogService = activityLogService;
-        _cache = cache;
-        _logger = logger;
-    }
 
     /// <summary>
     /// Get all dashboard data
     /// </summary>
     [HttpGet("overview")]
-    public async Task<IActionResult> GetDashboardOverview()
+    [ProducesResponseType(typeof(DashboardOverviewDto), StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+    public async Task<IActionResult> GetDashboardOverview(CancellationToken cancellationToken)
     {
+        var userId = GetCurrentUserId();
+        if (userId is null)
+            return Unauthorized();
+
         try
         {
-            var cacheKey = "dashboard:overview";
+            var cacheKey = $"dashboard:overview:{userId}";
 
-            var cachedData = await _cache.GetStringAsync(cacheKey);
+            var cachedData = await cache.GetStringAsync(cacheKey, cancellationToken);
             if (!string.IsNullOrEmpty(cachedData))
             {
-                _logger.LogDebug("Returning dashboard data from cache");
+                logger.LogDebug("Returning dashboard data from cache for user {UserId}", userId);
                 return Ok(JsonSerializer.Deserialize<DashboardOverviewDto>(cachedData));
             }
 
-            var events = await _eventService.GetEventsAsync();
+            var events = await eventService.GetEventsAsync(userId, cancellationToken);
 
-            if (!events.Any())
+            if (events.Count == 0)
             {
                 return Ok(new DashboardOverviewDto());
             }
 
             var eventIds = events.Select(e => e.Id).ToList();
 
-            var metricsTask = _metricsService.GetAggregatedMetricsForEventsAsync(eventIds);
-            var activitiesTask = _activityLogService.GetRecentActivitiesForEventsAsync(
+            var metrics = await metricsService.GetAggregatedMetricsForEventsAsync(eventIds);
+            var activities = await activityLogService.GetRecentActivitiesForEventsAsync(
                 eventIds,
                 20
             );
 
-            await Task.WhenAll(metricsTask, activitiesTask);
-
             var result = new DashboardOverviewDto
             {
-                Events = events,
-                Analytics = metricsTask.Result,
-                RecentActivities = activitiesTask.Result,
+                Events = events.ToList(),
+                Analytics = metrics,
+                RecentActivity = activities,
             };
 
-            await CacheResultAsync(cacheKey, result, DashboardOverviewCacheTtlSeconds);
+            await CacheResultAsync(
+                cacheKey,
+                result,
+                DashboardOverviewCacheTtlSeconds,
+                cancellationToken
+            );
 
             return Ok(result);
         }
         catch (Exception ex)
         {
-            _logger.LogError(ex, "Failed to get dashboard overview");
+            logger.LogError(ex, "Failed to get dashboard overview for user {UserId}", userId);
             return StatusCode(500, new { error = "Failed to load dashboard data" });
         }
     }
 
-    /// <summary>
-    /// cache result
-    /// </summary>
-    private async Task CacheResultAsync<T>(string key, T data, int ttlSeconds)
+    private async Task CacheResultAsync<T>(
+        string key,
+        T data,
+        int ttlSeconds,
+        CancellationToken cancellationToken
+    )
     {
         try
         {
@@ -99,11 +97,13 @@ public class DashboardController : ControllerBase
             };
 
             var jsonData = JsonSerializer.Serialize(data);
-            await _cache.SetStringAsync(key, jsonData, options);
+            await cache.SetStringAsync(key, jsonData, options, cancellationToken);
         }
         catch (Exception ex)
         {
-            _logger.LogWarning(ex, "Failed to cache data for key {Key}", key);
+            logger.LogWarning(ex, "Failed to cache data for key {Key}", key);
         }
     }
+
+    private string? GetCurrentUserId() => User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
 }
