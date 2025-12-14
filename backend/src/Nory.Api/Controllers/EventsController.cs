@@ -223,35 +223,5 @@ public class EventsController(IEventService eventService) : ControllerBase
         }
     }
 
-    [HttpGet("{eventId:guid}/photos/dashboard")]
-    [ProducesResponseType(typeof(IReadOnlyList<EventPhotoDto>), StatusCodes.Status200OK)]
-    [ProducesResponseType(StatusCodes.Status404NotFound)]
-    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
-    public async Task<IActionResult> GetEventPhotosDashboard(
-        Guid eventId,
-        [FromQuery] int limit = 6,
-        CancellationToken cancellationToken = default)
-    {
-        var userId = GetCurrentUserId();
-        if (userId is null)
-            return Unauthorized();
-
-        var eventDto = await eventService.GetEventByIdAsync(eventId, userId, cancellationToken);
-        if (eventDto is null)
-            return NotFound(new { message = "Event not found" });
-
-        return Ok(Array.Empty<EventPhotoDto>());
-    }
-
     private string? GetCurrentUserId() => User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
 }
-
-public record EventPhotoDto(
-    Guid Id,
-    string ImageUrl,
-    string OriginalFileName,
-    string? UploadedBy,
-    int? Width,
-    int? Height,
-    DateTime CreatedAt
-);

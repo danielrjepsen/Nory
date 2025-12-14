@@ -60,7 +60,7 @@ public class PhotoService : IPhotoService
             .Take(Math.Min(limit, 100))
             .Select(p => new PhotoDto(
                 p.Id,
-                $"/api/v1/events/{eventId}/photos/{p.Id}/image",
+                $"/api/v1/events/{eventId}/photos/{p.Id}/secure",
                 p.OriginalFileName,
                 p.UploadedBy ?? "Anonymous",
                 p.CategoryId,
@@ -231,5 +231,37 @@ public class PhotoService : IPhotoService
         _logger.LogInformation("Deleted photo {PhotoId}", photoId);
 
         return Result.Success();
+    }
+
+    public async Task<Result<FileResult>> GetPhotoImageAsync(
+        Guid eventId,
+        Guid photoId,
+        string userId,
+        CancellationToken cancellationToken = default)
+    {
+        var photo = await _context.EventPhotos
+            .AsNoTracking()
+            .Include(p => p.Event)
+            .FirstOrDefaultAsync(p => p.Id == photoId && p.EventId == eventId, cancellationToken);
+
+        if (photo?.Event is null || photo.Event.UserId != userId)
+        {
+            return Result<FileResult>.NotFound("Photo not found");
+        }
+
+        if (string.IsNullOrEmpty(photo.StoragePath))
+        {
+            _logger.LogWarning("Photo {PhotoId} has no storage path", photoId);
+            return Result<FileResult>.NotFound("Photo not found");
+        }
+
+        var fileResult = await _fileStorage.GetFileAsync(photo.StoragePath, cancellationToken);
+        if (fileResult is null)
+        {
+            _logger.LogWarning("File not found for photo {PhotoId}: {Path}", photoId, photo.StoragePath);
+            return Result<FileResult>.NotFound("Photo not found");
+        }
+
+        return Result<FileResult>.Success(new FileResult(fileResult.FileStream, fileResult.ContentType));
     }
 }

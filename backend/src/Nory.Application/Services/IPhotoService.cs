@@ -30,4 +30,10 @@ public interface IPhotoService
         Guid photoId,
         string userId,
         CancellationToken cancellationToken = default);
+
+    Task<Result<FileResult>> GetPhotoImageAsync(
+        Guid eventId,
+        Guid photoId,
+        string userId,
+        CancellationToken cancellationToken = default);
 }

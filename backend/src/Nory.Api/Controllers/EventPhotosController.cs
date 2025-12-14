@@ -70,4 +70,25 @@ public class EventPhotosController(IPhotoService photoService) : ApiControllerBa
 
         return NoContent();
     }
+
+    [HttpGet("{photoId:guid}/secure")]
+    [ProducesResponseType(typeof(FileStreamResult), StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+    [ResponseCache(Duration = 86400, Location = ResponseCacheLocation.Any)]
+    public async Task<IActionResult> GetPhotoImage(
+        Guid eventId,
+        Guid photoId,
+        CancellationToken cancellationToken)
+    {
+        var userId = GetUserId();
+        if (userId is null) return Unauthorized();
+
+        var result = await photoService.GetPhotoImageAsync(eventId, photoId, userId, cancellationToken);
+
+        if (!result.IsSuccess)
+            return NotFound();
+
+        return File(result.Data!.FileStream, result.Data.ContentType, enableRangeProcessing: true);
+    }
 }
