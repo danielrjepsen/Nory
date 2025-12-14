@@ -3,11 +3,12 @@
 import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { useTranslation } from 'react-i18next';
-import { EventsService } from '../../_services/events';
+import EventsService from '../../_services/events';
 import { useIntersectionObserver } from '../../_hooks/useIntersectionObserver';
 import { StatusBadge } from '../StatusBadge';
 import { QRButton } from '../QRButton';
 import { PhotoGrid } from '../PhotoGrid';
+import { EventQRModal } from './EventQRModal';
 import type { EventData, EventPhoto } from '../../_types/events';
 
 interface EventCardProps {
@@ -20,6 +21,7 @@ const EventCard: React.FC<EventCardProps> = ({ event, isOwner = false }) => {
   const router = useRouter();
   const [eventPhotos, setEventPhotos] = useState<EventPhoto[]>([]);
   const [loadingPhotos, setLoadingPhotos] = useState(true);
+  const [showQRModal, setShowQRModal] = useState(false);
   const { ref: cardRef, isVisible } = useIntersectionObserver<HTMLDivElement>();
 
   // fetch photos when card becomes visible
@@ -44,16 +46,15 @@ const EventCard: React.FC<EventCardProps> = ({ event, isOwner = false }) => {
 
   const handleCardClick = () => {
     if (isOwner) {
-      router.push(`/events/${event.id}/manage`);
+      router.push(`/dashboard/events/${event.id}/manage`);
     } else {
-      router.push(`/events/${event.id}`);
+      router.push(`/dashboard/events/${event.id}`);
     }
   };
 
   const handleQRClick = (e: React.MouseEvent) => {
     e.stopPropagation();
-    // TODO: Implement QR code modal/action
-    console.log('QR code clicked for event:', event.id);
+    setShowQRModal(true);
   };
 
   return (
@@ -95,6 +96,14 @@ const EventCard: React.FC<EventCardProps> = ({ event, isOwner = false }) => {
       />
 
       <QRButton onClick={handleQRClick} />
+
+      {/* QR Code Modal */}
+      <EventQRModal
+        isOpen={showQRModal}
+        onClose={() => setShowQRModal(false)}
+        eventId={event.id}
+        eventName={event.name}
+      />
     </div>
   );
 };
