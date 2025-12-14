@@ -7,3 +7,8 @@ export { SettingsIcon } from './SettingsIcon';
 export { LogoutIcon } from './LogoutIcon';
 export { MenuIcon } from './MenuIcon';
 export { PlusIcon } from './PlusIcon';
+export { ErrorIcon } from './ErrorIcon';
+export { SuccessIcon } from './SuccessIcon';
+export { WarningIcon } from './WarningIcon';
+export { InfoIcon } from './InfoIcon';
+export { CloseIcon } from './CloseIcon';
