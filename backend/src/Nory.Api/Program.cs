@@ -18,6 +18,12 @@ using Nory.Infrastructure.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
+// Configure Kestrel for large file uploads (1GB max for videos)
+builder.WebHost.ConfigureKestrel(options =>
+{
+    options.Limits.MaxRequestBodySize = 1024 * 1024 * 1024; // 1GB
+});
+
 // Get connection string once
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
 
@@ -47,12 +53,24 @@ builder.Services.AddValidatorsFromAssemblyContaining<IEventService>();
 // Register Application Services
 builder.Services.AddScoped<IAuthService, AuthService>();
 builder.Services.AddScoped<IEventService, EventService>();
+builder.Services.AddScoped<IEventAppService, Nory.Infrastructure.Services.EventAppService>();
+builder.Services.AddScoped<IAttendeeService, Nory.Infrastructure.Services.AttendeeService>();
 builder.Services.AddScoped<IMetricsService, MetricsService>();
 builder.Services.AddScoped<IActivityLogService, ActivityLogService>();
+builder.Services.AddScoped<IThemeService, Nory.Infrastructure.Services.ThemeService>();
+builder.Services.AddScoped<ICategoryService, Nory.Infrastructure.Services.CategoryService>();
+builder.Services.AddScoped<IPhotoService, Nory.Infrastructure.Services.PhotoService>();
+builder.Services.AddScoped<IPublicEventService, Nory.Infrastructure.Services.PublicEventService>();
+
+// Register File Storage Service
+builder.Services.Configure<FileStorageOptions>(
+    builder.Configuration.GetSection(FileStorageOptions.SectionName));
+builder.Services.AddSingleton<IFileStorageService, LocalFileStorageService>();
 
 // Register Repositories
 builder.Services.AddScoped<IAnalyticsRepository, AnalyticsRepository>();
 builder.Services.AddScoped<IEventRepository, EventRepository>();
+builder.Services.AddScoped<IThemeRepository, ThemeRepository>();
 
 // Add Redis Cache
 builder.Services.AddStackExchangeRedisCache(options =>
@@ -126,6 +144,9 @@ using (var scope = app.Services.CreateScope())
 {
     var db = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
     db.Database.Migrate();
+
+    // Seed required data (themes, etc.)
+    await DatabaseSeeder.SeedRequiredDataAsync(app.Services);
 
     // Seed default admin user (if no users exist)
     await DatabaseSeeder.SeedDevelopmentDataAsync(app.Services);

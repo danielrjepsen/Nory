@@ -1,12 +1,13 @@
+using Microsoft.Extensions.Logging;
 using Nory.Application.DTOs;
 using Nory.Application.Extensions;
+using Nory.Application.Services;
 using Nory.Core.Domain.Entities;
 using Nory.Core.Domain.Enums;
 using Nory.Core.Domain.Repositories;
 using System.Text.Json;
-using Microsoft.Extensions.Logging;
 
-namespace Nory.Application.Services;
+namespace Nory.Infrastructure.Services;
 
 public class ActivityLogService : IActivityLogService
 {
@@ -55,8 +56,8 @@ public class ActivityLogService : IActivityLogService
         await _analyticsRepository.SaveChangesAsync();
 
         _logger.LogInformation(
-            "Recorded {ActivityType} for event {EventId}", 
-            type, 
+            "Recorded {ActivityType} for event {EventId}",
+            type,
             eventId
         );
     }

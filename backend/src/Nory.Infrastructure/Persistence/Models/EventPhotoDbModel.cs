@@ -9,6 +9,10 @@ public class EventPhotoDbModel
 
     public EventDbModel? Event { get; set; }
 
+    public Guid? CategoryId { get; set; }
+
+    public EventCategoryDbModel? Category { get; set; }
+
     [Required]
     [MaxLength(255)]
     public string FileName { get; set; } = string.Empty;
@@ -27,16 +31,15 @@ public class EventPhotoDbModel
     public string StoragePath { get; set; } = string.Empty;
 
     [Required]
-    public string CdnUrl { get; set; } = string.Empty;
+    public string ImageUrl { get; set; } = string.Empty;
 
     [MaxLength(255)]
-    public string? UploadedBy { get; set; } // Guest name who uploaded
+    public string? UploadedBy { get; set; }
 
     public int? Year { get; set; }
 
     public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
 
-    // Metadata
     public int? Width { get; set; }
     public int? Height { get; set; }
     public string? ExifData { get; set; }

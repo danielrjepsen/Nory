@@ -3,6 +3,7 @@ using System;
 using System.Text.Json;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Nory.Infrastructure.Persistence;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
@@ -12,9 +13,11 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Nory.Infrastructure.Persistence.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20251213215331_AddCategoryIdToEventPhotos")]
+    partial class AddCategoryIdToEventPhotos
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -85,6 +88,10 @@ namespace Nory.Infrastructure.Persistence.Migrations
                     b.Property<Guid?>("CategoryId")
                         .HasColumnType("uuid");
 
+                    b.Property<string>("CdnUrl")
+                        .IsRequired()
+                        .HasColumnType("text");
+
                     b.Property<string>("ContentType")
                         .IsRequired()
                         .HasMaxLength(100)
@@ -109,10 +116,6 @@ namespace Nory.Infrastructure.Persistence.Migrations
 
                     b.Property<int?>("Height")
                         .HasColumnType("integer");
-
-                    b.Property<string>("ImageUrl")
-                        .IsRequired()
-                        .HasColumnType("text");
 
                     b.Property<string>("OriginalFileName")
                         .IsRequired()
@@ -583,179 +586,6 @@ namespace Nory.Infrastructure.Persistence.Migrations
                     b.ToTable("Events", (string)null);
                 });
 
-            modelBuilder.Entity("Nory.Infrastructure.Persistence.Models.EventTemplateDbModel", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uuid");
-
-                    b.Property<string>("AccentColor")
-                        .HasMaxLength(20)
-                        .HasColumnType("character varying(20)");
-
-                    b.Property<string>("BackgroundColor1")
-                        .HasMaxLength(20)
-                        .HasColumnType("character varying(20)");
-
-                    b.Property<string>("BackgroundColor2")
-                        .HasMaxLength(20)
-                        .HasColumnType("character varying(20)");
-
-                    b.Property<string>("BackgroundColor3")
-                        .HasMaxLength(20)
-                        .HasColumnType("character varying(20)");
-
-                    b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.Property<Guid>("EventId")
-                        .HasColumnType("uuid");
-
-                    b.Property<string>("PrimaryColor")
-                        .HasMaxLength(20)
-                        .HasColumnType("character varying(20)");
-
-                    b.Property<string>("PrimaryFont")
-                        .HasMaxLength(100)
-                        .HasColumnType("character varying(100)");
-
-                    b.Property<string>("SecondaryColor")
-                        .HasMaxLength(20)
-                        .HasColumnType("character varying(20)");
-
-                    b.Property<string>("SecondaryFont")
-                        .HasMaxLength(100)
-                        .HasColumnType("character varying(100)");
-
-                    b.Property<string>("ThemeConfig")
-                        .HasColumnType("jsonb");
-
-                    b.Property<Guid?>("ThemeId")
-                        .HasColumnType("uuid");
-
-                    b.Property<string>("ThemeName")
-                        .HasMaxLength(100)
-                        .HasColumnType("character varying(100)");
-
-                    b.Property<DateTime>("UpdatedAt")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("EventId")
-                        .IsUnique()
-                        .HasDatabaseName("IX_EventTemplates_EventId");
-
-                    b.HasIndex("ThemeId");
-
-                    b.ToTable("EventTemplates", (string)null);
-                });
-
-            modelBuilder.Entity("Nory.Infrastructure.Persistence.Models.ThemeDbModel", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uuid");
-
-                    b.Property<string>("AccentColor")
-                        .IsRequired()
-                        .HasMaxLength(20)
-                        .HasColumnType("character varying(20)");
-
-                    b.Property<string>("BackgroundColor1")
-                        .HasMaxLength(20)
-                        .HasColumnType("character varying(20)");
-
-                    b.Property<string>("BackgroundColor2")
-                        .HasMaxLength(20)
-                        .HasColumnType("character varying(20)");
-
-                    b.Property<string>("BackgroundColor3")
-                        .HasMaxLength(20)
-                        .HasColumnType("character varying(20)");
-
-                    b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.Property<string>("DarkBackgroundGradient")
-                        .HasColumnType("text");
-
-                    b.Property<string>("DarkParticleColors")
-                        .HasColumnType("jsonb");
-
-                    b.Property<string>("Description")
-                        .HasMaxLength(500)
-                        .HasColumnType("character varying(500)");
-
-                    b.Property<string>("DisplayName")
-                        .IsRequired()
-                        .HasMaxLength(200)
-                        .HasColumnType("character varying(200)");
-
-                    b.Property<bool>("IsActive")
-                        .HasColumnType("boolean");
-
-                    b.Property<bool>("IsSystemTheme")
-                        .HasColumnType("boolean");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("character varying(100)");
-
-                    b.Property<string>("PrimaryColor")
-                        .IsRequired()
-                        .HasMaxLength(20)
-                        .HasColumnType("character varying(20)");
-
-                    b.Property<string>("PrimaryFont")
-                        .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("character varying(100)");
-
-                    b.Property<string>("SecondaryColor")
-                        .IsRequired()
-                        .HasMaxLength(20)
-                        .HasColumnType("character varying(20)");
-
-                    b.Property<string>("SecondaryFont")
-                        .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("character varying(100)");
-
-                    b.Property<int>("SortOrder")
-                        .HasColumnType("integer");
-
-                    b.Property<string>("TextAccent")
-                        .HasMaxLength(20)
-                        .HasColumnType("character varying(20)");
-
-                    b.Property<string>("TextPrimary")
-                        .HasMaxLength(20)
-                        .HasColumnType("character varying(20)");
-
-                    b.Property<string>("TextSecondary")
-                        .HasMaxLength(20)
-                        .HasColumnType("character varying(20)");
-
-                    b.Property<string>("ThemeConfig")
-                        .HasColumnType("jsonb");
-
-                    b.Property<DateTime>("UpdatedAt")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("IsActive")
-                        .HasDatabaseName("IX_Themes_IsActive");
-
-                    b.HasIndex("Name")
-                        .IsUnique()
-                        .HasDatabaseName("IX_Themes_Name");
-
-                    b.ToTable("Themes", (string)null);
-                });
-
             modelBuilder.Entity("EventMetricsDbModel", b =>
                 {
                     b.HasOne("Nory.Infrastructure.Persistence.Models.EventDbModel", "Event")
@@ -875,24 +705,6 @@ namespace Nory.Infrastructure.Persistence.Migrations
                         .IsRequired();
 
                     b.Navigation("Event");
-                });
-
-            modelBuilder.Entity("Nory.Infrastructure.Persistence.Models.EventTemplateDbModel", b =>
-                {
-                    b.HasOne("Nory.Infrastructure.Persistence.Models.EventDbModel", "Event")
-                        .WithOne()
-                        .HasForeignKey("Nory.Infrastructure.Persistence.Models.EventTemplateDbModel", "EventId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("Nory.Infrastructure.Persistence.Models.ThemeDbModel", "Theme")
-                        .WithMany()
-                        .HasForeignKey("ThemeId")
-                        .OnDelete(DeleteBehavior.SetNull);
-
-                    b.Navigation("Event");
-
-                    b.Navigation("Theme");
                 });
 
             modelBuilder.Entity("Nory.Infrastructure.Persistence.Models.AppTypeDbModel", b =>

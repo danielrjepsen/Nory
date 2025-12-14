@@ -2,11 +2,12 @@ using FluentValidation;
 using Microsoft.Extensions.Logging;
 using Nory.Application.DTOs.Events;
 using Nory.Application.Extensions;
+using Nory.Application.Services;
 using Nory.Core.Domain.Entities;
 using Nory.Core.Domain.Enums;
 using Nory.Core.Domain.Repositories;
 
-namespace Nory.Application.Services;
+namespace Nory.Infrastructure.Services;
 
 public class EventService : IEventService
 {

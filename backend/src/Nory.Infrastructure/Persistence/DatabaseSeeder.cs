@@ -1,7 +1,10 @@
 using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Nory.Infrastructure.Identity;
+using Nory.Infrastructure.Persistence.Extensions;
+using Nory.Infrastructure.Persistence.SeedData;
 
 namespace Nory.Infrastructure.Persistence;
 
@@ -13,7 +16,22 @@ public static class DatabaseSeeder
         var userManager = scope.ServiceProvider.GetRequiredService<UserManager<ApplicationUser>>();
         var logger = scope.ServiceProvider.GetRequiredService<ILogger<ApplicationDbContext>>();
 
-        // Create default admin user for development
+        await SeedAdminUserAsync(userManager, logger);
+    }
+
+    public static async Task SeedRequiredDataAsync(IServiceProvider serviceProvider)
+    {
+        using var scope = serviceProvider.CreateScope();
+        var context = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
+        var logger = scope.ServiceProvider.GetRequiredService<ILogger<ApplicationDbContext>>();
+
+        await SeedDefaultThemesAsync(context, logger);
+    }
+
+    private static async Task SeedAdminUserAsync(
+        UserManager<ApplicationUser> userManager,
+        ILogger logger)
+    {
         var adminEmail = "admin@nory.dev";
         var existingUser = await userManager.FindByEmailAsync(adminEmail);
 
@@ -44,5 +62,51 @@ public static class DatabaseSeeder
         {
             logger.LogInformation("Development admin user already exists: {Email}", adminEmail);
         }
+    }
+
+    private static async Task SeedDefaultThemesAsync(
+        ApplicationDbContext context,
+        ILogger logger)
+    {
+        var existingThemes = await context.Themes.ToListAsync();
+        var defaultThemes = DefaultThemes.GetAll();
+
+        foreach (var theme in defaultThemes)
+        {
+            var existingTheme = existingThemes.FirstOrDefault(t => t.Name == theme.Name);
+
+            if (existingTheme == null)
+            {
+                var dbModel = theme.MapToDbModel();
+                context.Themes.Add(dbModel);
+                logger.LogInformation("Seeding new theme: {ThemeName}", theme.Name);
+            }
+            else
+            {
+                existingTheme.DisplayName = theme.DisplayName;
+                existingTheme.Description = theme.Description;
+                existingTheme.PrimaryColor = theme.PrimaryColor;
+                existingTheme.SecondaryColor = theme.SecondaryColor;
+                existingTheme.AccentColor = theme.AccentColor;
+                existingTheme.BackgroundColor1 = theme.BackgroundColor1;
+                existingTheme.BackgroundColor2 = theme.BackgroundColor2;
+                existingTheme.BackgroundColor3 = theme.BackgroundColor3;
+                existingTheme.TextPrimary = theme.TextPrimary;
+                existingTheme.TextSecondary = theme.TextSecondary;
+                existingTheme.TextAccent = theme.TextAccent;
+                existingTheme.PrimaryFont = theme.PrimaryFont;
+                existingTheme.SecondaryFont = theme.SecondaryFont;
+                existingTheme.DarkBackgroundGradient = theme.DarkBackgroundGradient;
+                existingTheme.DarkParticleColors = theme.DarkParticleColors;
+                existingTheme.ThemeConfig = theme.ThemeConfig;
+                existingTheme.SortOrder = theme.SortOrder;
+                existingTheme.UpdatedAt = DateTime.UtcNow;
+
+                logger.LogInformation("Updating existing theme: {ThemeName}", existingTheme.Name);
+            }
+        }
+
+        await context.SaveChangesAsync();
+        logger.LogInformation("Theme seeding completed. Total themes: {Count}", defaultThemes.Count);
     }
 }

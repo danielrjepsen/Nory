@@ -64,6 +64,7 @@ services:
       - /app/src/Nory.Application/bin
       - /app/src/Nory.Infrastructure/obj
       - /app/src/Nory.Infrastructure/bin
+      - ./data/uploads:/data/uploads  # Persistent file storage (host-accessible)
       - /app/src/Nory.Core/obj
       - /app/src/Nory.Core/bin
     environment:
@@ -71,6 +72,7 @@ services:
       - ASPNETCORE_URLS=http://0.0.0.0:5000
       - ConnectionStrings__DefaultConnection=Host=postgres;Database=nory;Username=noryuser;Password=${POSTGRES_PASSWORD:-devpassword123}
       - ConnectionStrings__Redis=redis:6379,password=${REDIS_PASSWORD:-devpassword123}
+      - FileStorage__BasePath=/data/uploads
       - DOTNET_USE_POLLING_FILE_WATCHER=true  # Enable file watcher
     ports:
       - "5001:5000"

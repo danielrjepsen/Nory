@@ -149,6 +149,7 @@ Thumbs.db
 
 # Family Photo Specific
 uploads/
+data/
 temp-images/
 photo-cache/
 

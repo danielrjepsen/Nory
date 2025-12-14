@@ -17,9 +17,6 @@ public class AnalyticsController(
     IEventService eventService,
     ILogger<AnalyticsController> logger) : ControllerBase
 {
-    /// <summary>
-    /// Get analytics summary for a specific event
-    /// </summary>
     [HttpGet("events/{eventId:guid}/summary")]
     [ProducesResponseType(typeof(EventMetricsDto), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
@@ -44,9 +41,6 @@ public class AnalyticsController(
         return Ok(metrics);
     }
 
-    /// <summary>
-    /// Get recent activity for a specific event
-    /// </summary>
     [HttpGet("events/{eventId:guid}/activity")]
     [ProducesResponseType(typeof(List<ActivityLogDto>), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
@@ -73,9 +67,6 @@ public class AnalyticsController(
         return Ok(activities);
     }
 
-    /// <summary>
-    /// Track an analytics event (public endpoint for guests)
-    /// </summary>
     [HttpPost("events/{eventId:guid}/track")]
     [AllowAnonymous]
     [ProducesResponseType(typeof(TrackEventResponse), StatusCodes.Status200OK)]

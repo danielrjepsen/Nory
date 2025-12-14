@@ -21,9 +21,6 @@ public class DashboardController(
 {
     private const int DashboardOverviewCacheTtlSeconds = 60;
 
-    /// <summary>
-    /// Get all dashboard data
-    /// </summary>
     [HttpGet("overview")]
     [ProducesResponseType(typeof(DashboardOverviewDto), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]

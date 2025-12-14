@@ -12,9 +12,6 @@ namespace Nory.Api.Controllers;
 [Authorize]
 public class EventsController(IEventService eventService) : ControllerBase
 {
-    /// <summary>
-    /// Get all events for the current user
-    /// </summary>
     [HttpGet]
     [ProducesResponseType(typeof(IReadOnlyList<EventDto>), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
@@ -28,9 +25,6 @@ public class EventsController(IEventService eventService) : ControllerBase
         return Ok(events);
     }
 
-    /// <summary>
-    /// Get a specific event by ID
-    /// </summary>
     [HttpGet("{eventId:guid}")]
     [ProducesResponseType(typeof(EventDto), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
@@ -48,9 +42,6 @@ public class EventsController(IEventService eventService) : ControllerBase
         return Ok(eventDto);
     }
 
-    /// <summary>
-    /// Get a public event (for guest/slideshow access)
-    /// </summary>
     [HttpGet("public/{eventId:guid}")]
     [AllowAnonymous]
     [ProducesResponseType(typeof(EventDto), StatusCodes.Status200OK)]
@@ -59,8 +50,7 @@ public class EventsController(IEventService eventService) : ControllerBase
     public async Task<IActionResult> GetPublicEvent(
         Guid eventId,
         [FromQuery] bool preview = false,
-        CancellationToken cancellationToken = default
-    )
+        CancellationToken cancellationToken = default)
     {
         var eventDto = await eventService.GetPublicEventAsync(eventId, preview, cancellationToken);
 
@@ -68,36 +58,27 @@ public class EventsController(IEventService eventService) : ControllerBase
             return NotFound(new { message = "Event not found" });
 
         if (eventDto.Status == "ended")
-            return StatusCode(
-                StatusCodes.Status410Gone,
-                new
-                {
-                    message = "This event has ended",
-                    status = "ended",
-                    endsAt = eventDto.EndsAt,
-                }
-            );
+            return StatusCode(StatusCodes.Status410Gone, new
+            {
+                message = "This event has ended",
+                status = "ended",
+                endsAt = eventDto.EndsAt,
+            });
 
         if (eventDto.Status == "draft" && !preview)
-            return StatusCode(
-                StatusCodes.Status403Forbidden,
-                new { message = "This event is not yet live", status = "draft" }
-            );
+            return StatusCode(StatusCodes.Status403Forbidden,
+                new { message = "This event is not yet live", status = "draft" });
 
         return Ok(eventDto);
     }
 
-    /// <summary>
-    /// Create a new event
-    /// </summary>
     [HttpPost]
     [ProducesResponseType(typeof(EventDto), StatusCodes.Status201Created)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     public async Task<IActionResult> CreateEvent(
         [FromBody] CreateEventDto dto,
-        CancellationToken cancellationToken
-    )
+        CancellationToken cancellationToken)
     {
         var userId = GetCurrentUserId();
         if (userId is null)
@@ -115,9 +96,6 @@ public class EventsController(IEventService eventService) : ControllerBase
         }
     }
 
-    /// <summary>
-    /// Update an existing event
-    /// </summary>
     [HttpPatch("{eventId:guid}")]
     [ProducesResponseType(typeof(EventDto), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
@@ -126,8 +104,7 @@ public class EventsController(IEventService eventService) : ControllerBase
     public async Task<IActionResult> UpdateEvent(
         Guid eventId,
         [FromBody] UpdateEventDto dto,
-        CancellationToken cancellationToken
-    )
+        CancellationToken cancellationToken)
     {
         var userId = GetCurrentUserId();
         if (userId is null)
@@ -135,12 +112,7 @@ public class EventsController(IEventService eventService) : ControllerBase
 
         try
         {
-            var eventDto = await eventService.UpdateEventAsync(
-                eventId,
-                dto,
-                userId,
-                cancellationToken
-            );
+            var eventDto = await eventService.UpdateEventAsync(eventId, dto, userId, cancellationToken);
             return Ok(eventDto);
         }
         catch (KeyNotFoundException)
@@ -162,9 +134,6 @@ public class EventsController(IEventService eventService) : ControllerBase
         }
     }
 
-    /// <summary>
-    /// Delete (archive) an event
-    /// </summary>
     [HttpDelete("{eventId:guid}")]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
@@ -194,9 +163,6 @@ public class EventsController(IEventService eventService) : ControllerBase
         }
     }
 
-    /// <summary>
-    /// Start an event (change status from Draft to Live)
-    /// </summary>
     [HttpPost("{eventId:guid}/start")]
     [ProducesResponseType(typeof(EventDto), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
@@ -227,9 +193,6 @@ public class EventsController(IEventService eventService) : ControllerBase
         }
     }
 
-    /// <summary>
-    /// End an event (change status from Live to Ended)
-    /// </summary>
     [HttpPost("{eventId:guid}/end")]
     [ProducesResponseType(typeof(EventDto), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
@@ -260,9 +223,6 @@ public class EventsController(IEventService eventService) : ControllerBase
         }
     }
 
-    /// <summary>
-    /// Get photos for an event (dashboard view - limited)
-    /// </summary>
     [HttpGet("{eventId:guid}/photos/dashboard")]
     [ProducesResponseType(typeof(IReadOnlyList<EventPhotoDto>), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
@@ -270,8 +230,7 @@ public class EventsController(IEventService eventService) : ControllerBase
     public async Task<IActionResult> GetEventPhotosDashboard(
         Guid eventId,
         [FromQuery] int limit = 6,
-        CancellationToken cancellationToken = default
-    )
+        CancellationToken cancellationToken = default)
     {
         var userId = GetCurrentUserId();
         if (userId is null)
@@ -281,19 +240,15 @@ public class EventsController(IEventService eventService) : ControllerBase
         if (eventDto is null)
             return NotFound(new { message = "Event not found" });
 
-        // For now, return empty array - photo upload functionality comes later
         return Ok(Array.Empty<EventPhotoDto>());
     }
 
     private string? GetCurrentUserId() => User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
 }
 
-/// <summary>
-/// DTO for event photos
-/// </summary>
 public record EventPhotoDto(
     Guid Id,
-    string CdnUrl,
+    string ImageUrl,
     string OriginalFileName,
     string? UploadedBy,
     int? Width,

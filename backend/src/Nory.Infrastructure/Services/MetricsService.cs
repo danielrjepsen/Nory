@@ -1,10 +1,11 @@
+using Microsoft.Extensions.Logging;
 using Nory.Application.DTOs;
 using Nory.Application.Extensions;
+using Nory.Application.Services;
 using Nory.Core.Domain.Enums;
 using Nory.Core.Domain.Repositories;
-using Microsoft.Extensions.Logging;
 
-namespace Nory.Application.Services;
+namespace Nory.Infrastructure.Services;
 
 public class MetricsService : IMetricsService
 {

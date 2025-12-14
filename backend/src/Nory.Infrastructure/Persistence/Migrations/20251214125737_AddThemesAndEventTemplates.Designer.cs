@@ -3,6 +3,7 @@ using System;
 using System.Text.Json;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Nory.Infrastructure.Persistence;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
@@ -12,9 +13,11 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Nory.Infrastructure.Persistence.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20251214125737_AddThemesAndEventTemplates")]
+    partial class AddThemesAndEventTemplates
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -85,6 +88,10 @@ namespace Nory.Infrastructure.Persistence.Migrations
                     b.Property<Guid?>("CategoryId")
                         .HasColumnType("uuid");
 
+                    b.Property<string>("CdnUrl")
+                        .IsRequired()
+                        .HasColumnType("text");
+
                     b.Property<string>("ContentType")
                         .IsRequired()
                         .HasMaxLength(100)
@@ -109,10 +116,6 @@ namespace Nory.Infrastructure.Persistence.Migrations
 
                     b.Property<int?>("Height")
                         .HasColumnType("integer");
-
-                    b.Property<string>("ImageUrl")
-                        .IsRequired()
-                        .HasColumnType("text");
 
                     b.Property<string>("OriginalFileName")
                         .IsRequired()

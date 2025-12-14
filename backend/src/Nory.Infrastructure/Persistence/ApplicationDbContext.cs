@@ -21,6 +21,10 @@ public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
     public DbSet<EventAppDbModel> EventApps { get; set; }
     public DbSet<AppTypeDbModel> AppTypes { get; set; }
 
+    // Theme entities
+    public DbSet<ThemeDbModel> Themes { get; set; }
+    public DbSet<EventTemplateDbModel> EventTemplates { get; set; }
+
     // Analytics entities
     public DbSet<ActivityLogDbModel> ActivityLogs { get; set; }
     public DbSet<EventMetricsDbModel> EventMetrics { get; set; }
@@ -38,6 +42,10 @@ public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
 
         builder.Entity<ActivityLogDbModel>().ToTable("ActivityLogs");
         builder.Entity<EventMetricsDbModel>().ToTable("EventMetrics");
+
+        // Theme tables
+        builder.Entity<ThemeDbModel>().ToTable("Themes");
+        builder.Entity<EventTemplateDbModel>().ToTable("EventTemplates");
 
         // event indexes
         builder
@@ -90,6 +98,18 @@ public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
             .WithOne(c => c.Event)
             .HasForeignKey(c => c.EventId)
             .OnDelete(DeleteBehavior.Cascade);
+
+        builder
+            .Entity<EventCategoryDbModel>()
+            .HasMany(c => c.Photos)
+            .WithOne(p => p.Category)
+            .HasForeignKey(p => p.CategoryId)
+            .OnDelete(DeleteBehavior.SetNull);
+
+        builder
+            .Entity<EventPhotoDbModel>()
+            .HasIndex(p => p.CategoryId)
+            .HasDatabaseName("IX_EventPhotos_CategoryId");
 
         builder
             .Entity<EventDbModel>()
@@ -152,5 +172,53 @@ public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
             .HasColumnType("jsonb")
             .HasConversion(dictionaryConverter)
             .Metadata.SetValueComparer(dictionaryComparer);
+
+        // Theme configuration
+        builder
+            .Entity<ThemeDbModel>()
+            .HasIndex(t => t.Name)
+            .IsUnique()
+            .HasDatabaseName("IX_Themes_Name");
+
+        builder
+            .Entity<ThemeDbModel>()
+            .HasIndex(t => t.IsActive)
+            .HasDatabaseName("IX_Themes_IsActive");
+
+        builder
+            .Entity<ThemeDbModel>()
+            .Property(t => t.ThemeConfig)
+            .HasColumnType("jsonb");
+
+        builder
+            .Entity<ThemeDbModel>()
+            .Property(t => t.DarkParticleColors)
+            .HasColumnType("jsonb");
+
+        // EventTemplate configuration
+        builder
+            .Entity<EventTemplateDbModel>()
+            .HasIndex(et => et.EventId)
+            .IsUnique()
+            .HasDatabaseName("IX_EventTemplates_EventId");
+
+        builder
+            .Entity<EventTemplateDbModel>()
+            .HasOne(et => et.Event)
+            .WithOne()
+            .HasForeignKey<EventTemplateDbModel>(et => et.EventId)
+            .OnDelete(DeleteBehavior.Cascade);
+
+        builder
+            .Entity<EventTemplateDbModel>()
+            .HasOne(et => et.Theme)
+            .WithMany()
+            .HasForeignKey(et => et.ThemeId)
+            .OnDelete(DeleteBehavior.SetNull);
+
+        builder
+            .Entity<EventTemplateDbModel>()
+            .Property(et => et.ThemeConfig)
+            .HasColumnType("jsonb");
     }
 }

@@ -19,9 +19,6 @@ public class AuthController : ControllerBase
         _logger = logger;
     }
 
-    /// <summary>
-    /// register user with email and password
-    /// </summary>
     [HttpPost("register")]
     public async Task<IActionResult> Register([FromBody] RegisterRequest request)
     {
@@ -30,11 +27,8 @@ public class AuthController : ControllerBase
             var result = await _authService.RegisterAsync(request);
 
             if (!result.Success)
-            {
                 return BadRequest(new { errors = result.Errors });
-            }
 
-            // Cookie-based auth: SignInManager already set the auth cookie
             return Ok(new { user = result.User });
         }
         catch (Exception ex)
@@ -44,9 +38,6 @@ public class AuthController : ControllerBase
         }
     }
 
-    /// <summary>
-    /// login with email and password
-    /// </summary>
     [HttpPost("login")]
     public async Task<IActionResult> Login([FromBody] LoginRequest request)
     {
@@ -55,11 +46,8 @@ public class AuthController : ControllerBase
             var result = await _authService.LoginAsync(request);
 
             if (!result.Success)
-            {
                 return BadRequest(new { errors = result.Errors });
-            }
 
-            // Cookie-based auth: SignInManager already set the auth cookie
             return Ok(new { user = result.User });
         }
         catch (Exception ex)
@@ -69,52 +57,6 @@ public class AuthController : ControllerBase
         }
     }
 
-    // NOTE: RefreshToken endpoint not needed for cookie-based authentication
-    // Cookie-based auth uses persistent sessions - no JWT refresh tokens required
-    //
-    // /// <summary>
-    // /// Refresh access token using refresh token
-    // /// </summary>
-    // [HttpPost("refresh")]
-    // public async Task<IActionResult> RefreshToken()
-    // {
-    //     try
-    //     {
-    //         var refreshToken = Request.Cookies["refreshToken"];
-    //         if (string.IsNullOrEmpty(refreshToken))
-    //         {
-    //             return Unauthorized(new { error = "Refresh token not found" });
-    //         }
-    //
-    //         var result = await _authService.RefreshTokenAsync(refreshToken);
-    //
-    //         if (!result.Success)
-    //         {
-    //             ClearRefreshTokenCookie();
-    //             return Unauthorized(new { errors = result.Errors });
-    //         }
-    //
-    //         SetRefreshTokenCookie(result.RefreshToken!);
-    //
-    //         return Ok(
-    //             new
-    //             {
-    //                 token = result.Token,
-    //                 user = result.User,
-    //                 expiresIn = AccessTokenExpirySeconds,
-    //             }
-    //         );
-    //     }
-    //     catch (Exception ex)
-    //     {
-    //         _logger.LogError(ex, "Token refresh failed");
-    //         return StatusCode(500, new { error = "Token refresh failed" });
-    //     }
-    // }
-
-    /// <summary>
-    /// Verify email address with token
-    /// </summary>
     [HttpPost("verify-email")]
     public async Task<IActionResult> VerifyEmail([FromBody] VerifyEmailRequest request)
     {
@@ -123,9 +65,7 @@ public class AuthController : ControllerBase
             var result = await _authService.VerifyEmailAsync(request.UserId, request.Token);
 
             if (!result)
-            {
                 return BadRequest(new { error = "Invalid or expired verification token" });
-            }
 
             return Ok(new { message = "Email verified successfully" });
         }
@@ -136,20 +76,13 @@ public class AuthController : ControllerBase
         }
     }
 
-    /// <summary>
-    /// Request password email
-    /// </summary>
     [HttpPost("forgot-password")]
     public async Task<IActionResult> ForgotPassword([FromBody] ForgotPasswordRequest request)
     {
         try
         {
             await _authService.SendPasswordResetEmailAsync(request.Email);
-
-            // Always return success to prevent email enumeration
-            return Ok(
-                new { message = "If that email exists, a password reset link has been sent" }
-            );
+            return Ok(new { message = "If that email exists, a password reset link has been sent" });
         }
         catch (Exception ex)
         {
@@ -158,9 +91,6 @@ public class AuthController : ControllerBase
         }
     }
 
-    /// <summary>
-    /// Reset password with token
-    /// </summary>
     [HttpPost("reset-password")]
     public async Task<IActionResult> ResetPassword([FromBody] ResetPasswordRequest request)
     {
@@ -169,13 +99,10 @@ public class AuthController : ControllerBase
             var result = await _authService.ResetPasswordAsync(
                 request.UserId,
                 request.Token,
-                request.NewPassword
-            );
+                request.NewPassword);
 
             if (!result)
-            {
                 return BadRequest(new { error = "Invalid or expired reset token" });
-            }
 
             return Ok(new { message = "Password reset successfully" });
         }
@@ -186,9 +113,6 @@ public class AuthController : ControllerBase
         }
     }
 
-    /// <summary>
-    /// get current auth user
-    /// </summary>
     [HttpGet("me")]
     [Authorize]
     public async Task<IActionResult> GetCurrentUser()
@@ -197,15 +121,11 @@ public class AuthController : ControllerBase
         {
             var userId = GetCurrentUserId();
             if (userId == null)
-            {
                 return Unauthorized();
-            }
 
             var user = await _authService.GetCurrentUserAsync(userId);
             if (user == null)
-            {
                 return NotFound(new { error = "User not found" });
-            }
 
             return Ok(user);
         }
@@ -216,9 +136,6 @@ public class AuthController : ControllerBase
         }
     }
 
-    /// <summary>
-    ///  update user profile
-    /// </summary>
     [HttpPut("me")]
     [Authorize]
     public async Task<IActionResult> UpdateProfile([FromBody] UpdateProfileRequest request)
@@ -227,16 +144,12 @@ public class AuthController : ControllerBase
         {
             var userId = GetCurrentUserId();
             if (userId == null)
-            {
                 return Unauthorized();
-            }
 
             var result = await _authService.UpdateProfileAsync(userId, request);
 
             if (!result.Success)
-            {
                 return BadRequest(new { errors = result.Errors });
-            }
 
             return Ok(result.User);
         }
@@ -247,9 +160,6 @@ public class AuthController : ControllerBase
         }
     }
 
-    /// <summary>
-    /// Change password for loggedin user
-    /// </summary>
     [HttpPost("change-password")]
     [Authorize]
     public async Task<IActionResult> ChangePassword([FromBody] ChangePasswordRequest request)
@@ -258,20 +168,15 @@ public class AuthController : ControllerBase
         {
             var userId = GetCurrentUserId();
             if (userId == null)
-            {
                 return Unauthorized();
-            }
 
             var result = await _authService.ChangePasswordAsync(
                 userId,
                 request.CurrentPassword,
-                request.NewPassword
-            );
+                request.NewPassword);
 
             if (!result)
-            {
                 return BadRequest(new { error = "Current password is incorrect" });
-            }
 
             return Ok(new { message = "Password changed successfully" });
         }
@@ -282,9 +187,6 @@ public class AuthController : ControllerBase
         }
     }
 
-    /// <summary>
-    /// logout user and invalidate refresh token
-    /// </summary>
     [HttpPost("logout")]
     [Authorize]
     public async Task<IActionResult> Logout()
@@ -293,11 +195,8 @@ public class AuthController : ControllerBase
         {
             var userId = GetCurrentUserId();
             if (userId != null)
-            {
                 await _authService.LogoutAsync(userId);
-            }
 
-            // Cookie-based auth: SignOutAsync already cleared the auth cookie
             return Ok(new { message = "Logged out successfully" });
         }
         catch (Exception ex)
@@ -307,8 +206,5 @@ public class AuthController : ControllerBase
         }
     }
 
-    private string? GetCurrentUserId()
-    {
-        return User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
-    }
+    private string? GetCurrentUserId() => User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
 }
