@@ -2,7 +2,7 @@
 
 import React from 'react';
 import { useTranslation } from 'react-i18next';
-import { Toggle } from '../../../form';
+import Toggle from '@/app/dashboard/_components/form/Toggle';
 
 interface SettingsStepProps {
   isPublic: boolean;

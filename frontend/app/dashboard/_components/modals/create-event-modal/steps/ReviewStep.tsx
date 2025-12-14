@@ -3,7 +3,7 @@
 import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { format, setMinutes, setHours } from 'date-fns';
-import type { Theme } from '../../../services/themes';
+import { Theme } from '@/app/dashboard/_types/theme';
 
 interface ReviewStepProps {
   name: string;

@@ -1,4 +1,4 @@
-import type { Theme } from '../../services/themes';
+import { Theme } from "@/app/dashboard/_types/theme";
 
 export interface EventStep {
   id: string;
