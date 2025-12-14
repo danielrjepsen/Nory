@@ -44,6 +44,7 @@ export interface EventSummary {
     name: string;
     status: string;
     isPublic: boolean;
+    location?: string;
     startsAt?: string;
     endsAt?: string;
     photoCount: number;
