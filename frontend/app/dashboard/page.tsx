@@ -2,8 +2,8 @@
 
 import React from 'react';
 import ProtectedRoute from './_components/auth/ProtectedRoute';
-import { PageLayout } from './_components/layout/PageLayout';
 import { DashboardContent } from './_components/DashboardContent';
+import PageLayout from './_components/layout/PageLayout';
 
 export default function DashboardPage() {
     return (
