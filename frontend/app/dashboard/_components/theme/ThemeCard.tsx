@@ -1,5 +1,5 @@
 import React from 'react';
-import type { Theme } from '../../services/themes';
+import { Theme } from '../../_types/theme';
 
 interface ThemeCardProps {
   theme: Theme;

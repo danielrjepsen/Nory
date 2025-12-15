@@ -1,10 +1,10 @@
 'use client';
 
 import React from 'react';
-import type { Theme } from '../../services/themes';
 import { useCustomTheme } from '../../_hooks/useCustomTheme';
 import { ColorPicker } from '../form/ColorPicker';
 import { ThemeEditorPreview } from './ThemeEditorPreview';
+import { Theme } from '../../_types/theme';
 
 interface CustomThemeEditorProps {
   isOpen: boolean;

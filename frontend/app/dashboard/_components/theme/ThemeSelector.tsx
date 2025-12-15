@@ -1,10 +1,10 @@
 'use client';
 
 import React from 'react';
-import type { Theme } from '../../services/themes';
 import { useThemes } from '../../_hooks/useThemes';
 import { ThemeCard } from './ThemeCard';
 import { CustomThemeCard } from './CustomThemeCard';
+import { Theme } from '../../_types/theme';
 
 interface ThemeSelectorProps {
   value: string;

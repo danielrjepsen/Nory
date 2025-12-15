@@ -1,5 +1,5 @@
 import React from 'react';
-import type { Theme } from '../../services/themes';
+import { Theme } from '../../_types/theme';
 
 interface PreviewCardProps {
   eventName: string;
@@ -40,10 +40,10 @@ export function PreviewCard({ eventName, eventDescription, startsAt, theme }: Pr
           >
             {startsAt
               ? new Date(startsAt).toLocaleDateString('en-US', {
-                  month: 'long',
-                  day: 'numeric',
-                  year: 'numeric',
-                })
+                month: 'long',
+                day: 'numeric',
+                year: 'numeric',
+              })
               : 'September 14, 2025'}
           </div>
 

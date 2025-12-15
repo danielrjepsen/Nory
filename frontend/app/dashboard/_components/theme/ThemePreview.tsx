@@ -1,12 +1,12 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
-import type { Theme } from '../../services/themes';
 import { useThemes } from '../../_hooks/useThemes';
 import { getDarkBackground, getThemeColors, getDefaultTheme } from '../../_utils/themeHelpers';
 import AnimatedBackground from '../ui/AnimatedBackground';
 import FloatingParticles from '../ui/FloatingParticles';
 import { PreviewCard } from './PreviewCard';
+import { Theme } from '../../_types/theme';
 
 interface ThemePreviewProps {
   eventName: string;
