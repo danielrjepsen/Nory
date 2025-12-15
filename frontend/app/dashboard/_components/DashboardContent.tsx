@@ -17,16 +17,14 @@ export function DashboardContent() {
     const [showCreateModal, setShowCreateModal] = useState(false);
 
     const fetchDashboardData = useCallback(async () => {
-        if (authLoading || !user?.currentOrg) {
+        if (authLoading) {
             setLoading(false);
             return;
         }
 
         try {
             setLoading(true);
-            const dashboardData = await AnalyticsService.getDashboardOverview(
-                user.currentOrg.id
-            );
+            const dashboardData = await AnalyticsService.getDashboardOverview();
 
             const mappedEvents = dashboardData.events.map(mapEventSummaryToEventData);
             setEvents(mappedEvents);

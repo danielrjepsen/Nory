@@ -1,7 +1,7 @@
 import Image from 'next/image';
 import { NavButton } from './NavButton';
 import { UserProfile } from './UserProfile';
-import type { NavigationItem, User } from '../types';
+import type { NavigationItem, User } from '../_types';
 
 interface DesktopSidebarProps {
   navigationItems: NavigationItem[];

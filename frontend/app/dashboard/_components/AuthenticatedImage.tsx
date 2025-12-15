@@ -17,7 +17,7 @@ export function AuthenticatedImage({ photo, className = '' }: AuthenticatedImage
     handleImageError,
   } = useAuthenticatedImage({
     photoId: photo.id,
-    cdnUrl: photo.cdnUrl,
+    imageUrl: photo.imageUrl,
   });
 
   return (
