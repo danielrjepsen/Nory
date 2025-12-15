@@ -21,8 +21,8 @@ interface LoginFormProps {
 export function LoginForm({ onSubmit, loading, error }: LoginFormProps) {
     const { t } = useTranslation('auth');
     const [formData, setFormData] = useState<LoginCredentials>({
-        email: '',
-        password: '',
+        email: 'admin@nory.dev',
+        password: 'Admin123!',
     });
     const [rememberMe, setRememberMe] = useState(false);
     const [fieldErrors, setFieldErrors] = useState<Partial<Record<keyof LoginCredentials, string>>>({});
