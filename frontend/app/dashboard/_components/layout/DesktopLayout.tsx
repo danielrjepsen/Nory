@@ -43,7 +43,7 @@ export const DesktopLayout = ({ children }: DesktopLayoutProps) => {
             {pageTitle}
           </h1>
           <button
-            onClick={() => router.push('/events/create')}
+            onClick={() => router.push('/dashboard/events/create')}
             className="flex items-center gap-2 px-5 py-2.5 bg-gray-900 text-white rounded-lg text-sm font-semibold transition-all hover:bg-gray-800"
           >
             <PlusIcon />

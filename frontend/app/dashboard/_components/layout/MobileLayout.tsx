@@ -42,7 +42,7 @@ export const MobileLayout = ({ children }: MobileLayoutProps) => {
             <MenuIcon />
           </button>
           <button
-            onClick={() => router.push('/events/create')}
+            onClick={() => router.push('/dashboard/events/create')}
             className="bg-transparent border-0 cursor-pointer p-0"
           >
             <PlusIcon />

@@ -1,7 +1,7 @@
 import React from 'react';
-import { EventCard } from '../events/EventCard';
+import EventCard from '../events/EventCard';
 import { CreateEventCard } from '../CreateEventCard';
-import type { EventData } from '@/types/event';
+import type { EventData } from '../../_types';
 
 interface EventGridProps {
     events: EventData[];
