@@ -2,98 +2,76 @@ import { apiClient } from '@/lib/api';
 import { eventCache } from './cache';
 import type { CreateEventRequest, EventData, EventPhoto } from '../_types/events';
 
-const CACHE_KEYS = {
-  eventPhotos: (eventId: string, limit: number) => `event:photos:${eventId}:${limit}`,
-  eventDetails: (eventId: string) => `event:details:${eventId}`,
-  events: () => `events`,
+const Endpoints = {
+  events: '/api/v1/events',
+  event: (id: string) => `/api/v1/events/${id}`,
+  photos: (id: string) => `/api/v1/events/${id}/photos/dashboard`,
+  start: (id: string) => `/api/v1/events/${id}/start`,
+  end: (id: string) => `/api/v1/events/${id}/end`,
 } as const;
 
-export default class EventsService {
-  static async getEventPhotos(eventId: string, limit = 6): Promise<EventPhoto[]> {
-    const cacheKey = CACHE_KEYS.eventPhotos(eventId, limit);
+const CacheKeys = {
+  events: 'events',
+  event: (id: string) => `event:${id}`,
+  photos: (id: string, limit: number) => `photos:${id}:${limit}`,
+} as const;
 
-    return eventCache.getOrSet(cacheKey, async () => {
-      const response = await apiClient.get<{ photos: EventPhoto[]; totalCount: number }>(
-        `/api/v1/events/${eventId}/photos/dashboard`,
-        { params: { limit } }
-      );
-      return (response.photos || []).slice(0, limit);
-    });
-  }
+interface PhotosResponse {
+  photos: EventPhoto[];
+  totalCount: number;
+}
 
-  static async getEventDetails(eventId: string): Promise<EventData> {
-    const cacheKey = CACHE_KEYS.eventDetails(eventId);
+export async function getEvents(): Promise<EventData[]> {
+  return eventCache.getOrSet(CacheKeys.events, () => apiClient.get<EventData[]>(Endpoints.events));
+}
 
-    return eventCache.getOrSet(
-      cacheKey,
-      () => apiClient.get<EventData>(`/api/v1/events/${eventId}`)
-    );
-  }
+export async function getEventDetails(eventId: string): Promise<EventData> {
+  return eventCache.getOrSet(CacheKeys.event(eventId), () => apiClient.get<EventData>(Endpoints.event(eventId)));
+}
 
-  static async createEvent(event: CreateEventRequest): Promise<EventData> {
-    return apiClient.post<EventData>('/api/v1/events', event);
-  }
+export async function getEventPhotos(eventId: string, limit = 6): Promise<EventPhoto[]> {
+  return eventCache.getOrSet(CacheKeys.photos(eventId, limit), async () => {
+    const res = await apiClient.get<PhotosResponse>(Endpoints.photos(eventId), { params: { limit } });
+    return (res.photos || []).slice(0, limit);
+  });
+}
 
-  static async getEvents(): Promise<EventData[]> {
-    const cacheKey = CACHE_KEYS.events();
+export async function createEvent(event: CreateEventRequest): Promise<EventData> {
+  return apiClient.post<EventData>(Endpoints.events, event);
+}
 
-    return eventCache.getOrSet(
-      cacheKey,
-      () => apiClient.get<EventData[]>('/api/v1/events')
-    );
-  }
+export async function updateEvent(eventId: string, updates: Partial<CreateEventRequest>): Promise<EventData> {
+  invalidateEvent(eventId);
+  return apiClient.patch<EventData>(Endpoints.event(eventId), updates);
+}
 
-  static async updateEvent(eventId: string, updates: Partial<CreateEventRequest>): Promise<EventData> {
-    EventsService.invalidateEventDetailsCache(eventId);
-    EventsService.invalidateEventsCache();
-    return apiClient.patch<EventData>(`/api/v1/events/${eventId}`, updates);
-  }
+export async function deleteEvent(eventId: string): Promise<void> {
+  invalidateEvent(eventId);
+  await apiClient.delete(Endpoints.event(eventId));
+}
 
-  static async deleteEvent(eventId: string): Promise<void> {
-    EventsService.invalidateEventDetailsCache(eventId);
-    EventsService.invalidateEventsCache();
-    await apiClient.delete(`/api/v1/events/${eventId}`);
-  }
+export async function startEvent(eventId: string): Promise<EventData> {
+  invalidateEvent(eventId);
+  return apiClient.post<EventData>(Endpoints.start(eventId), {});
+}
 
-  static async startEvent(eventId: string): Promise<EventData> {
-    EventsService.invalidateEventDetailsCache(eventId);
-    EventsService.invalidateEventsCache();
-    return apiClient.post<EventData>(`/api/v1/events/${eventId}/start`, {});
-  }
+export async function endEvent(eventId: string): Promise<EventData> {
+  invalidateEvent(eventId);
+  return apiClient.post<EventData>(Endpoints.end(eventId), {});
+}
 
-  static async endEvent(eventId: string): Promise<EventData> {
-    EventsService.invalidateEventDetailsCache(eventId);
-    EventsService.invalidateEventsCache();
-    return apiClient.post<EventData>(`/api/v1/events/${eventId}/end`, {});
-  }
+export async function loadAuthenticatedImage(imageUrl: string): Promise<Blob> {
+  const res = await apiClient.getRaw(imageUrl);
+  if (!res.ok) throw new Error(`Failed to load image: ${res.status}`);
+  return res.blob();
+}
 
-  static async loadAuthenticatedImage(imageUrl: string): Promise<Blob> {
-    const response = await apiClient.getRaw(imageUrl);
+export function invalidateEvent(eventId: string): void {
+  eventCache.delete(CacheKeys.events);
+  eventCache.delete(CacheKeys.event(eventId));
+  eventCache.invalidateByPrefix(`photos:${eventId}:`);
+}
 
-    if (!response.ok) {
-      throw new Error(`Failed to load image: ${response.status}`);
-    }
-
-    return response.blob();
-  }
-
-  static invalidateEventPhotosCache(eventId: string): number {
-    return eventCache.invalidateByPrefix(`event:photos:${eventId}:`);
-  }
-
-  static invalidateEventDetailsCache(eventId: string): boolean {
-    return eventCache.delete(CACHE_KEYS.eventDetails(eventId));
-  }
-
-  static invalidateEventsCache(): boolean {
-    return eventCache.delete(CACHE_KEYS.events());
-  }
-
-  static clearCache(): void {
-    eventCache.clear();
-  }
-
-  static getCacheStats() {
-    return eventCache.getStats();
-  }
+export function clearCache(): void {
+  eventCache.clear();
 }

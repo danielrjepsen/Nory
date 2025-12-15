@@ -1,6 +1,11 @@
 import { apiClient } from '@/lib/api';
-import { authService } from './auth';
+import { setUser } from './auth';
 import type { User } from '../_types/auth';
+
+const Endpoints = {
+  me: '/api/v1/auth/me',
+  changePassword: '/api/v1/auth/change-password',
+} as const;
 
 export interface UpdateProfileRequest {
   name?: string;
@@ -12,25 +17,16 @@ export interface ChangePasswordRequest {
   newPassword: string;
 }
 
-export interface ChangePasswordResponse {
-  message: string;
+export async function updateProfile(data: UpdateProfileRequest): Promise<User> {
+  const user = await apiClient.put<User>(Endpoints.me, data);
+  setUser(user);
+  return user;
 }
 
-class SettingsService {
-  async updateProfile(data: UpdateProfileRequest): Promise<User> {
-    const user = await apiClient.put<User>('/api/v1/auth/me', data);
-    // Update local user state
-    authService.setUser(user);
-    return user;
-  }
-
-  async changePassword(data: ChangePasswordRequest): Promise<ChangePasswordResponse> {
-    return apiClient.post<ChangePasswordResponse>('/api/v1/auth/change-password', data);
-  }
-
-  async getCurrentUser(): Promise<User> {
-    return apiClient.get<User>('/api/v1/auth/me');
-  }
+export async function changePassword(data: ChangePasswordRequest): Promise<{ message: string }> {
+  return apiClient.post<{ message: string }>(Endpoints.changePassword, data);
 }
 
-export const settingsService = new SettingsService();
+export async function getCurrentUser(): Promise<User> {
+  return apiClient.get<User>(Endpoints.me);
+}
