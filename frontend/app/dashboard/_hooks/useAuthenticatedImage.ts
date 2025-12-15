@@ -1,26 +1,13 @@
 import { useState, useEffect, useRef, useCallback } from 'react';
-import EventsService from '../_services/events';
+import { loadAuthenticatedImage } from '../_services/events';
 
-interface UseAuthenticatedImageOptions {
+interface Options {
   photoId: string;
   imageUrl: string;
   enabled?: boolean;
 }
 
-interface UseAuthenticatedImageReturn {
-  imageSrc: string;
-  isLoading: boolean;
-  error: boolean;
-  imageLoaded: boolean;
-  handleImageLoad: () => void;
-  handleImageError: () => void;
-}
-
-export function useAuthenticatedImage({
-  photoId,
-  imageUrl,
-  enabled = true,
-}: UseAuthenticatedImageOptions): UseAuthenticatedImageReturn {
+export function useAuthenticatedImage({ photoId, imageUrl, enabled = true }: Options) {
   const [imageSrc, setImageSrc] = useState<string>('');
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(false);
@@ -43,7 +30,7 @@ export function useAuthenticatedImage({
       setError(false);
       setImageLoaded(false);
 
-      const blob = await EventsService.loadAuthenticatedImage(imageUrl);
+      const blob = await loadAuthenticatedImage(imageUrl);
       const blobUrl = URL.createObjectURL(blob);
 
       cacheRef.current.set(photoId, blobUrl);

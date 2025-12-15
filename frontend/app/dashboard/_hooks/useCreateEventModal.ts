@@ -1,8 +1,8 @@
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { useAuth } from '../_contexts/AuthContext';
-import eventService from '../_services/events';
-import { themeService } from '../_services/themes';
+import { createEvent } from '../_services/events';
+import { getThemePresets } from '../_services/themes';
 import { INITIAL_FORM_DATA, EVENT_STEPS, type EventFormData } from '../_components/modals/create-event-modal/createEventModalConfig';
 import { combineDateAndTime } from '../_utils/dateTimeUtils';
 import { getValidationErrorMessage, validateCurrentStep } from '../_components/modals/create-event-modal/eventValidation';
@@ -29,7 +29,7 @@ export function useCreateEventModal(isOpen: boolean) {
 
   const loadThemes = async () => {
     try {
-      const fetchedThemes = await themeService.getThemePresets();
+      const fetchedThemes = await getThemePresets();
       setThemes(fetchedThemes);
     } catch (error) {
       console.error('Error loading themes:', error);
@@ -94,7 +94,7 @@ export function useCreateEventModal(isOpen: boolean) {
         guestAppConfig: formData.guestApp.config,
       };
 
-      const result = await eventService.createEvent(eventData);
+      const result = await createEvent(eventData);
 
       resetForm();
       router.push(`/dashboard/events/${result.id}/manage`);

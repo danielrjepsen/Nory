@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
-import { themeService } from '../_services/themes';
-import { Theme } from '../_types/theme';
+import { getThemePresets } from '../_services/themes';
+import type { Theme } from '../_types/theme';
 
 export function useThemes() {
   const [themes, setThemes] = useState<Theme[]>([]);
@@ -14,7 +14,7 @@ export function useThemes() {
   const loadThemes = async () => {
     try {
       setLoading(true);
-      const fetchedThemes = await themeService.getThemePresets();
+      const fetchedThemes = await getThemePresets();
       setThemes(fetchedThemes);
       setError(null);
     } catch (err) {

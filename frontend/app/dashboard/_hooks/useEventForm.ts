@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useAuth } from '../_contexts/AuthContext';
-import EventsService from '../_services/events';
+import { getEvents } from '../_services/events';
 
 export interface EventFormData {
   eventType: 'single' | 'organizer' | '';
@@ -49,7 +49,7 @@ export function useEventForm() {
   const fetchEventSlots = async () => {
     setSlotsLoading(true);
     try {
-      const events = await EventsService.getEvents();
+      const events = await getEvents();
       const usedSlots = events.length;
 
       // Calculate available slots based on plan
