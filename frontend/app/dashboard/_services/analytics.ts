@@ -1,4 +1,4 @@
-import { apiClient } from './api';
+import { apiClient } from '@/lib/api';
 import { analyticsCache } from './cache';
 import type {
     DashboardOverview,
@@ -12,18 +12,18 @@ import type {
 } from '../_types/analytics';
 
 const CACHE_KEYS = {
-    dashboardOverview: (orgId: string) => `dashboard:overview:${orgId}`,
+    dashboardOverview: () => `dashboard:overview`,
     eventSummary: (eventId: string, periodType: PeriodType) =>
         `event:summary:${eventId}:${periodType}`,
 } as const;
 
 export class AnalyticsService {
-    static async getDashboardOverview(orgId: string): Promise<DashboardOverview> {
-        const cacheKey = CACHE_KEYS.dashboardOverview(orgId);
+    static async getDashboardOverview(): Promise<DashboardOverview> {
+        const cacheKey = CACHE_KEYS.dashboardOverview();
 
         return analyticsCache.getOrSet(
             cacheKey,
-            () => apiClient.get<DashboardOverview>(`/api/dashboard/org/${orgId}/overview`)
+            () => apiClient.get<DashboardOverview>(`/api/v1/dashboard/overview`)
         );
     }
 
@@ -32,7 +32,7 @@ export class AnalyticsService {
         periodType: PeriodType = 'Total'
     ): Promise<EventAnalyticsSummary> {
         return apiClient.get<EventAnalyticsSummary>(
-            `/api/analytics/events/${eventId}/summary`,
+            `/api/v1/analytics/events/${eventId}/summary`,
             { params: { periodType } }
         );
     }
@@ -44,7 +44,7 @@ export class AnalyticsService {
         periodType: RangePeriodType = 'Daily'
     ): Promise<EventAnalyticsSummary[]> {
         return apiClient.get<EventAnalyticsSummary[]>(
-            `/api/analytics/events/${eventId}/range`,
+            `/api/v1/analytics/events/${eventId}/range`,
             { params: { startDate, endDate, periodType } }
         );
     }
@@ -55,7 +55,7 @@ export class AnalyticsService {
         offset = 0
     ): Promise<ActivityLogEntry[]> {
         return apiClient.get<ActivityLogEntry[]>(
-            `/api/analytics/events/${eventId}/activity`,
+            `/api/v1/analytics/events/${eventId}/activity`,
             { params: { limit, offset } }
         );
     }
@@ -65,7 +65,7 @@ export class AnalyticsService {
         payload: TrackEventPayload
     ): Promise<TrackEventResponse> {
         return apiClient.post<TrackEventResponse>(
-            `/api/analytics/events/${eventId}/track`,
+            `/api/v1/analytics/events/${eventId}/track`,
             {
                 eventType: payload.eventType,
                 data: payload.data ?? {},
@@ -74,7 +74,7 @@ export class AnalyticsService {
         );
     }
 
-    static async getOrgAnalyticsSummary(
+    static async getAnalyticsSummary(
         eventIds: string[]
     ): Promise<OrgAnalyticsSummary & { events: EventAnalyticsSummary[] }> {
         if (eventIds.length === 0) {
@@ -125,17 +125,13 @@ export class AnalyticsService {
     }
 
     static invalidateDashboardCache(orgId: string): boolean {
-        return analyticsCache.delete(CACHE_KEYS.dashboardOverview(orgId));
+        return analyticsCache.delete(CACHE_KEYS.dashboardOverview());
     }
 
-    /**
-     * Invalidate event summary cache
-     */
     static invalidateEventCache(eventId: string, periodType?: PeriodType): number {
         if (periodType) {
             return analyticsCache.delete(CACHE_KEYS.eventSummary(eventId, periodType)) ? 1 : 0;
         }
-        // Invalidate all period types for this event
         return analyticsCache.invalidateByPrefix(`event:summary:${eventId}:`);
     }
 
@@ -144,9 +140,6 @@ export class AnalyticsService {
     }
 }
 
-/**
- * Format numbers for display with K/M
- */
 export function formatNumber(num: number): string {
     if (num >= 1_000_000) {
         return `${(num / 1_000_000).toFixed(1)}M`;
@@ -157,9 +150,6 @@ export function formatNumber(num: number): string {
     return num.toString();
 }
 
-/**
- * calculate percent change 
- */
 export function calculateChange(
     current: number,
     previous: number

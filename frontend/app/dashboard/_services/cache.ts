@@ -1,7 +1,3 @@
-/**
- * caching for different service with ttl.
- */
-
 interface CacheEntry<T> {
   data: T;
   expires: number;
@@ -22,9 +18,6 @@ export class CacheService {
     this.maxSize = config.maxSize ?? 100;
   }
 
-  /**
-   * Get cached data by key
-   */
   get<T>(key: string): T | null {
     const cached = this.store.get(key);
 
@@ -32,7 +25,6 @@ export class CacheService {
       return null;
     }
 
-    // Check if expired
     if (cached.expires <= Date.now()) {
       this.store.delete(key);
       return null;
@@ -41,9 +33,6 @@ export class CacheService {
     return cached.data as T;
   }
 
-  /**
-   * Set data in cache with TTL
-   */
   set<T>(key: string, data: T, ttlMs?: number): void {
     if (this.store.size >= this.maxSize) {
       const firstKey = this.store.keys().next().value;
@@ -108,9 +97,6 @@ export class CacheService {
     };
   }
 
-  /**
-   * fetch if not in cache
-   */
   async getOrSet<T>(
     key: string,
     fetcher: () => Promise<T>,
@@ -139,9 +125,6 @@ export class CacheService {
     return count;
   }
 
-  /**
-   * Get all keys in cache
-   */
   keys(): string[] {
     return Array.from(this.store.keys());
   }

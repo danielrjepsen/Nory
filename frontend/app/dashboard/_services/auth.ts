@@ -1,29 +1,28 @@
+import { apiClient } from '@/lib/api';
 import { AuthResponse, LoginData, RegisterData, User } from '../_types/auth';
-import { apiClient } from './api';
 
-const TOKEN_REFRESH_BUFFER = 60; // refresh token 60s before expiry
 const STORAGE_KEYS = {
     USER: 'auth_user',
 } as const;
 
 class AuthService {
     private user: User | null = null;
-    private accessToken: string | null = null;
-    private tokenExpiry: number | null = null;
-    private refreshPromise: Promise<boolean> | null = null;
-    private refreshTimer: NodeJS.Timeout | null = null;
 
     constructor() {
         this.initializeFromStorage();
         this.setupApiClient();
     }
 
-    /**
-     * Configure API client with auth providers
-     */
     private setupApiClient(): void {
-        apiClient.setAuthTokenProvider(() => this.getAccessToken());
-        apiClient.setUnauthorizedHandler(() => this.refreshToken());
+        apiClient.setAuthTokenProvider(() => null);
+
+        apiClient.setUnauthorizedHandler(async () => {
+            this.clearAuth();
+            if (typeof window !== 'undefined') {
+                window.location.href = '/login';
+            }
+            return false;
+        });
     }
 
     private initializeFromStorage(): void {
@@ -60,34 +59,6 @@ class AuthService {
         }
     }
 
-    async refreshToken(): Promise<boolean> {
-        if (this.refreshPromise) {
-            return this.refreshPromise;
-        }
-
-        this.refreshPromise = this.performTokenRefresh();
-
-        try {
-            return await this.refreshPromise;
-        } finally {
-            this.refreshPromise = null;
-        }
-    }
-
-    private async performTokenRefresh(): Promise<boolean> {
-        try {
-            const result = await apiClient.post<AuthResponse>('/api/v1/auth/refresh');
-            this.handleAuthResponse(result);
-            return true;
-        } catch (error: any) {
-            console.error('Token refresh error:', error);
-            if (error.status === 401 || error.status === 400) {
-                this.clearAuth();
-            }
-            return false;
-        }
-    }
-
     async logout(): Promise<void> {
         try {
             await apiClient.post('/api/v1/auth/logout');
@@ -98,32 +69,23 @@ class AuthService {
         }
     }
 
-    private handleAuthResponse(response: AuthResponse): void {
-        if (response.token) {
-            this.setAccessToken(response.token, response.expiresIn);
+    async verifyAuth(): Promise<boolean> {
+        try {
+            const user = await apiClient.get<User>('/api/v1/auth/me');
+            if (user) {
+                this.setUser(user);
+                return true;
+            }
+            return false;
+        } catch {
+            this.clearAuth();
+            return false;
         }
+    }
 
+    private handleAuthResponse(response: AuthResponse): void {
         if (response.user) {
             this.setUser(response.user);
-        }
-    }
-
-    setAccessToken(token: string, expiresIn: number): void {
-        this.accessToken = token;
-        this.tokenExpiry = Date.now() + expiresIn * 1000;
-        this.scheduleTokenRefresh(expiresIn);
-    }
-
-    private scheduleTokenRefresh(expiresIn: number): void {
-        if (this.refreshTimer) {
-            clearTimeout(this.refreshTimer);
-        }
-
-        const refreshIn = Math.max(0, (expiresIn - TOKEN_REFRESH_BUFFER) * 1000);
-        if (refreshIn > 0) {
-            this.refreshTimer = setTimeout(() => {
-                this.refreshToken();
-            }, refreshIn);
         }
     }
 
@@ -137,25 +99,10 @@ class AuthService {
 
     private clearAuth(): void {
         this.user = null;
-        this.accessToken = null;
-        this.tokenExpiry = null;
-
-        if (this.refreshTimer) {
-            clearTimeout(this.refreshTimer);
-            this.refreshTimer = null;
-        }
 
         if (typeof window !== 'undefined') {
             localStorage.removeItem(STORAGE_KEYS.USER);
         }
-    }
-
-    getAccessToken(): string | null {
-        if (this.tokenExpiry && Date.now() >= this.tokenExpiry) {
-            this.refreshToken();
-            return null;
-        }
-        return this.accessToken;
     }
 
     getUser(): User | null {
@@ -167,15 +114,6 @@ class AuthService {
 
     isAuthenticated(): boolean {
         return !!this.getUser();
-    }
-
-    getTokenInfo() {
-        return {
-            hasToken: !!this.accessToken,
-            hasUser: !!this.user,
-            tokenExpiry: this.tokenExpiry ? new Date(this.tokenExpiry) : null,
-            timeUntilExpiry: this.tokenExpiry ? Math.max(0, this.tokenExpiry - Date.now()) : null,
-        };
     }
 }
 
