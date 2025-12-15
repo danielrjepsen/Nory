@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
-import { useAuth } from '../contexts/AuthContext';
-import { eventService } from '../services/events';
+import { useAuth } from '../_contexts/AuthContext';
+import EventsService from '../_services/events';
 
 export interface EventFormData {
   eventType: 'single' | 'organizer' | '';
@@ -47,30 +47,15 @@ export function useEventForm() {
 
   // Fetch event slots
   const fetchEventSlots = async () => {
-    if (!user?.currentOrg) return;
-
     setSlotsLoading(true);
     try {
-      const events = await eventService.getEvents(user.currentOrg.id);
+      const events = await EventsService.getEvents();
       const usedSlots = events.length;
 
       // Calculate available slots based on plan
       let maxEvents = 0;
-      switch (user.currentOrg.planCode) {
-        case 'organizers':
-          maxEvents = 10;
-          break;
-        case 'professionals':
-          maxEvents = 50;
-          break;
-        case 'enterprise':
-          maxEvents = 999;
-          break;
-        default:
-          maxEvents = 1;
-      }
 
-      const purchasedSlots = user.currentOrg.purchasedSlots || 0;
+      const purchasedSlots = 0;
       const totalMaxEvents = maxEvents + purchasedSlots;
       const calculatedAvailableSlots = Math.max(0, totalMaxEvents - usedSlots);
 

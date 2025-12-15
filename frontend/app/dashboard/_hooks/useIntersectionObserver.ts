@@ -6,9 +6,6 @@ interface UseIntersectionObserverOptions {
   enabled?: boolean;
 }
 
-/**
- * Hook for detecting when an element enters the viewport
- */
 export function useIntersectionObserver<T extends HTMLElement = HTMLDivElement>(
   options: UseIntersectionObserverOptions = {}
 ) {

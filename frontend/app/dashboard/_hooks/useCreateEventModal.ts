@@ -1,11 +1,13 @@
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { useAuth } from '../_contexts/AuthContext';
-import { eventService } from '../_services/events';
-import { themeService, Theme } from '../services/themes';
+import eventService from '../_services/events';
+import { themeService } from '../_services/themes';
 import { INITIAL_FORM_DATA, EVENT_STEPS, type EventFormData } from '../_components/modals/create-event-modal/createEventModalConfig';
 import { combineDateAndTime } from '../_utils/dateTimeUtils';
 import { getValidationErrorMessage, validateCurrentStep } from '../_components/modals/create-event-modal/eventValidation';
+import { Theme } from '../_types/theme';
+import { CreateEventRequest } from '../_types';
 
 export function useCreateEventModal(isOpen: boolean) {
   const router = useRouter();
@@ -73,11 +75,6 @@ export function useCreateEventModal(isOpen: boolean) {
   };
 
   const handleSubmit = async () => {
-    if (!user?.currentOrg) {
-      setError('No organization found');
-      return;
-    }
-
     setLoading(true);
     setError('');
 
@@ -87,21 +84,20 @@ export function useCreateEventModal(isOpen: boolean) {
         ? combineDateAndTime(formData.endDate, formData.endTime)
         : startDateTime;
 
-      const eventData = {
+      const eventData: CreateEventRequest = {
         name: formData.name,
         description: formData.description,
-        startsAt: startDateTime,
-        endsAt: endDateTime,
+        startsAt: startDateTime?.toISOString() ?? null,
+        endsAt: endDateTime?.toISOString() ?? null,
         isPublic: formData.isPublic,
-        theme: formData.selectedTheme,
+        themeName: formData.selectedTheme,
         guestAppConfig: formData.guestApp.config,
-        orgId: user.currentOrg.id
       };
 
       const result = await eventService.createEvent(eventData);
 
       resetForm();
-      router.push(`/events/${result.id}`);
+      router.push(`/dashboard/events/${result.id}/manage`);
       return result;
     } catch (error: any) {
       setError(error.message || 'An unexpected error occurred');

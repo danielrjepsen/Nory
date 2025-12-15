@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import type { Theme } from '../services/themes';
+import { Theme } from '../_types/theme';
 
 const DEFAULT_THEME: Partial<Theme> = {
   name: 'custom',

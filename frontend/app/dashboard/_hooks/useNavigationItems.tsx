@@ -32,25 +32,25 @@ export function useNavigationItems(): NavigationItem[] {
       id: 'galleries',
       label: t('navigation.galleries'),
       icon: <PhotoIcon />,
-      path: '/galleries'
+      path: '/dashboard/galleries'
     },
     {
       id: 'qr',
       label: t('navigation.qrCodes'),
       icon: <QRCodeIcon />,
-      path: '/qr-codes'
+      path: '/dashboard/qr-codes'
     },
     {
       id: 'analytics',
       label: t('navigation.analytics'),
       icon: <ChartIcon />,
-      path: '/analytics'
+      path: '/dashboard/analytics'
     },
     {
       id: 'settings',
       label: t('navigation.settings'),
       icon: <SettingsIcon />,
-      path: '/settings'
+      path: '/dashboard/settings'
     }
   ], [t]);
 }

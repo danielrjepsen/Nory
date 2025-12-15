@@ -1,9 +1,9 @@
 import { useState, useEffect, useRef, useCallback } from 'react';
-import { EventsService } from '../_services/events';
+import EventsService from '../_services/events';
 
 interface UseAuthenticatedImageOptions {
   photoId: string;
-  cdnUrl: string;
+  imageUrl: string;
   enabled?: boolean;
 }
 
@@ -16,12 +16,9 @@ interface UseAuthenticatedImageReturn {
   handleImageError: () => void;
 }
 
-/**
- * Hook for loading authenticated images with caching
- */
 export function useAuthenticatedImage({
   photoId,
-  cdnUrl,
+  imageUrl,
   enabled = true,
 }: UseAuthenticatedImageOptions): UseAuthenticatedImageReturn {
   const [imageSrc, setImageSrc] = useState<string>('');
@@ -34,7 +31,6 @@ export function useAuthenticatedImage({
     if (!enabled) return;
 
     try {
-      // Check cache first
       if (cacheRef.current.has(photoId)) {
         const cachedUrl = cacheRef.current.get(photoId)!;
         setImageSrc(cachedUrl);
@@ -47,7 +43,7 @@ export function useAuthenticatedImage({
       setError(false);
       setImageLoaded(false);
 
-      const blob = await EventsService.loadAuthenticatedImage(cdnUrl);
+      const blob = await EventsService.loadAuthenticatedImage(imageUrl);
       const blobUrl = URL.createObjectURL(blob);
 
       cacheRef.current.set(photoId, blobUrl);
@@ -58,12 +54,11 @@ export function useAuthenticatedImage({
       setIsLoading(false);
       setImageLoaded(false);
     }
-  }, [photoId, cdnUrl, enabled]);
+  }, [photoId, imageUrl, enabled]);
 
   useEffect(() => {
     loadImage();
 
-    // Cleanup blob URLs on unmount
     return () => {
       cacheRef.current.forEach((blobUrl) => {
         URL.revokeObjectURL(blobUrl);

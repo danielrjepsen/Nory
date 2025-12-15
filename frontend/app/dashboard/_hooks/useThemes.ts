@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
-import { Theme, themeService } from '../services/themes';
+import { themeService } from '../_services/themes';
+import { Theme } from '../_types/theme';
 
 export function useThemes() {
   const [themes, setThemes] = useState<Theme[]>([]);
