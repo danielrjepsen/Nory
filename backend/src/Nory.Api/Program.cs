@@ -65,6 +65,7 @@ builder.Services.AddScoped<IAnalyticsRepository, AnalyticsRepository>();
 builder.Services.AddScoped<IAppTypeRepository, AppTypeRepository>();
 builder.Services.AddScoped<ICategoryRepository, CategoryRepository>();
 builder.Services.AddScoped<IEventAppRepository, EventAppRepository>();
+builder.Services.AddScoped<IEventPhotoRepository, EventPhotoRepository>();
 builder.Services.AddScoped<IEventRepository, EventRepository>();
 builder.Services.AddScoped<IThemeRepository, ThemeRepository>();
 

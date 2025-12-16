@@ -1,26 +1,28 @@
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Nory.Application.Common;
 using Nory.Application.DTOs;
 using Nory.Application.Services;
+using Nory.Core.Domain.Entities;
 using Nory.Core.Domain.Enums;
-using Nory.Infrastructure.Persistence;
-using Nory.Infrastructure.Persistence.Models;
+using Nory.Core.Domain.Repositories;
 
 namespace Nory.Infrastructure.Services;
 
 public class PhotoService : IPhotoService
 {
-    private readonly ApplicationDbContext _context;
+    private readonly IEventRepository _eventRepository;
+    private readonly IEventPhotoRepository _photoRepository;
     private readonly IFileStorageService _fileStorage;
     private readonly ILogger<PhotoService> _logger;
 
     public PhotoService(
-        ApplicationDbContext context,
+        IEventRepository eventRepository,
+        IEventPhotoRepository photoRepository,
         IFileStorageService fileStorage,
         ILogger<PhotoService> logger)
     {
-        _context = context;
+        _eventRepository = eventRepository;
+        _photoRepository = photoRepository;
         _fileStorage = fileStorage;
         _logger = logger;
     }
@@ -33,48 +35,35 @@ public class PhotoService : IPhotoService
         int offset = 0,
         CancellationToken cancellationToken = default)
     {
-        var eventEntity = await _context.Events
-            .AsNoTracking()
-            .FirstOrDefaultAsync(e => e.Id == eventId && e.UserId == userId, cancellationToken);
+        var eventEntity = await _eventRepository.GetByIdAsync(eventId, cancellationToken);
 
         if (eventEntity is null)
-        {
             return Result<PhotosResponse>.NotFound("Event not found");
-        }
+
+        if (!eventEntity.BelongsTo(userId))
+            return Result<PhotosResponse>.NotFound("Event not found");
 
         if (eventEntity.Status == EventStatus.Archived)
-        {
             return Result<PhotosResponse>.NotFound("Event has been archived");
-        }
 
-        var query = _context.EventPhotos.AsNoTracking().Where(p => p.EventId == eventId);
+        var photos = await _photoRepository.GetByEventIdAsync(eventId, categoryId, limit, offset, cancellationToken);
 
-        if (categoryId.HasValue)
-        {
-            query = query.Where(p => p.CategoryId == categoryId.Value);
-        }
+        var photoDtos = photos.Select(p => new PhotoDto(
+            p.Id,
+            $"/api/v1/events/{eventId}/photos/{p.Id}/secure",
+            p.OriginalFileName,
+            p.UploadedBy ?? "Anonymous",
+            p.CategoryId,
+            p.Width,
+            p.Height,
+            p.FileSizeBytes,
+            p.CreatedAt
+        )).ToList();
 
-        var photos = await query
-            .OrderByDescending(p => p.CreatedAt)
-            .Skip(offset)
-            .Take(Math.Min(limit, 100))
-            .Select(p => new PhotoDto(
-                p.Id,
-                $"/api/v1/events/{eventId}/photos/{p.Id}/secure",
-                p.OriginalFileName,
-                p.UploadedBy ?? "Anonymous",
-                p.CategoryId,
-                p.Width,
-                p.Height,
-                p.FileSizeBytes,
-                p.CreatedAt
-            ))
-            .ToListAsync(cancellationToken);
-
-        _logger.LogInformation("Retrieved {Count} photos for event {EventId}", photos.Count, eventId);
+        _logger.LogInformation("Retrieved {Count} photos for event {EventId}", photoDtos.Count, eventId);
 
         return Result<PhotosResponse>.Success(
-            new PhotosResponse(true, photos, photos.Count));
+            new PhotosResponse(true, photoDtos, photoDtos.Count));
     }
 
     public async Task<Result<UploadPhotosResponse>> UploadPhotosAsync(
@@ -83,25 +72,19 @@ public class PhotoService : IPhotoService
         CancellationToken cancellationToken = default)
     {
         if (files.Count == 0)
-        {
             return Result<UploadPhotosResponse>.BadRequest("No files uploaded");
-        }
 
-        var eventEntity = await _context.Events
-            .FirstOrDefaultAsync(e => e.Id == eventId, cancellationToken);
+        var eventEntity = await _eventRepository.GetByIdAsync(eventId, cancellationToken);
 
         if (eventEntity is null)
-        {
             return Result<UploadPhotosResponse>.NotFound("Event not found");
-        }
 
         if (eventEntity.Status == EventStatus.Archived)
-        {
             return Result<UploadPhotosResponse>.BadRequest("This event no longer accepts photo uploads");
-        }
 
         var uploadedPhotos = new List<UploadedPhotoDto>();
         var userName = files.FirstOrDefault()?.UserName ?? "Anonymous";
+        var hasNewContent = false;
 
         foreach (var file in files)
         {
@@ -124,33 +107,21 @@ public class PhotoService : IPhotoService
                     continue;
                 }
 
-                var photoId = Guid.NewGuid();
-                var imageUrl = $"/api/v1/events/{eventId}/photos/{photoId}/image";
+                var photo = EventPhoto.Create(
+                    eventId: eventId,
+                    fileName: Path.GetFileName(storageResult.StoragePath),
+                    originalFileName: file.FileName,
+                    contentType: file.ContentType,
+                    fileSizeBytes: file.FileSize,
+                    storagePath: storageResult.StoragePath,
+                    uploadedBy: file.UserName,
+                    categoryId: file.CategoryId
+                );
 
-                var photo = new EventPhotoDbModel
-                {
-                    Id = photoId,
-                    EventId = eventId,
-                    CategoryId = file.CategoryId,
-                    FileName = Path.GetFileName(storageResult.StoragePath),
-                    OriginalFileName = file.FileName,
-                    ContentType = file.ContentType,
-                    FileSizeBytes = file.FileSize,
-                    StoragePath = storageResult.StoragePath,
-                    ImageUrl = imageUrl,
-                    UploadedBy = file.UserName ?? "Anonymous",
-                    Year = DateTime.UtcNow.Year,
-                    CreatedAt = DateTime.UtcNow,
-                };
+                _photoRepository.Add(photo);
+                hasNewContent = true;
 
-                _context.EventPhotos.Add(photo);
-
-                if (!eventEntity.HasContent)
-                {
-                    eventEntity.HasContent = true;
-                }
-
-                uploadedPhotos.Add(new UploadedPhotoDto(photo.Id, file.FileName, imageUrl));
+                uploadedPhotos.Add(new UploadedPhotoDto(photo.Id, file.FileName, photo.ImageUrl));
             }
             catch (Exception ex)
             {
@@ -158,7 +129,13 @@ public class PhotoService : IPhotoService
             }
         }
 
-        await _context.SaveChangesAsync(cancellationToken);
+        if (hasNewContent && !eventEntity.HasContent)
+        {
+            eventEntity.MarkHasContent();
+            _eventRepository.Update(eventEntity);
+        }
+
+        await _photoRepository.SaveChangesAsync(cancellationToken);
 
         _logger.LogInformation("Uploaded {Count} photos for event {EventId}", uploadedPhotos.Count, eventId);
 
@@ -177,28 +154,19 @@ public class PhotoService : IPhotoService
         MovePhotoCategoryCommand command,
         CancellationToken cancellationToken = default)
     {
-        var photo = await _context.EventPhotos
-            .Include(p => p.Event)
-            .FirstOrDefaultAsync(p => p.Id == photoId && p.EventId == eventId, cancellationToken);
+        var eventEntity = await _eventRepository.GetByIdAsync(eventId, cancellationToken);
 
-        if (photo?.Event is null || photo.Event.UserId != userId)
-        {
+        if (eventEntity is null || !eventEntity.BelongsTo(userId))
             return Result.NotFound("Photo not found");
-        }
 
-        if (command.CategoryId.HasValue)
-        {
-            var categoryExists = await _context.EventCategories
-                .AnyAsync(c => c.Id == command.CategoryId && c.EventId == eventId, cancellationToken);
+        var photo = await _photoRepository.GetByIdWithEventAsync(photoId, eventId, cancellationToken);
 
-            if (!categoryExists)
-            {
-                return Result.BadRequest("Category not found");
-            }
-        }
+        if (photo is null)
+            return Result.NotFound("Photo not found");
 
-        photo.CategoryId = command.CategoryId;
-        await _context.SaveChangesAsync(cancellationToken);
+        photo.MoveToCategory(command.CategoryId);
+        _photoRepository.Update(photo);
+        await _photoRepository.SaveChangesAsync(cancellationToken);
 
         _logger.LogInformation("Moved photo {PhotoId} to category {CategoryId}", photoId, command.CategoryId);
 
@@ -211,22 +179,23 @@ public class PhotoService : IPhotoService
         string userId,
         CancellationToken cancellationToken = default)
     {
-        var photo = await _context.EventPhotos
-            .Include(p => p.Event)
-            .FirstOrDefaultAsync(p => p.Id == photoId && p.EventId == eventId, cancellationToken);
+        var eventEntity = await _eventRepository.GetByIdAsync(eventId, cancellationToken);
 
-        if (photo?.Event is null || photo.Event.UserId != userId)
-        {
+        if (eventEntity is null || !eventEntity.BelongsTo(userId))
             return Result.NotFound("Photo not found");
-        }
+
+        var photo = await _photoRepository.GetByIdWithEventAsync(photoId, eventId, cancellationToken);
+
+        if (photo is null)
+            return Result.NotFound("Photo not found");
 
         if (!string.IsNullOrEmpty(photo.StoragePath))
         {
             await _fileStorage.DeleteFileAsync(photo.StoragePath, cancellationToken);
         }
 
-        _context.EventPhotos.Remove(photo);
-        await _context.SaveChangesAsync(cancellationToken);
+        _photoRepository.Remove(photo);
+        await _photoRepository.SaveChangesAsync(cancellationToken);
 
         _logger.LogInformation("Deleted photo {PhotoId}", photoId);
 
@@ -239,15 +208,15 @@ public class PhotoService : IPhotoService
         string userId,
         CancellationToken cancellationToken = default)
     {
-        var photo = await _context.EventPhotos
-            .AsNoTracking()
-            .Include(p => p.Event)
-            .FirstOrDefaultAsync(p => p.Id == photoId && p.EventId == eventId, cancellationToken);
+        var eventEntity = await _eventRepository.GetByIdAsync(eventId, cancellationToken);
 
-        if (photo?.Event is null || photo.Event.UserId != userId)
-        {
+        if (eventEntity is null || !eventEntity.BelongsTo(userId))
             return Result<FileResult>.NotFound("Photo not found");
-        }
+
+        var photo = await _photoRepository.GetByIdWithEventAsync(photoId, eventId, cancellationToken);
+
+        if (photo is null)
+            return Result<FileResult>.NotFound("Photo not found");
 
         if (string.IsNullOrEmpty(photo.StoragePath))
         {

@@ -162,6 +162,15 @@ public class Event
         UpdatedAt = DateTime.UtcNow;
     }
 
+    public void MarkHasContent()
+    {
+        if (!HasContent)
+        {
+            HasContent = true;
+            UpdatedAt = DateTime.UtcNow;
+        }
+    }
+
     public bool BelongsTo(string userId) => UserId == userId;
 
     private static void ValidateName(string name)
