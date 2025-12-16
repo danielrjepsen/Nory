@@ -46,11 +46,9 @@ public class EventAppService : IEventAppService
 
         var apps = new List<EventAppDto>();
 
-        // Get apps from EventApps table
         var eventApps = await GetAppsFromDatabaseAsync(eventId, cancellationToken);
         apps.AddRange(eventApps);
 
-        // Get apps from GuestAppConfig (GuestAppBuilder system)
         var guestApps = await GetAppsFromGuestAppConfigAsync(eventEntity.GuestAppConfig, cancellationToken);
         apps.AddRange(guestApps);
 
@@ -62,7 +60,6 @@ public class EventAppService : IEventAppService
     {
         _logger.LogInformation("Getting app {AppId} for event {EventId}", appId, eventId);
 
-        // Try to find in EventApps table first
         if (Guid.TryParse(appId, out var appGuid))
         {
             var app = await _context.EventApps
@@ -78,7 +75,6 @@ public class EventAppService : IEventAppService
             }
         }
 
-        // Try to find in GuestAppConfig
         var eventEntity = await _context.Events
             .AsNoTracking()
             .FirstOrDefaultAsync(e => e.Id == eventId, cancellationToken);
@@ -314,7 +310,6 @@ public class EventAppService : IEventAppService
     }
 }
 
-// Internal models for GuestAppConfig parsing
 internal class GuestAppComponent
 {
     public string Id { get; set; } = string.Empty;

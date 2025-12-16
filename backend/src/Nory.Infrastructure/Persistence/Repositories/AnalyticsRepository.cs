@@ -15,7 +15,6 @@ public class AnalyticsRepository : IAnalyticsRepository
         _context = context;
     }
 
-    // activity logs
     public async Task<ActivityLog> AddActivityAsync(ActivityLog activity)
     {
         var dbModel = activity.MapToDbModel();
@@ -101,7 +100,6 @@ public class AnalyticsRepository : IAnalyticsRepository
             .MaxAsync(a => (DateTime?)a.CreatedAt);
     }
 
-    // event metrics
     public async Task<EventMetrics?> GetMetricsAsync(
         Guid eventId,
         MetricsPeriodType periodType = MetricsPeriodType.Total
@@ -215,7 +213,6 @@ public class AnalyticsRepository : IAnalyticsRepository
         }
     }
 
-    // bulk
     public async Task<List<EventMetrics>> GetMetricsForEventsAsync(
         List<Guid> eventIds,
         MetricsPeriodType periodType
@@ -237,7 +234,6 @@ public class AnalyticsRepository : IAnalyticsRepository
             .ToDictionaryAsync(x => x.EventId, x => x.Count);
     }
 
-    // utility
     public async Task<bool> HasActivityDataAsync(Guid eventId)
     {
         return await _context.ActivityLogs.AnyAsync(a => a.EventId == eventId);

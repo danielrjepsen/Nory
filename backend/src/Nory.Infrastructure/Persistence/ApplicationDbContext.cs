@@ -14,18 +14,13 @@ public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
     public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
         : base(options) { }
 
-    // entities
     public DbSet<EventDbModel> Events { get; set; }
     public DbSet<EventPhotoDbModel> EventPhotos { get; set; }
     public DbSet<EventCategoryDbModel> EventCategories { get; set; }
     public DbSet<EventAppDbModel> EventApps { get; set; }
     public DbSet<AppTypeDbModel> AppTypes { get; set; }
-
-    // Theme entities
     public DbSet<ThemeDbModel> Themes { get; set; }
     public DbSet<EventTemplateDbModel> EventTemplates { get; set; }
-
-    // Analytics entities
     public DbSet<ActivityLogDbModel> ActivityLogs { get; set; }
     public DbSet<EventMetricsDbModel> EventMetrics { get; set; }
 
@@ -42,12 +37,8 @@ public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
 
         builder.Entity<ActivityLogDbModel>().ToTable("ActivityLogs");
         builder.Entity<EventMetricsDbModel>().ToTable("EventMetrics");
-
-        // Theme tables
         builder.Entity<ThemeDbModel>().ToTable("Themes");
         builder.Entity<EventTemplateDbModel>().ToTable("EventTemplates");
-
-        // event indexes
         builder
             .Entity<EventPhotoDbModel>()
             .HasIndex(p => p.EventId)
@@ -63,7 +54,6 @@ public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
             .HasIndex(ea => ea.EventId)
             .HasDatabaseName("IX_EventApps_EventId");
 
-        // Analytics indexes
         builder
             .Entity<ActivityLogDbModel>()
             .HasIndex(a => a.EventId)
@@ -84,7 +74,6 @@ public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
             .HasIndex(m => new { m.EventId, m.PeriodType })
             .HasDatabaseName("IX_EventMetrics_EventId_PeriodType");
 
-        // event
         builder
             .Entity<EventDbModel>()
             .HasMany(e => e.Photos)
@@ -118,7 +107,6 @@ public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
             .HasForeignKey(ea => ea.EventId)
             .OnDelete(DeleteBehavior.Cascade);
 
-        // Analytics
         builder
             .Entity<ActivityLogDbModel>()
             .HasOne(a => a.Event)
@@ -137,7 +125,6 @@ public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
 
         builder.Entity<EventMetricsDbModel>().Property(m => m.FeatureUsage).HasColumnType("jsonb");
 
-        // guestAppConfig as json column (value converter)
         var dictionaryConverter = new ValueConverter<Dictionary<string, object>?, string?>(
             v => v == null ? null : JsonSerializer.Serialize(v, (JsonSerializerOptions?)null),
             v =>
@@ -173,7 +160,6 @@ public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
             .HasConversion(dictionaryConverter)
             .Metadata.SetValueComparer(dictionaryComparer);
 
-        // Theme configuration
         builder
             .Entity<ThemeDbModel>()
             .HasIndex(t => t.Name)
@@ -195,7 +181,6 @@ public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
             .Property(t => t.DarkParticleColors)
             .HasColumnType("jsonb");
 
-        // EventTemplate configuration
         builder
             .Entity<EventTemplateDbModel>()
             .HasIndex(et => et.EventId)

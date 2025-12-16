@@ -79,38 +79,23 @@ public class MetricsService : IMetricsService
     {
         _logger.LogInformation("Updating metrics for {EventCount} events", eventIds.Count);
 
-        // Get unprocessed activities
         var unprocessedActivities = await _analyticsRepository.GetUnprocessedActivitiesAsync();
+        if (!unprocessedActivities.Any()) return;
 
-        if (!unprocessedActivities.Any())
-        {
-            _logger.LogInformation("No unprocessed activities to process");
-            return;
-        }
-
-        // Filter activities for the specified events
         var relevantActivities = unprocessedActivities
             .Where(a => eventIds.Contains(a.EventId))
             .ToList();
 
-        if (!relevantActivities.Any())
-        {
-            _logger.LogInformation("No relevant activities for the specified events");
-            return;
-        }
+        if (!relevantActivities.Any()) return;
 
-        // Group activities by event
         var activitiesByEvent = relevantActivities.GroupBy(a => a.EventId);
 
         foreach (var eventGroup in activitiesByEvent)
         {
             var eventId = eventGroup.Key;
-
-            // Get or create total metrics for this event
             var metrics = await _analyticsRepository.GetMetricsAsync(eventId, MetricsPeriodType.Total)
                 ?? Core.Domain.Entities.EventMetrics.Create(eventId, MetricsPeriodType.Total);
 
-            // Process each activity and update metrics
             foreach (var activity in eventGroup)
             {
                 switch (activity.Type)
@@ -133,17 +118,9 @@ public class MetricsService : IMetricsService
                 }
             }
 
-            // Save updated metrics
             await _analyticsRepository.UpsertMetricsAsync(metrics);
-
-            _logger.LogInformation(
-                "Updated metrics for event {EventId}: {ActivityCount} activities processed",
-                eventId,
-                eventGroup.Count()
-            );
         }
 
-        // Mark all processed activities as processed
         var activityIds = relevantActivities.Select(a => a.Id).ToList();
         await _analyticsRepository.MarkActivitiesAsProcessedAsync(activityIds);
 

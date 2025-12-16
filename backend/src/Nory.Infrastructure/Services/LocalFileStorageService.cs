@@ -85,7 +85,7 @@ public class LocalFileStorageService : IFileStorageService
             var year = DateTime.UtcNow.Year;
             var month = DateTime.UtcNow.Month.ToString("D2");
 
-            // Path: events/johns-wedding-aaacb193/2025/12/abc123.jpg
+            // events/johns-wedding-aaacb193/2025/12/abc123.jpg
             var eventSlug = CreateSlug(eventName);
             var shortGuid = eventId.ToString()[..8];
             var eventFolder = $"{eventSlug}-{shortGuid}";

@@ -34,8 +34,6 @@ public class AttendeeService : IAttendeeService
     {
         _logger.LogInformation("Getting attendee status for event {EventId}", eventId);
 
-        // TODO: Implement attendee tracking with session/cookie based identification
-        // For now return not registered status to allow the guest flow to work
         return Task.FromResult(
             new AttendeeStatusDto
             {
@@ -59,11 +57,6 @@ public class AttendeeService : IAttendeeService
             request.Name
         );
 
-        // TODO: Implement actual attendee registration with:
-        // - Session/cookie based identification
-        // - Store attendee in database
-        // - Associate with event
-        // ..for now, acknowledge the registration
         return Task.FromResult(
             new RegisterAttendeeResponseDto
             {
@@ -82,7 +75,6 @@ public class AttendeeService : IAttendeeService
     {
         _logger.LogInformation("Updating consent for event {EventId}", eventId);
 
-        // TODO: Implement actual consent
         return Task.FromResult(
             new UpdateConsentResponseDto { Success = true, Message = "Consent updated" }
         );

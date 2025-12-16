@@ -1,14 +1,9 @@
-using System.IdentityModel.Tokens.Jwt;
-using System.Security.Claims;
-using System.Text;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
-using Microsoft.IdentityModel.Tokens;
 using Nory.Application.DTOs.Auth;
 using Nory.Application.Services;
-using Nory.Core.Domain.Entities;
 using Nory.Infrastructure.Identity;
+using Nory.Infrastructure.Persistence.Extensions;
 
 namespace Nory.Infrastructure.Services;
 
@@ -16,19 +11,16 @@ public class AuthService : IAuthService
 {
     private readonly UserManager<ApplicationUser> _userManager;
     private readonly SignInManager<ApplicationUser> _signInManager;
-    private readonly IConfiguration _configuration;
     private readonly ILogger<AuthService> _logger;
 
     public AuthService(
         UserManager<ApplicationUser> userManager,
         SignInManager<ApplicationUser> signInManager,
-        IConfiguration configuration,
         ILogger<AuthService> logger
     )
     {
         _userManager = userManager;
         _signInManager = signInManager;
-        _configuration = configuration;
         _logger = logger;
     }
 
@@ -62,13 +54,11 @@ public class AuthService : IAuthService
             };
         }
 
-        // Generate email confirmation token
         var emailToken = await _userManager.GenerateEmailConfirmationTokenAsync(user);
-        // TODO: Send email with verification link
 
         await _signInManager.SignInAsync(user, isPersistent: true);
 
-        return new AuthResult { Success = true, User = MapToUserDto(user) };
+        return new AuthResult { Success = true, User = user.MapToDto() };
     }
 
     public async Task<AuthResult> LoginAsync(LoginRequest request)
@@ -103,10 +93,9 @@ public class AuthService : IAuthService
             return new AuthResult { Success = false, Errors = errors };
         }
 
-        // Sign in with cookie
         await _signInManager.SignInAsync(user, isPersistent: request.RememberMe);
 
-        return new AuthResult { Success = true, User = MapToUserDto(user) };
+        return new AuthResult { Success = true, User = user.MapToDto() };
     }
 
     public async Task<bool> VerifyEmailAsync(string userId, string token)
@@ -123,11 +112,9 @@ public class AuthService : IAuthService
     {
         var user = await _userManager.FindByEmailAsync(email);
         if (user == null)
-            return; // Don't reveal if user exists
+            return;
 
         var token = await _userManager.GeneratePasswordResetTokenAsync(user);
-
-        // TODO: Send email with reset link containing token
         _logger.LogInformation("Password reset token generated for {Email}", email);
     }
 
@@ -161,7 +148,7 @@ public class AuthService : IAuthService
         if (user == null)
             return null;
 
-        return MapToUserDto(user);
+        return user.MapToDto();
     }
 
     public async Task<UpdateProfileResult> UpdateProfileAsync(
@@ -196,53 +183,12 @@ public class AuthService : IAuthService
             };
         }
 
-        return new UpdateProfileResult { Success = true, User = MapToUserDto(user) };
+        return new UpdateProfileResult { Success = true, User = user.MapToDto() };
     }
 
     public async Task LogoutAsync(string userId)
     {
-        // TODO: Invalidate refresh tokens in database
         await _signInManager.SignOutAsync();
         _logger.LogInformation("User {UserId} logged out", userId);
-    }
-
-    private UserDto MapToUserDto(ApplicationUser user)
-    {
-        return new UserDto
-        {
-            Id = user.Id,
-            Email = user.Email!,
-            Name = user.Name ?? user.Email!,
-            EmailVerified = user.EmailConfirmed,
-            ProfilePicture = user.ProfilePicture,
-            CreatedAt = user.CreatedAt,
-        };
-    }
-
-    private User MapToDomainUser(ApplicationUser appUser)
-    {
-        return new User(
-            id: appUser.Id,
-            email: appUser.Email!,
-            name: appUser.Name,
-            locale: appUser.Locale,
-            profilePicture: appUser.ProfilePicture,
-            createdAt: appUser.CreatedAt,
-            updatedAt: appUser.UpdatedAt
-        );
-    }
-
-    private ApplicationUser MapToApplicationUser(User user)
-    {
-        return new ApplicationUser
-        {
-            Id = user.Id,
-            Email = user.Email,
-            Name = user.Name,
-            Locale = user.Locale,
-            ProfilePicture = user.ProfilePicture,
-            CreatedAt = user.CreatedAt,
-            UpdatedAt = user.UpdatedAt,
-        };
     }
 }

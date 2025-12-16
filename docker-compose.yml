@@ -1,10 +1,6 @@
 version: '3.8'
 
 services:
-
-  # ============================================================================
-  # PostgreSQL Database
-  # ============================================================================
   postgres:
     image: postgres:15-alpine
     container_name: nory-postgres
@@ -25,9 +21,6 @@ services:
       timeout: 5s
       retries: 5
 
-  # ============================================================================
-  # Redis Cache
-  # ============================================================================
   redis:
     image: redis:7-alpine
     container_name: nory-redis
@@ -45,35 +38,32 @@ services:
       timeout: 5s
       retries: 5
 
-  # ============================================================================
-  # Backend API (.NET)
-  # ============================================================================
   backend:
     build:
       context: ./backend
       dockerfile: Dockerfile
-      target: development  # Use development stage for hot reload
+      target: development
     image: nory-backend:latest
     container_name: nory-backend
     restart: unless-stopped
     volumes:
-      - ./backend:/app  # Mount source code for hot reload
-      - /app/src/Nory.Api/obj  # Exclude build artifacts
+      - ./backend:/app
+      - /app/src/Nory.Api/obj
       - /app/src/Nory.Api/bin
       - /app/src/Nory.Application/obj
       - /app/src/Nory.Application/bin
       - /app/src/Nory.Infrastructure/obj
       - /app/src/Nory.Infrastructure/bin
-      - ./data/uploads:/data/uploads  # Persistent file storage (host-accessible)
       - /app/src/Nory.Core/obj
       - /app/src/Nory.Core/bin
+      - ./data/uploads:/data/uploads
     environment:
       - ASPNETCORE_ENVIRONMENT=${ASPNETCORE_ENVIRONMENT:-Development}
       - ASPNETCORE_URLS=http://0.0.0.0:5000
       - ConnectionStrings__DefaultConnection=Host=postgres;Database=nory;Username=noryuser;Password=${POSTGRES_PASSWORD:-devpassword123}
       - ConnectionStrings__Redis=redis:6379,password=${REDIS_PASSWORD:-devpassword123}
       - FileStorage__BasePath=/data/uploads
-      - DOTNET_USE_POLLING_FILE_WATCHER=true  # Enable file watcher
+      - DOTNET_USE_POLLING_FILE_WATCHER=true
     ports:
       - "5001:5000"
     networks:
@@ -90,21 +80,18 @@ services:
       retries: 3
       start_period: 60s
 
-  # ============================================================================
-  # Frontend (Next.js)
-  # ============================================================================
   frontend:
     build:
       context: ./frontend
       dockerfile: Dockerfile
-      target: development  # Use development stage for hot reload
+      target: development
     image: nory-frontend:latest
     container_name: nory-frontend
     restart: unless-stopped
     volumes:
-      - ./frontend:/app  # Mount source code for hot reload
-      - /app/node_modules  # Exclude node_modules
-      - /app/.next  # Exclude Next.js build cache
+      - ./frontend:/app
+      - /app/node_modules
+      - /app/.next
     environment:
       - NODE_ENV=development
       - PORT=3002
@@ -122,18 +109,12 @@ services:
       retries: 3
       start_period: 40s
 
-# ============================================================================
-# Volumes
-# ============================================================================
 volumes:
   postgres_data:
     driver: local
   redis_data:
     driver: local
 
-# ============================================================================
-# Networks
-# ============================================================================
 networks:
   nory-network:
     driver: bridge

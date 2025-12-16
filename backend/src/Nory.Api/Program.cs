@@ -18,13 +18,11 @@ using Nory.Infrastructure.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Configure Kestrel for large file uploads (1GB max for videos)
 builder.WebHost.ConfigureKestrel(options =>
 {
-    options.Limits.MaxRequestBodySize = 1024 * 1024 * 1024; // 1GB
+    options.Limits.MaxRequestBodySize = 1024 * 1024 * 1024;
 });
 
-// Get connection string once
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
 
 builder.Services.AddDatabaseConfiguration(connectionString);
@@ -33,7 +31,6 @@ builder.Services.AddAuthorization();
 
 builder.Services.AddHangfireWithPostgres(connectionString);
 
-// Add Controllers
 builder
     .Services.AddControllers()
     .AddJsonOptions(options =>
@@ -47,10 +44,8 @@ builder
             .WhenWritingNull;
     });
 
-// Register FluentValidation
 builder.Services.AddValidatorsFromAssemblyContaining<IEventService>();
 
-// Register Application Services
 builder.Services.AddScoped<IAuthService, AuthService>();
 builder.Services.AddScoped<IEventService, EventService>();
 builder.Services.AddScoped<IEventAppService, Nory.Infrastructure.Services.EventAppService>();
@@ -62,24 +57,20 @@ builder.Services.AddScoped<ICategoryService, Nory.Infrastructure.Services.Catego
 builder.Services.AddScoped<IPhotoService, Nory.Infrastructure.Services.PhotoService>();
 builder.Services.AddScoped<IPublicEventService, Nory.Infrastructure.Services.PublicEventService>();
 
-// Register File Storage Service
 builder.Services.Configure<FileStorageOptions>(
     builder.Configuration.GetSection(FileStorageOptions.SectionName));
 builder.Services.AddSingleton<IFileStorageService, LocalFileStorageService>();
 
-// Register Repositories
 builder.Services.AddScoped<IAnalyticsRepository, AnalyticsRepository>();
 builder.Services.AddScoped<IEventRepository, EventRepository>();
 builder.Services.AddScoped<IThemeRepository, ThemeRepository>();
 
-// Add Redis Cache
 builder.Services.AddStackExchangeRedisCache(options =>
 {
     options.Configuration = builder.Configuration.GetConnectionString("Redis");
     options.InstanceName = "Nory_";
 });
 
-// Add CORS
 builder.Services.AddCors(options =>
 {
     options.AddDefaultPolicy(policy =>
@@ -99,13 +90,11 @@ builder.Services.AddCors(options =>
     });
 });
 
-// Add Swagger
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(options =>
 {
     options.SwaggerDoc("v1", new() { Title = "Nory API", Version = "v1" });
 
-    // Add JWT Authentication to Swagger
     options.AddSecurityDefinition(
         "Bearer",
         new()
@@ -139,25 +128,18 @@ builder.Services.AddSwaggerGen(options =>
 
 var app = builder.Build();
 
-// Run database migrations on startup (best practice for self-hosted/containerized apps)
 using (var scope = app.Services.CreateScope())
 {
     var db = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
     db.Database.Migrate();
-
-    // Seed required data (themes, etc.)
     await DatabaseSeeder.SeedRequiredDataAsync(app.Services);
-
-    // Seed default admin user (if no users exist)
     await DatabaseSeeder.SeedDevelopmentDataAsync(app.Services);
 }
 
-// Configure middleware pipeline
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
     app.UseSwaggerUI();
-    // HTTPS redirect only in development (production uses reverse proxy for SSL)
     app.UseHttpsRedirection();
 }
 
@@ -166,10 +148,9 @@ app.UseCors();
 app.UseAuthentication();
 app.UseAuthorization();
 
-// Add Hangfire Dashboard
 if (app.Environment.IsDevelopment())
 {
-    app.UseHangfireDashboard("/hangfire"); // Open access in dev
+    app.UseHangfireDashboard("/hangfire");
 }
 else
 {
@@ -181,7 +162,6 @@ else
 
 app.MapControllers();
 
-// Configure recurring jobs
 using (var scope = app.Services.CreateScope())
 {
     var recurringJobManager = scope.ServiceProvider.GetRequiredService<IRecurringJobManager>();

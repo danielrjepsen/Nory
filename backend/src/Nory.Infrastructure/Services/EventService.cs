@@ -57,15 +57,12 @@ public class EventService : IEventService
         if (eventEntity is null)
             return null;
 
-        // Only return public events
         if (!eventEntity.IsPublic)
             return null;
 
-        // Don't return archived events
         if (eventEntity.Status == EventStatus.Archived)
             return null;
 
-        // Only allow viewing Draft events in preview mode
         if (eventEntity.Status == EventStatus.Draft && !preview)
             return null;
 
@@ -111,7 +108,6 @@ public class EventService : IEventService
         if (!eventEntity.BelongsTo(userId))
             throw new UnauthorizedAccessException("Access denied");
 
-        // Handle status change
         if (!string.IsNullOrEmpty(dto.Status) && Enum.TryParse<EventStatus>(dto.Status, true, out var newStatus))
         {
             switch (newStatus)
@@ -128,7 +124,6 @@ public class EventService : IEventService
             }
         }
 
-        // Update other details
         eventEntity.UpdateDetails(
             name: dto.Name,
             description: dto.Description,
@@ -156,7 +151,6 @@ public class EventService : IEventService
         if (!eventEntity.BelongsTo(userId))
             throw new UnauthorizedAccessException("Access denied");
 
-        // Soft delete by archiving
         eventEntity.Archive();
 
         _eventRepository.Update(eventEntity);
