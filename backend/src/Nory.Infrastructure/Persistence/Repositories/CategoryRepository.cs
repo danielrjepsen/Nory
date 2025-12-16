@@ -48,13 +48,6 @@ public class CategoryRepository : ICategoryRepository
         return await query.AnyAsync(cancellationToken);
     }
 
-    public async Task<bool> UserOwnsEventAsync(Guid eventId, string userId, CancellationToken cancellationToken = default)
-    {
-        return await _context.Events.AnyAsync(
-            e => e.Id == eventId && e.UserId == userId,
-            cancellationToken);
-    }
-
     public void Add(EventCategory category)
     {
         var dbModel = category.MapToDbModel();

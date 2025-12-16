@@ -1,3 +1,4 @@
+using Nory.Application.DTOs;
 using Nory.Core.Domain.Entities;
 using Nory.Infrastructure.Persistence.Models;
 
@@ -45,5 +46,18 @@ public static class CategoryMappingExtensions
     public static IReadOnlyList<EventCategory> MapToDomain(this IEnumerable<EventCategoryDbModel> dbModels)
     {
         return dbModels.Select(db => db.MapToDomain()).ToList();
+    }
+
+    public static CategoryDto MapToDto(this EventCategory category)
+    {
+        return new CategoryDto(
+            category.Id,
+            category.Name,
+            category.Description,
+            category.SortOrder,
+            category.IsDefault,
+            category.PhotoCount,
+            category.CreatedAt,
+            category.UpdatedAt);
     }
 }

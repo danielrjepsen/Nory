@@ -50,6 +50,11 @@ public class EventRepository : IEventRepository
         return await _context.Events.AnyAsync(e => e.Id == eventId, cancellationToken);
     }
 
+    public async Task<bool> IsOwnedByUserAsync(Guid eventId, string userId, CancellationToken cancellationToken = default)
+    {
+        return await _context.Events.AnyAsync(e => e.Id == eventId && e.UserId == userId, cancellationToken);
+    }
+
     public async Task<int> CountByUserIdAsync(string userId, CancellationToken cancellationToken = default)
     {
         return await _context.Events

@@ -5,17 +5,23 @@ using Nory.Application.DTOs;
 using Nory.Application.Services;
 using Nory.Core.Domain.Entities;
 using Nory.Core.Domain.Repositories;
+using Nory.Infrastructure.Persistence.Extensions;
 
 namespace Nory.Infrastructure.Services;
 
 public class CategoryService : ICategoryService
 {
     private readonly ICategoryRepository _categoryRepository;
+    private readonly IEventRepository _eventRepository;
     private readonly ILogger<CategoryService> _logger;
 
-    public CategoryService(ICategoryRepository categoryRepository, ILogger<CategoryService> logger)
+    public CategoryService(
+        ICategoryRepository categoryRepository,
+        IEventRepository eventRepository,
+        ILogger<CategoryService> logger)
     {
         _categoryRepository = categoryRepository;
+        _eventRepository = eventRepository;
         _logger = logger;
     }
 
@@ -24,11 +30,11 @@ public class CategoryService : ICategoryService
         string userId,
         CancellationToken cancellationToken = default)
     {
-        if (!await _categoryRepository.UserOwnsEventAsync(eventId, userId, cancellationToken))
+        if (!await _eventRepository.IsOwnedByUserAsync(eventId, userId, cancellationToken))
             return Result<CategoriesResponse>.NotFound("Event not found or access denied");
 
         var categories = await _categoryRepository.GetByEventIdAsync(eventId, cancellationToken);
-        var dtos = categories.Select(MapToDto).ToList();
+        var dtos = categories.Select(c => c.MapToDto()).ToList();
 
         return Result<CategoriesResponse>.Success(new CategoriesResponse(true, dtos, dtos.Count));
     }
@@ -39,7 +45,7 @@ public class CategoryService : ICategoryService
         CreateCategoryCommand command,
         CancellationToken cancellationToken = default)
     {
-        if (!await _categoryRepository.UserOwnsEventAsync(eventId, userId, cancellationToken))
+        if (!await _eventRepository.IsOwnedByUserAsync(eventId, userId, cancellationToken))
             return Result<CategoryDto>.NotFound("Event not found or access denied");
 
         if (await _categoryRepository.NameExistsAsync(eventId, command.Name, null, cancellationToken))
@@ -56,7 +62,7 @@ public class CategoryService : ICategoryService
 
         _logger.LogInformation("Created category {CategoryId} for event {EventId}", category.Id, eventId);
 
-        return Result<CategoryDto>.Success(MapToDto(category));
+        return Result<CategoryDto>.Success(category.MapToDto());
     }
 
     public async Task<Result<CategoryDto>> UpdateCategoryAsync(
@@ -66,7 +72,7 @@ public class CategoryService : ICategoryService
         UpdateCategoryCommand command,
         CancellationToken cancellationToken = default)
     {
-        if (!await _categoryRepository.UserOwnsEventAsync(eventId, userId, cancellationToken))
+        if (!await _eventRepository.IsOwnedByUserAsync(eventId, userId, cancellationToken))
             return Result<CategoryDto>.NotFound("Category not found or access denied");
 
         var category = await _categoryRepository.GetByIdAsync(categoryId, eventId, cancellationToken);
@@ -86,7 +92,7 @@ public class CategoryService : ICategoryService
 
         _logger.LogInformation("Updated category {CategoryId}", categoryId);
 
-        return Result<CategoryDto>.Success(MapToDto(category));
+        return Result<CategoryDto>.Success(category.MapToDto());
     }
 
     public async Task<Result> DeleteCategoryAsync(
@@ -95,7 +101,7 @@ public class CategoryService : ICategoryService
         string userId,
         CancellationToken cancellationToken = default)
     {
-        if (!await _categoryRepository.UserOwnsEventAsync(eventId, userId, cancellationToken))
+        if (!await _eventRepository.IsOwnedByUserAsync(eventId, userId, cancellationToken))
             return Result.NotFound("Category not found or access denied");
 
         var category = await _categoryRepository.GetByIdAsync(categoryId, eventId, cancellationToken);
@@ -119,7 +125,7 @@ public class CategoryService : ICategoryService
         ReorderCategoriesCommand command,
         CancellationToken cancellationToken = default)
     {
-        if (!await _categoryRepository.UserOwnsEventAsync(eventId, userId, cancellationToken))
+        if (!await _eventRepository.IsOwnedByUserAsync(eventId, userId, cancellationToken))
             return Result.NotFound("Event not found or access denied");
 
         if (command.CategoryIds.Count > 100)
@@ -150,17 +156,4 @@ public class CategoryService : ICategoryService
     }
 
     private static string SanitizeInput(string input) => HtmlEncoder.Default.Encode(input.Trim());
-
-    private static CategoryDto MapToDto(EventCategory category)
-    {
-        return new CategoryDto(
-            category.Id,
-            category.Name,
-            category.Description,
-            category.SortOrder,
-            category.IsDefault,
-            category.PhotoCount,
-            category.CreatedAt,
-            category.UpdatedAt);
-    }
 }

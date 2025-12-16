@@ -9,6 +9,7 @@ public interface IEventRepository
     Task<Event?> GetByIdAsync(Guid eventId, CancellationToken cancellationToken = default);
     Task<Event?> GetByIdWithPhotosAsync(Guid eventId, CancellationToken cancellationToken = default);
     Task<bool> ExistsAsync(Guid eventId, CancellationToken cancellationToken = default);
+    Task<bool> IsOwnedByUserAsync(Guid eventId, string userId, CancellationToken cancellationToken = default);
     Task<int> CountByUserIdAsync(string userId, CancellationToken cancellationToken = default);
 
     // Commands
