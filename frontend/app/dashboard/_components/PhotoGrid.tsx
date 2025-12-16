@@ -3,7 +3,7 @@
 import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { AuthenticatedImage } from './AuthenticatedImage';
-import type { EventPhoto } from '../../_types/events';
+import type { EventPhoto } from '../_types/events';
 
 interface PhotoGridProps {
   photos: EventPhoto[];

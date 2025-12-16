@@ -4,7 +4,7 @@ import { forwardRef } from 'react';
 import { useTranslation } from 'react-i18next';
 import { NavButton } from './NavButton';
 import { LogoutIcon } from './icons';
-import type { NavigationItem } from '../types';
+import type { NavigationItem } from '../_types';
 
 interface MobileMenuProps {
   isOpen: boolean;

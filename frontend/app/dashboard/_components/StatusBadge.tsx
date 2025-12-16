@@ -2,17 +2,16 @@
 
 import React from 'react';
 import { useTranslation } from 'react-i18next';
-
-export type StatusType = 'active' | 'completed' | 'draft';
+import { type EventStatus } from '../_types/events';
 
 interface StatusBadgeProps {
-  status: StatusType;
+  status: EventStatus;
   className?: string;
 }
 
-const STATUS_COLORS: Record<StatusType, string> = {
-  active: '#10b981',
-  completed: '#6b7280',
+const STATUS_COLORS: Record<EventStatus, string> = {
+  live: '#10b981',
+  ended: '#6b7280',
   draft: '#f59e0b',
 };
 
@@ -20,9 +19,9 @@ export function StatusBadge({ status, className = '' }: StatusBadgeProps) {
   const { t } = useTranslation('dashboard');
   const color = STATUS_COLORS[status] || STATUS_COLORS.draft;
 
-  const statusKeys: Record<StatusType, string> = {
-    active: 'events.status.live',
-    completed: 'events.status.ended',
+  const statusKeys: Record<EventStatus, string> = {
+    live: 'events.status.live',
+    ended: 'events.status.ended',
     draft: 'events.status.draft',
   };
 
