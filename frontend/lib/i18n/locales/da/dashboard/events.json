@@ -26,5 +26,59 @@
     "viewGallery": "Se galleri",
     "manageGuests": "Administrer gæster",
     "downloadPhotos": "Download billeder"
+  },
+  "editEvent": {
+    "title": "Rediger begivenhed",
+    "fields": {
+      "name": "Begivenhedsnavn",
+      "description": "Beskrivelse"
+    },
+    "placeholders": {
+      "name": "Indtast begivenhedsnavn",
+      "description": "Indtast begivenhedsbeskrivelse (valgfrit)"
+    },
+    "errors": {
+      "nameRequired": "Begivenhedsnavn er påkrævet",
+      "updateFailed": "Kunne ikke opdatere begivenhed"
+    },
+    "saveChanges": "Gem ændringer"
+  },
+  "manage": {
+    "loading": "Indlæser begivenhed...",
+    "backToDashboard": "Tilbage til oversigt",
+    "hasContent": "Har indhold",
+    "errors": {
+      "notFound": "Begivenhed ikke fundet"
+    },
+    "stats": {
+      "photos": "Billeder",
+      "visits": "Besøg",
+      "date": "Dato"
+    },
+    "links": {
+      "open": "Åbn",
+      "copy": "Kopier",
+      "copied": "Kopieret",
+      "guestApp": {
+        "title": "Gæste-app",
+        "description": "Del med gæster for at uploade billeder"
+      },
+      "slideshow": {
+        "title": "Slideshow",
+        "description": "Vis billeder på skærm eller TV"
+      }
+    },
+    "controls": {
+      "goLive": "Gå live",
+      "endEvent": "Afslut begivenhed",
+      "updating": "Opdaterer..."
+    },
+    "goLiveModal": {
+      "title": "Gå live med {{name}}?",
+      "description": "Din begivenhed vil være synlig for gæster, og de kan begynde at uploade billeder med det samme.",
+      "notYet": "Ikke endnu",
+      "goLive": "Gå live!",
+      "goingLive": "Går live..."
+    }
   }
 }

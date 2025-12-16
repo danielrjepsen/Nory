@@ -1,0 +1,33 @@
+{
+  "loading": "Indlæser...",
+  "loadingEvent": "Indlæser begivenhed...",
+  "loadingDate": "Indlæser dato...",
+  "loadingGallery": "Indlæser galleri",
+  "loadingWeddingGallery": "Indlæser bryllupsgalleri",
+  "preparingMemories": "Forbereder dine minder",
+  "loadingEventDetails": "Indlæser begivenhedsdetaljer",
+  "error": "Der opstod en fejl",
+  "back": "Tilbage",
+  "home": "Hjem",
+  "close": "Luk",
+  "cancel": "Annuller",
+  "save": "Gem",
+  "submit": "Send",
+  "next": "Næste",
+  "previous": "Forrige",
+  "upload": "Upload",
+  "uploading": "Uploader...",
+  "selectFiles": "Vælg filer først",
+  "noPhotos": "Ingen billeder endnu",
+  "beFirstToShare": "Vær den første til at dele et øjeblik!",
+  "loadingPhotos": "Indlæser billeder...",
+  "eventNotFound": {
+    "title": "Begivenhed ikke fundet",
+    "description": "Vi kunne ikke finde den begivenhed, du leder efter. Den kan være blevet fjernet, gjort privat, eller linket kan være forkert.",
+    "goBack": "Gå tilbage",
+    "eventId": "Begivenhed ID",
+    "helpText": "Hvis du mener, dette er en fejl, kontakt venligst arrangøren eller prøv at opdatere siden."
+  },
+  "eventEnded": "Denne begivenhed er ikke længere tilgængelig",
+  "eventEndedNotice": "Minder fra denne begivenhed (tilgængelig i 30 dage)"
+}

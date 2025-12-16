@@ -1,0 +1,81 @@
+{
+  "header": {
+    "back": "Tilbage",
+    "live": "Live"
+  },
+  "remote": {
+    "title": "TV-fjernbetjening",
+    "nowPlaying": "Afspilles nu",
+    "photosVideos": "{{photos}} billeder • {{videos}} videoer",
+    "takeControl": "Tag kontrol",
+    "inControl": "Du har kontrol",
+    "pause": "Pause",
+    "play": "Afspil",
+    "previous": "Forrige",
+    "next": "Næste",
+    "favorite": "Favorit",
+    "addMemory": "Tilføj minde",
+    "sessionCode": "Sessionskode",
+    "photoMaster": {
+      "title": "Du er foto-mesteren!",
+      "description": "Styr festens slideshow og skab uforglemmelige øjeblikke"
+    }
+  },
+  "guestbook": {
+    "title": "Gæstebog",
+    "subtitle": "Efterlad en besked til parret",
+    "writeMessage": "Skriv din besked",
+    "messagePlaceholder": "Del dine lykønskninger...",
+    "yourName": "Dit navn",
+    "namePlaceholder": "Indtast dit navn",
+    "sendMessage": "Send besked",
+    "sending": "Sender...",
+    "noEntries": "Ingen beskeder endnu",
+    "beFirst": "Vær den første til at efterlade en besked!"
+  },
+  "lists": {
+    "title": "Ønskeliste",
+    "subtitle": "Udforsk muligheder",
+    "search": "Søg...",
+    "categories": {
+      "all": "Alle",
+      "kitchen": "Køkken",
+      "bedroom": "Soveværelse",
+      "living": "Stue"
+    },
+    "claimed": "Reserveret",
+    "available": "Tilgængelig"
+  },
+  "gallery": {
+    "title": "Fotogalleri",
+    "subtitle": "Se og del billeder",
+    "photos": "{{count}} billeder",
+    "uploadPhoto": "Upload billede"
+  },
+  "schedule": {
+    "title": "Begivenhedsprogram",
+    "subtitle": "Dagens program",
+    "now": "Nu",
+    "upcoming": "Kommende",
+    "past": "Tidligere"
+  },
+  "polls": {
+    "title": "Live afstemninger",
+    "subtitle": "Deltag i afstemninger",
+    "vote": "Stem",
+    "votes": "stemmer",
+    "yourVote": "Din stemme",
+    "active": "Aktiv",
+    "ended": "Afsluttet"
+  },
+  "custom": {
+    "title": "Brugerdefineret API",
+    "subtitle": "Byg din egen",
+    "configTitle": "API-konfiguration",
+    "connected": "Forbundet til API",
+    "configureEndpoint": "Konfigurer API-endpoint"
+  },
+  "default": {
+    "comingSoon": "Kommer snart..."
+  }
+}

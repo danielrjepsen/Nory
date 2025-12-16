@@ -1,0 +1,17 @@
+{
+  "title": "Dagens øjeblikke",
+  "titleEnded": "Begivenhedsminder",
+  "subtitle": "Billeder og videoer fra festen",
+  "subtitleEnded": "Minder fra denne særlige begivenhed (tilgængelig i 30 dage)",
+  "uploadButton": "Upload medie",
+  "uploadModal": {
+    "title": "Upload billeder og videoer",
+    "subtitle": "Del dine minder med alle",
+    "dragDrop": "Træk og slip eller klik for at gennemse",
+    "selectMultiple": "Vælg flere billeder og videoer",
+    "filesSelected": "{{count}} fil(er) valgt",
+    "selectCategory": "Vælg kategori:",
+    "noCategory": "Ingen kategori"
+  },
+  "quickFeatures": "Hurtige funktioner"
+}

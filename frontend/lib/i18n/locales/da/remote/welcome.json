@@ -1,0 +1,12 @@
+{
+  "title": "Velkommen!",
+  "joiningEvent": "Du deltager i",
+  "nameLabel": "Hvad hedder du?",
+  "namePlaceholder": "Indtast dit navn",
+  "joinButton": "Deltag i begivenhed",
+  "joining": "Tilslutter...",
+  "memoryOptIn": {
+    "title": "Få dine minder",
+    "description": "Modtag et personligt album med billeder, du optræder på, efter begivenheden."
+  }
+}

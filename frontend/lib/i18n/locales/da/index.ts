@@ -17,6 +17,10 @@ import dashboardUser from './dashboard/user.json';
 import slideshowControls from './slideshow/controls.json';
 import slideshowSettings from './slideshow/settings.json';
 import slideshowDisplay from './slideshow/display.json';
+import remoteCommon from './remote/common.json';
+import remoteWelcome from './remote/welcome.json';
+import remoteGallery from './remote/gallery.json';
+import remoteApps from './remote/apps.json';
 
 export default {
   common,
@@ -43,5 +47,11 @@ export default {
     controls: slideshowControls,
     settings: slideshowSettings,
     display: slideshowDisplay,
+  },
+  remote: {
+    common: remoteCommon,
+    welcome: remoteWelcome,
+    gallery: remoteGallery,
+    apps: remoteApps,
   },
 };

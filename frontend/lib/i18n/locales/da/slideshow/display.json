@@ -6,6 +6,50 @@
   "noPhotosDescription": "Vent på at gæster uploader billeder til galleriet",
   "loading": "Indlæser billeder...",
   "error": "Kunne ikke indlæse billeder",
+  "activityFeed": {
+    "moreActivities": "+{{count}} flere",
+    "minutesAgo": "({{minutes}}m)"
+  },
+  "fallback": {
+    "eventName": "Begivenhed",
+    "userName": "Ukendt"
+  },
+  "status": {
+    "draft": {
+      "title": "Begivenhed ikke live endnu",
+      "description": "Dette slideshow er ikke live endnu. Arrangøren skal aktivere det først."
+    },
+    "preview": {
+      "title": "Forhåndsvisning",
+      "badge": "Forhåndsvisning aktiv",
+      "description": "Du ser slideshowet i forhåndsvisning. Ændringer er ikke endelige før begivenheden går live.",
+      "notLive": "Forhåndsvisning - Begivenheden er ikke live endnu"
+    },
+    "ended": {
+      "title": "Begivenhed afsluttet",
+      "description": "Denne begivenhed er afsluttet. Tak fordi du var med!",
+      "endedAt": "Afsluttet: {{date}}"
+    },
+    "error": {
+      "title": "Noget gik galt",
+      "retry": "Prøv igen"
+    },
+    "noPhotos": {
+      "title": "Ingen billeder i {{event}} endnu",
+      "titleGeneric": "Ingen billeder fundet",
+      "waiting": "Venter på de første billeder fra gæsterne!",
+      "retry": "Prøv igen",
+      "refresh": "Opdater billeder",
+      "checkNew": "Tjek for nye billeder"
+    }
+  },
+  "connectionStatus": {
+    "controlledBy": "{{name}} styrer {{event}}",
+    "connecting": "Forbinder til event...",
+    "reconnecting": "Forbinder igen ({{current}}/{{max}})...",
+    "maxAttemptsReached": "Max forsøg nået. Tjek backend server.",
+    "restartConnection": "Genstart forbindelse"
+  },
   "qrOverlay": {
     "title": "Del dine billeder!",
     "subtitle": "Scan QR-koden for at uploade billeder",
@@ -34,5 +78,41 @@
     "tryAgain": "Prøv igen",
     "eventNotFound": "Begivenhed ikke fundet",
     "accessDenied": "Adgang nægtet"
+  },
+  "loadingScreen": {
+    "defaultTitle": "TV Slideshow",
+    "preparing": "Forbereder slideshow",
+    "loadingMemories": "Indlæser dine smukke minder",
+    "loadingMedia": "Indlæser billeder og videoer",
+    "features": {
+      "bigScreen": "Storskærm",
+      "autoPlay": "Auto-afspilning",
+      "hdQuality": "HD-kvalitet"
+    }
+  },
+  "mediaViewer": {
+    "loading": "Indlæser billede...",
+    "photoAlt": "Billede",
+    "mute": {
+      "enable": "Slå lyd til",
+      "disable": "Slå lyd fra",
+      "muted": "Ingen lyd",
+      "unmuted": "Med lyd"
+    },
+    "error": {
+      "video": "Video kan ikke indlæses",
+      "image": "Billede kan ikke indlæses",
+      "hint": "Tjek CDN tilladelser"
+    }
+  },
+  "photoCounter": {
+    "allPhotos": "Alle billeder",
+    "photos": "Billeder",
+    "loading": "Indlæser..."
+  },
+  "qrCode": {
+    "title": "Fjernbetjening",
+    "alt": "Scan for at uploade billeder",
+    "upload": "Upload billeder"
   }
 }
