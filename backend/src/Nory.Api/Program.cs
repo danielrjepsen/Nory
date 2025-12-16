@@ -62,6 +62,7 @@ builder.Services.Configure<FileStorageOptions>(
 builder.Services.AddSingleton<IFileStorageService, LocalFileStorageService>();
 
 builder.Services.AddScoped<IAnalyticsRepository, AnalyticsRepository>();
+builder.Services.AddScoped<ICategoryRepository, CategoryRepository>();
 builder.Services.AddScoped<IEventRepository, EventRepository>();
 builder.Services.AddScoped<IThemeRepository, ThemeRepository>();
 
