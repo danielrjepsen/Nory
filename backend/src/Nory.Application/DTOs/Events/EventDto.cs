@@ -12,7 +12,6 @@ public class EventDto
     public bool IsPublic { get; init; } = true;
     public bool HasContent { get; init; }
     public int PhotoCount { get; init; }
-    public Dictionary<string, object>? GuestAppConfig { get; init; }
     public string? ThemeName { get; init; }
     public DateTime CreatedAt { get; init; }
     public DateTime UpdatedAt { get; init; }

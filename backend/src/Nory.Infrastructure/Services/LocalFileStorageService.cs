@@ -1,12 +1,19 @@
+using System.Text;
+using System.Text.RegularExpressions;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Nory.Application.Services;
 
 namespace Nory.Infrastructure.Services;
 
-public class LocalFileStorageService : IFileStorageService
+public partial class LocalFileStorageService : IFileStorageService
 {
+    private const int BufferSize = 81920;
+    private const int MaxSlugLength = 50;
+    private const int ShortGuidLength = 8;
+
     private readonly string _basePath;
+    private readonly FileStorageOptions _options;
     private readonly ILogger<LocalFileStorageService> _logger;
 
     private static readonly HashSet<string> AllowedContentTypes = new(StringComparer.OrdinalIgnoreCase)
@@ -25,25 +32,27 @@ public class LocalFileStorageService : IFileStorageService
 
     private static readonly HashSet<string> AllowedExtensions = new(StringComparer.OrdinalIgnoreCase)
     {
-        ".jpg", ".jpeg", ".png", ".gif", ".webp", ".heic", ".heif",
-        ".mp4", ".mov", ".webm"
+        ".jpg",
+        ".jpeg",
+        ".png",
+        ".gif",
+        ".webp",
+        ".heic",
+        ".heif",
+        ".mp4",
+        ".mov",
+        ".webm"
     };
-
-    private const long MaxImageSizeBytes = 50 * 1024 * 1024;       // 50MB
-    private const long MaxVideoSizeBytes = 1024 * 1024 * 1024;    // 1GB
 
     public LocalFileStorageService(
         IOptions<FileStorageOptions> options,
         ILogger<LocalFileStorageService> logger)
     {
-        _basePath = options.Value.BasePath;
+        _options = options.Value;
+        _basePath = _options.BasePath;
         _logger = logger;
 
-        if (!Directory.Exists(_basePath))
-        {
-            Directory.CreateDirectory(_basePath);
-            _logger.LogInformation("Created file storage directory: {BasePath}", _basePath);
-        }
+        EnsureDirectoryExists(_basePath);
     }
 
     public async Task<FileStorageResult> StoreFileAsync(
@@ -71,49 +80,38 @@ public class LocalFileStorageService : IFileStorageService
             }
 
             var isVideo = contentType.StartsWith("video/", StringComparison.OrdinalIgnoreCase);
-            var maxSize = isVideo ? MaxVideoSizeBytes : MaxImageSizeBytes;
+            var maxSize = isVideo ? _options.MaxVideoSizeBytes : _options.MaxImageSizeBytes;
             var maxSizeLabel = isVideo ? "1GB" : "50MB";
 
             if (fileStream.Length > maxSize)
             {
-                _logger.LogWarning("File too large: {Size} bytes (max {MaxSize})",
-                    fileStream.Length, maxSizeLabel);
+                _logger.LogWarning("File too large: {Size} bytes (max {MaxSize})", fileStream.Length, maxSizeLabel);
                 return new FileStorageResult(false, string.Empty, $"File too large (max {maxSizeLabel})");
             }
 
+            var now = DateTime.UtcNow;
             var uniqueFileName = $"{Guid.NewGuid()}{extension.ToLowerInvariant()}";
-            var year = DateTime.UtcNow.Year;
-            var month = DateTime.UtcNow.Month.ToString("D2");
-
-            // events/johns-wedding-aaacb193/2025/12/abc123.jpg
             var eventSlug = CreateSlug(eventName);
-            var shortGuid = eventId.ToString()[..8];
+            var shortGuid = eventId.ToString()[..ShortGuidLength];
             var eventFolder = $"{eventSlug}-{shortGuid}";
 
             var relativePath = Path.Combine(
                 SanitizePath(storageCategory),
                 eventFolder,
-                year.ToString(),
-                month,
-                uniqueFileName
-            );
+                now.Year.ToString(),
+                now.Month.ToString("D2"),
+                uniqueFileName);
 
             var fullPath = Path.Combine(_basePath, relativePath);
-            var directory = Path.GetDirectoryName(fullPath)!;
-
-            if (!Directory.Exists(directory))
-            {
-                Directory.CreateDirectory(directory);
-            }
+            EnsureDirectoryExists(Path.GetDirectoryName(fullPath)!);
 
             await using var fileStreamWriter = new FileStream(
                 fullPath,
                 FileMode.Create,
                 FileAccess.Write,
                 FileShare.None,
-                bufferSize: 81920,
-                useAsync: true
-            );
+                BufferSize,
+                useAsync: true);
 
             await fileStream.CopyToAsync(fileStreamWriter, cancellationToken);
             await fileStreamWriter.FlushAsync(cancellationToken);
@@ -134,75 +132,49 @@ public class LocalFileStorageService : IFileStorageService
         string storagePath,
         CancellationToken cancellationToken = default)
     {
-        try
+        var fullPath = Path.Combine(_basePath, storagePath);
+
+        if (!IsPathSafe(fullPath))
         {
-            var fullPath = Path.Combine(_basePath, storagePath);
-
-            if (!IsPathSafe(fullPath))
-            {
-                _logger.LogWarning("Path traversal attempt: {Path}", storagePath);
-                return Task.FromResult<FileRetrievalResult?>(null);
-            }
-
-            if (!File.Exists(fullPath))
-            {
-                _logger.LogDebug("File not found: {Path}", storagePath);
-                return Task.FromResult<FileRetrievalResult?>(null);
-            }
-
-            var fileInfo = new FileInfo(fullPath);
-            var contentType = GetContentType(fileInfo.Extension);
-            var stream = new FileStream(
-                fullPath,
-                FileMode.Open,
-                FileAccess.Read,
-                FileShare.Read,
-                bufferSize: 81920,
-                useAsync: true
-            );
-
-            return Task.FromResult<FileRetrievalResult?>(new FileRetrievalResult(
-                stream,
-                contentType,
-                fileInfo.Name,
-                fileInfo.Length
-            ));
-        }
-        catch (Exception ex)
-        {
-            _logger.LogError(ex, "Failed to retrieve file: {Path}", storagePath);
+            _logger.LogWarning("Path traversal attempt: {Path}", storagePath);
             return Task.FromResult<FileRetrievalResult?>(null);
         }
+
+        if (!File.Exists(fullPath))
+            return Task.FromResult<FileRetrievalResult?>(null);
+
+        var fileInfo = new FileInfo(fullPath);
+        var contentType = GetContentType(fileInfo.Extension);
+        var stream = new FileStream(
+            fullPath,
+            FileMode.Open,
+            FileAccess.Read,
+            FileShare.Read,
+            BufferSize,
+            useAsync: true);
+
+        return Task.FromResult<FileRetrievalResult?>(
+            new FileRetrievalResult(stream, contentType, fileInfo.Name, fileInfo.Length));
     }
 
     public Task<bool> DeleteFileAsync(
         string storagePath,
         CancellationToken cancellationToken = default)
     {
-        try
+        var fullPath = Path.Combine(_basePath, storagePath);
+
+        if (!IsPathSafe(fullPath))
         {
-            var fullPath = Path.Combine(_basePath, storagePath);
-
-            if (!IsPathSafe(fullPath))
-            {
-                _logger.LogWarning("Path traversal attempt on delete: {Path}", storagePath);
-                return Task.FromResult(false);
-            }
-
-            if (File.Exists(fullPath))
-            {
-                File.Delete(fullPath);
-                _logger.LogInformation("Deleted file: {Path}", storagePath);
-                return Task.FromResult(true);
-            }
-
+            _logger.LogWarning("Path traversal attempt on delete: {Path}", storagePath);
             return Task.FromResult(false);
         }
-        catch (Exception ex)
-        {
-            _logger.LogError(ex, "Failed to delete file: {Path}", storagePath);
+
+        if (!File.Exists(fullPath))
             return Task.FromResult(false);
-        }
+
+        File.Delete(fullPath);
+        _logger.LogInformation("Deleted file: {Path}", storagePath);
+        return Task.FromResult(true);
     }
 
     public Task<bool> FileExistsAsync(
@@ -220,6 +192,12 @@ public class LocalFileStorageService : IFileStorageService
         return normalizedFullPath.StartsWith(normalizedBasePath, StringComparison.OrdinalIgnoreCase);
     }
 
+    private static void EnsureDirectoryExists(string path)
+    {
+        if (!Directory.Exists(path))
+            Directory.CreateDirectory(path);
+    }
+
     private static string SanitizePath(string input)
     {
         return input
@@ -234,29 +212,21 @@ public class LocalFileStorageService : IFileStorageService
             return "unnamed";
 
         var slug = input.ToLowerInvariant().Trim();
+        slug = slug.Replace("'", "").Replace("\"", "").Replace("&", "and");
 
-        slug = slug
-            .Replace("'", "")
-            .Replace("\"", "")
-            .Replace("&", "and");
-
-        var result = new System.Text.StringBuilder();
+        var result = new StringBuilder();
         foreach (var c in slug)
         {
             if (char.IsLetterOrDigit(c))
                 result.Append(c);
-            else if (c == ' ' || c == '-' || c == '_')
+            else if (c is ' ' or '-' or '_')
                 result.Append('-');
         }
 
-        slug = result.ToString();
-        while (slug.Contains("--"))
-            slug = slug.Replace("--", "-");
+        slug = MultiDashRegex().Replace(result.ToString(), "-").Trim('-');
 
-        slug = slug.Trim('-');
-
-        if (slug.Length > 50)
-            slug = slug[..50].TrimEnd('-');
+        if (slug.Length > MaxSlugLength)
+            slug = slug[..MaxSlugLength].TrimEnd('-');
 
         return string.IsNullOrEmpty(slug) ? "unnamed" : slug;
     }
@@ -277,10 +247,7 @@ public class LocalFileStorageService : IFileStorageService
             _ => "application/octet-stream"
         };
     }
-}
 
-public class FileStorageOptions
-{
-    public const string SectionName = "FileStorage";
-    public string BasePath { get; set; } = "uploads";
+    [GeneratedRegex("--+")]
+    private static partial Regex MultiDashRegex();
 }

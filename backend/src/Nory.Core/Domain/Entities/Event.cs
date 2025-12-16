@@ -14,7 +14,6 @@ public class Event
     public EventStatus Status { get; private set; }
     public bool IsPublic { get; private set; }
     public bool HasContent { get; private set; }
-    public Dictionary<string, object>? GuestAppConfig { get; private set; }
     public string? ThemeName { get; private set; }
     public DateTime CreatedAt { get; private set; }
     public DateTime UpdatedAt { get; private set; }
@@ -22,10 +21,8 @@ public class Event
     private readonly List<Photo> _photos = new();
     public IReadOnlyCollection<Photo> Photos => _photos.AsReadOnly();
 
-    // Private constructor for EF Core
     private Event() { }
 
-    // Constructor for reconstitution from persistence
     public Event(
         Guid id,
         string userId,
@@ -37,7 +34,6 @@ public class Event
         EventStatus status,
         bool isPublic,
         bool hasContent,
-        Dictionary<string, object>? guestAppConfig,
         string? themeName,
         DateTime createdAt,
         DateTime updatedAt)
@@ -52,13 +48,11 @@ public class Event
         Status = status;
         IsPublic = isPublic;
         HasContent = hasContent;
-        GuestAppConfig = guestAppConfig;
         ThemeName = themeName;
         CreatedAt = createdAt;
         UpdatedAt = updatedAt;
     }
 
-    // Factory method for creating new events
     public static Event Create(
         string userId,
         string name,
@@ -67,8 +61,7 @@ public class Event
         DateTime? startsAt = null,
         DateTime? endsAt = null,
         bool isPublic = true,
-        string? themeName = null,
-        Dictionary<string, object>? guestAppConfig = null)
+        string? themeName = null)
     {
         ValidateName(name);
         ValidateDateRange(startsAt, endsAt);
@@ -84,14 +77,12 @@ public class Event
             status: EventStatus.Draft,
             isPublic: isPublic,
             hasContent: false,
-            guestAppConfig: guestAppConfig,
             themeName: themeName,
             createdAt: DateTime.UtcNow,
             updatedAt: DateTime.UtcNow
         );
     }
 
-    // Business methods
     public void UpdateDetails(
         string? name = null,
         string? description = null,
@@ -99,7 +90,6 @@ public class Event
         DateTime? startsAt = null,
         DateTime? endsAt = null,
         bool? isPublic = null,
-        Dictionary<string, object>? guestAppConfig = null,
         string? themeName = null)
     {
         if (Status == EventStatus.Archived)
@@ -128,9 +118,6 @@ public class Event
 
         if (isPublic.HasValue)
             IsPublic = isPublic.Value;
-
-        if (guestAppConfig is not null)
-            GuestAppConfig = guestAppConfig;
 
         if (themeName is not null)
             ThemeName = themeName;
@@ -177,7 +164,6 @@ public class Event
 
     public bool BelongsTo(string userId) => UserId == userId;
 
-    // Validation helpers
     private static void ValidateName(string name)
     {
         if (string.IsNullOrWhiteSpace(name))

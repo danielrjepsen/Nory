@@ -30,8 +30,6 @@ public class EventDbModel
 
     public bool HasContent { get; set; } = false;
 
-    public Dictionary<string, object>? GuestAppConfig { get; set; }
-
     [MaxLength(100)]
     public string? ThemeName { get; set; }
 

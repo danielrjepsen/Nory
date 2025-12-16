@@ -25,6 +25,7 @@ public static class DatabaseSeeder
         var context = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
         var logger = scope.ServiceProvider.GetRequiredService<ILogger<ApplicationDbContext>>();
 
+        await SeedAppTypesAsync(context, logger);
         await SeedDefaultThemesAsync(context, logger);
     }
 
@@ -62,6 +63,39 @@ public static class DatabaseSeeder
         {
             logger.LogInformation("Development admin user already exists: {Email}", adminEmail);
         }
+    }
+
+    private static async Task SeedAppTypesAsync(
+        ApplicationDbContext context,
+        ILogger logger)
+    {
+        var existingAppTypes = await context.AppTypes.ToListAsync();
+        var defaultAppTypes = DefaultAppTypes.GetAll();
+
+        foreach (var appType in defaultAppTypes)
+        {
+            var existing = existingAppTypes.FirstOrDefault(a => a.Id == appType.Id);
+
+            if (existing == null)
+            {
+                var dbModel = appType.MapToDbModel();
+                context.AppTypes.Add(dbModel);
+                logger.LogInformation("Seeding new app type: {AppTypeId}", appType.Id);
+            }
+            else
+            {
+                existing.Name = appType.Name;
+                existing.Description = appType.Description;
+                existing.Component = appType.Component;
+                existing.Icon = appType.Icon;
+                existing.Color = appType.Color;
+                existing.IsActive = appType.IsActive;
+                existing.UpdatedAt = DateTime.UtcNow;
+            }
+        }
+
+        await context.SaveChangesAsync();
+        logger.LogInformation("App type seeding completed. Total: {Count}", defaultAppTypes.Count);
     }
 
     private static async Task SeedDefaultThemesAsync(

@@ -1,3 +1,4 @@
+using System.Text.Json;
 using FluentValidation;
 using Microsoft.Extensions.Logging;
 using Nory.Application.DTOs.Events;
@@ -12,17 +13,25 @@ namespace Nory.Infrastructure.Services;
 public class EventService : IEventService
 {
     private readonly IEventRepository _eventRepository;
+    private readonly IEventAppRepository _eventAppRepository;
     private readonly IValidator<CreateEventDto> _createValidator;
     private readonly IValidator<UpdateEventDto> _updateValidator;
     private readonly ILogger<EventService> _logger;
 
+    private static readonly JsonSerializerOptions JsonOptions = new()
+    {
+        PropertyNamingPolicy = JsonNamingPolicy.CamelCase
+    };
+
     public EventService(
         IEventRepository eventRepository,
+        IEventAppRepository eventAppRepository,
         IValidator<CreateEventDto> createValidator,
         IValidator<UpdateEventDto> updateValidator,
         ILogger<EventService> logger)
     {
         _eventRepository = eventRepository;
+        _eventAppRepository = eventAppRepository;
         _createValidator = createValidator;
         _updateValidator = updateValidator;
         _logger = logger;
@@ -86,12 +95,13 @@ public class EventService : IEventService
             startsAt: dto.StartsAt,
             endsAt: dto.EndsAt,
             isPublic: dto.IsPublic,
-            themeName: dto.ThemeName,
-            guestAppConfig: dto.GuestAppConfig
+            themeName: dto.ThemeName
         );
 
         _eventRepository.Add(eventEntity);
         await _eventRepository.SaveChangesAsync(cancellationToken);
+
+        await SyncEventAppsFromConfigAsync(eventEntity.Id, dto.GuestAppConfig, cancellationToken);
 
         _logger.LogInformation("User {UserId} created event {EventId}", userId, eventEntity.Id);
 
@@ -131,12 +141,14 @@ public class EventService : IEventService
             startsAt: dto.StartsAt,
             endsAt: dto.EndsAt,
             isPublic: dto.IsPublic,
-            guestAppConfig: dto.GuestAppConfig,
             themeName: dto.ThemeName
         );
 
         _eventRepository.Update(eventEntity);
         await _eventRepository.SaveChangesAsync(cancellationToken);
+
+        if (dto.GuestAppConfig != null)
+            await SyncEventAppsFromConfigAsync(eventId, dto.GuestAppConfig, cancellationToken);
 
         _logger.LogInformation("User {UserId} updated event {EventId}", userId, eventId);
 
@@ -194,4 +206,75 @@ public class EventService : IEventService
 
         return eventEntity.MapToDto();
     }
+
+    private async Task SyncEventAppsFromConfigAsync(
+        Guid eventId,
+        Dictionary<string, object>? guestAppConfig,
+        CancellationToken cancellationToken)
+    {
+        await _eventAppRepository.RemoveByEventIdAsync(eventId, cancellationToken);
+
+        if (guestAppConfig?.ContainsKey("components") != true)
+        {
+            await _eventAppRepository.SaveChangesAsync(cancellationToken);
+            return;
+        }
+
+        try
+        {
+            var componentsJson = JsonSerializer.Serialize(guestAppConfig["components"]);
+            var components = JsonSerializer.Deserialize<List<GuestAppComponent>>(componentsJson, JsonOptions);
+
+            if (components == null || components.Count == 0)
+            {
+                await _eventAppRepository.SaveChangesAsync(cancellationToken);
+                return;
+            }
+
+            var eventApps = components.Select(c => new EventApp(
+                id: Guid.TryParse(c.Id, out var guid) ? guid : Guid.NewGuid(),
+                eventId: eventId,
+                appTypeId: MapComponentTypeToAppTypeId(c.Config?.Type),
+                configuration: c.Config != null ? JsonSerializer.Serialize(c.Config) : null,
+                isEnabled: true,
+                sortOrder: c.Slot
+            ));
+
+            _eventAppRepository.AddRange(eventApps);
+            await _eventAppRepository.SaveChangesAsync(cancellationToken);
+
+            _logger.LogInformation("Synced {Count} event apps for event {EventId}", components.Count, eventId);
+        }
+        catch (Exception ex)
+        {
+            _logger.LogWarning(ex, "Failed to sync event apps from GuestAppConfig for event {EventId}", eventId);
+        }
+    }
+
+    private static string MapComponentTypeToAppTypeId(string? componentType)
+    {
+        return componentType switch
+        {
+            "remote" => "tv-remote",
+            "guestbook" => "guestbook",
+            "lists" => "lists",
+            "gallery" => "photos",
+            "schedule" => "schedule",
+            "polls" => "polls",
+            "custom" => "custom",
+            _ => componentType ?? ""
+        };
+    }
+}
+
+internal class GuestAppComponent
+{
+    public string Id { get; set; } = string.Empty;
+    public int Slot { get; set; }
+    public GuestAppConfig? Config { get; set; }
+}
+
+internal class GuestAppConfig
+{
+    public string? Type { get; set; }
 }

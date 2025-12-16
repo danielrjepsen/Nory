@@ -154,13 +154,6 @@ public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
         );
 
         builder
-            .Entity<EventDbModel>()
-            .Property(e => e.GuestAppConfig)
-            .HasColumnType("jsonb")
-            .HasConversion(dictionaryConverter)
-            .Metadata.SetValueComparer(dictionaryComparer);
-
-        builder
             .Entity<ThemeDbModel>()
             .HasIndex(t => t.Name)
             .IsUnique()

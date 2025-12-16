@@ -18,7 +18,6 @@ public static class EventExtensions
             IsPublic = eventEntity.IsPublic,
             HasContent = eventEntity.HasContent,
             PhotoCount = eventEntity.Photos.Count,
-            GuestAppConfig = eventEntity.GuestAppConfig,
             ThemeName = eventEntity.ThemeName,
             CreatedAt = eventEntity.CreatedAt,
             UpdatedAt = eventEntity.UpdatedAt,

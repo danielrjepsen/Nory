@@ -18,7 +18,6 @@ public static class EventMappingExtensions
             status: dbModel.Status,
             isPublic: dbModel.IsPublic,
             hasContent: dbModel.HasContent,
-            guestAppConfig: dbModel.GuestAppConfig,
             themeName: dbModel.ThemeName,
             createdAt: dbModel.CreatedAt,
             updatedAt: dbModel.UpdatedAt
@@ -39,7 +38,6 @@ public static class EventMappingExtensions
             Status = domainEvent.Status,
             IsPublic = domainEvent.IsPublic,
             HasContent = domainEvent.HasContent,
-            GuestAppConfig = domainEvent.GuestAppConfig,
             ThemeName = domainEvent.ThemeName,
             CreatedAt = domainEvent.CreatedAt,
             UpdatedAt = domainEvent.UpdatedAt,
@@ -57,7 +55,6 @@ public static class EventMappingExtensions
         dbModel.Status = domainEvent.Status;
         dbModel.IsPublic = domainEvent.IsPublic;
         dbModel.HasContent = domainEvent.HasContent;
-        dbModel.GuestAppConfig = domainEvent.GuestAppConfig;
         dbModel.ThemeName = domainEvent.ThemeName;
         dbModel.UpdatedAt = domainEvent.UpdatedAt;
     }
