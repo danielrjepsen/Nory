@@ -11,6 +11,7 @@ public enum ActivityType
 
     // app
     GuestAppOpened,
+    AppOpened,
     GalleryViewed,
     SlideshowViewed,
 
@@ -18,6 +19,10 @@ public enum ActivityType
     QrCodeScanned,
     EventJoined,
     EventLeft,
+
+    // guest
+    GuestRegistered,
+    ConsentUpdated,
 
     // guestbook
     GuestbookEntryAdded,

@@ -10,7 +10,6 @@ public class User
     public DateTime CreatedAt { get; private set; }
     public DateTime? UpdatedAt { get; private set; }
 
-    // constructor for EF
     public User(
         string id,
         string email,

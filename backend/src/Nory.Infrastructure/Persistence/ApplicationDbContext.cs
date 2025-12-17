@@ -23,6 +23,7 @@ public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
     public DbSet<EventTemplateDbModel> EventTemplates { get; set; }
     public DbSet<ActivityLogDbModel> ActivityLogs { get; set; }
     public DbSet<EventMetricsDbModel> EventMetrics { get; set; }
+    public DbSet<AttendeeDbModel> Attendees { get; set; }
 
     protected override void OnModelCreating(ModelBuilder builder)
     {
@@ -39,6 +40,7 @@ public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
         builder.Entity<EventMetricsDbModel>().ToTable("EventMetrics");
         builder.Entity<ThemeDbModel>().ToTable("Themes");
         builder.Entity<EventTemplateDbModel>().ToTable("EventTemplates");
+        builder.Entity<AttendeeDbModel>().ToTable("Attendees");
         builder
             .Entity<EventPhotoDbModel>()
             .HasIndex(p => p.EventId)
@@ -73,6 +75,23 @@ public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
             .Entity<EventMetricsDbModel>()
             .HasIndex(m => new { m.EventId, m.PeriodType })
             .HasDatabaseName("IX_EventMetrics_EventId_PeriodType");
+
+        builder
+            .Entity<AttendeeDbModel>()
+            .HasIndex(a => a.EventId)
+            .HasDatabaseName("IX_Attendees_EventId");
+
+        builder
+            .Entity<AttendeeDbModel>()
+            .HasIndex(a => new { a.EventId, a.Email })
+            .HasDatabaseName("IX_Attendees_EventId_Email");
+
+        builder
+            .Entity<AttendeeDbModel>()
+            .HasOne(a => a.Event)
+            .WithMany()
+            .HasForeignKey(a => a.EventId)
+            .OnDelete(DeleteBehavior.Cascade);
 
         builder
             .Entity<EventDbModel>()
