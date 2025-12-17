@@ -5,7 +5,6 @@ using Nory.Core.Domain.Enums;
 public class Event
 {
     public Guid Id { get; private set; }
-    public string UserId { get; private set; } = string.Empty;
     public string Name { get; private set; } = string.Empty;
     public string? Description { get; private set; }
     public string? Location { get; private set; }
@@ -25,7 +24,6 @@ public class Event
 
     public Event(
         Guid id,
-        string userId,
         string name,
         string? description,
         string? location,
@@ -39,7 +37,6 @@ public class Event
         DateTime updatedAt)
     {
         Id = id;
-        UserId = userId;
         Name = name;
         Description = description;
         Location = location;
@@ -54,7 +51,6 @@ public class Event
     }
 
     public static Event Create(
-        string userId,
         string name,
         string? description = null,
         string? location = null,
@@ -68,7 +64,6 @@ public class Event
 
         return new Event(
             id: Guid.NewGuid(),
-            userId: userId,
             name: name.Trim(),
             description: description?.Trim(),
             location: location?.Trim(),
@@ -170,8 +165,6 @@ public class Event
             UpdatedAt = DateTime.UtcNow;
         }
     }
-
-    public bool BelongsTo(string userId) => UserId == userId;
 
     private static void ValidateName(string name)
     {

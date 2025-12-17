@@ -8,10 +8,6 @@ public class EventDbModel
     public Guid Id { get; set; } = Guid.NewGuid();
 
     [Required]
-    [MaxLength(450)]
-    public string UserId { get; set; } = string.Empty;
-
-    [Required]
     [MaxLength(200)]
     public string Name { get; set; } = string.Empty;
 

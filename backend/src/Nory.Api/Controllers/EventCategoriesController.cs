@@ -15,10 +15,7 @@ public class EventCategoriesController(ICategoryService categoryService) : ApiCo
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     public async Task<IActionResult> GetCategories(Guid eventId, CancellationToken cancellationToken)
     {
-        var userId = GetUserId();
-        if (userId is null) return Unauthorized();
-
-        var result = await categoryService.GetCategoriesAsync(eventId, userId, cancellationToken);
+        var result = await categoryService.GetCategoriesAsync(eventId, cancellationToken);
         return ToActionResult(result);
     }
 
@@ -31,11 +28,8 @@ public class EventCategoriesController(ICategoryService categoryService) : ApiCo
         [FromBody] CreateCategoryRequest request,
         CancellationToken cancellationToken)
     {
-        var userId = GetUserId();
-        if (userId is null) return Unauthorized();
-
         var command = new CreateCategoryCommand(request.Name, request.Description, request.SortOrder);
-        var result = await categoryService.CreateCategoryAsync(eventId, userId, command, cancellationToken);
+        var result = await categoryService.CreateCategoryAsync(eventId, command, cancellationToken);
 
         if (!result.IsSuccess)
             return ToActionResult(result);
@@ -56,11 +50,8 @@ public class EventCategoriesController(ICategoryService categoryService) : ApiCo
         [FromBody] UpdateCategoryRequest request,
         CancellationToken cancellationToken)
     {
-        var userId = GetUserId();
-        if (userId is null) return Unauthorized();
-
         var command = new UpdateCategoryCommand(request.Name, request.Description, request.SortOrder);
-        var result = await categoryService.UpdateCategoryAsync(eventId, categoryId, userId, command, cancellationToken);
+        var result = await categoryService.UpdateCategoryAsync(eventId, categoryId, command, cancellationToken);
 
         if (!result.IsSuccess)
             return ToActionResult(result);
@@ -77,10 +68,7 @@ public class EventCategoriesController(ICategoryService categoryService) : ApiCo
         Guid categoryId,
         CancellationToken cancellationToken)
     {
-        var userId = GetUserId();
-        if (userId is null) return Unauthorized();
-
-        var result = await categoryService.DeleteCategoryAsync(eventId, categoryId, userId, cancellationToken);
+        var result = await categoryService.DeleteCategoryAsync(eventId, categoryId, cancellationToken);
 
         if (!result.IsSuccess)
             return ToActionResult(result);
@@ -96,11 +84,8 @@ public class EventCategoriesController(ICategoryService categoryService) : ApiCo
         [FromBody] ReorderCategoriesRequest request,
         CancellationToken cancellationToken)
     {
-        var userId = GetUserId();
-        if (userId is null) return Unauthorized();
-
         var command = new ReorderCategoriesCommand(request.CategoryIds);
-        var result = await categoryService.ReorderCategoriesAsync(eventId, userId, command, cancellationToken);
+        var result = await categoryService.ReorderCategoriesAsync(eventId, command, cancellationToken);
 
         if (!result.IsSuccess)
             return ToActionResult(result);

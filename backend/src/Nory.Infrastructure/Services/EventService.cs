@@ -41,26 +41,16 @@ public class EventService : IEventService
         _logger = logger;
     }
 
-    public async Task<IReadOnlyList<EventDto>> GetEventsAsync(string userId, CancellationToken cancellationToken = default)
+    public async Task<IReadOnlyList<EventDto>> GetEventsAsync(CancellationToken cancellationToken = default)
     {
-        var events = await _eventRepository.GetByUserIdAsync(userId, cancellationToken);
+        var events = await _eventRepository.GetAllAsync(cancellationToken);
         return events.MapToDto();
     }
 
-    public async Task<EventDto?> GetEventByIdAsync(Guid eventId, string userId, CancellationToken cancellationToken = default)
+    public async Task<EventDto?> GetEventByIdAsync(Guid eventId, CancellationToken cancellationToken = default)
     {
         var eventEntity = await _eventRepository.GetByIdWithPhotosAsync(eventId, cancellationToken);
-
-        if (eventEntity is null)
-            return null;
-
-        if (!eventEntity.BelongsTo(userId))
-        {
-            _logger.LogWarning("User {UserId} attempted to access event {EventId} they don't own", userId, eventId);
-            return null;
-        }
-
-        return eventEntity.MapToDto();
+        return eventEntity?.MapToDto();
     }
 
     public async Task<EventDto?> GetPublicEventAsync(Guid eventId, bool preview = false, CancellationToken cancellationToken = default)
@@ -87,13 +77,10 @@ public class EventService : IEventService
         return await _eventRepository.ExistsAsync(eventId, cancellationToken);
     }
 
-    public async Task<EventAttendeeListDto> GetEventAttendeesAsync(Guid eventId, string userId, CancellationToken cancellationToken = default)
+    public async Task<EventAttendeeListDto> GetEventAttendeesAsync(Guid eventId, CancellationToken cancellationToken = default)
     {
         var eventEntity = await _eventRepository.GetByIdAsync(eventId, cancellationToken)
             ?? throw new KeyNotFoundException($"Event {eventId} not found");
-
-        if (!eventEntity.BelongsTo(userId))
-            throw new UnauthorizedAccessException("Access denied");
 
         var attendees = await _attendeeRepository.GetByEventIdAsync(eventId, cancellationToken);
 
@@ -117,12 +104,11 @@ public class EventService : IEventService
         };
     }
 
-    public async Task<EventDto> CreateEventAsync(CreateEventDto dto, string userId, CancellationToken cancellationToken = default)
+    public async Task<EventDto> CreateEventAsync(CreateEventDto dto, CancellationToken cancellationToken = default)
     {
         await _createValidator.ValidateAndThrowAsync(dto, cancellationToken);
 
         var eventEntity = Event.Create(
-            userId: userId,
             name: dto.Name,
             description: dto.Description,
             location: dto.Location,
@@ -137,20 +123,17 @@ public class EventService : IEventService
 
         await SyncEventAppsFromConfigAsync(eventEntity.Id, dto.GuestAppConfig, cancellationToken);
 
-        _logger.LogInformation("User {UserId} created event {EventId}", userId, eventEntity.Id);
+        _logger.LogInformation("Created event {EventId}", eventEntity.Id);
 
         return eventEntity.MapToDto();
     }
 
-    public async Task<EventDto> UpdateEventAsync(Guid eventId, UpdateEventDto dto, string userId, CancellationToken cancellationToken = default)
+    public async Task<EventDto> UpdateEventAsync(Guid eventId, UpdateEventDto dto, CancellationToken cancellationToken = default)
     {
         await _updateValidator.ValidateAndThrowAsync(dto, cancellationToken);
 
         var eventEntity = await _eventRepository.GetByIdAsync(eventId, cancellationToken)
             ?? throw new KeyNotFoundException($"Event {eventId} not found");
-
-        if (!eventEntity.BelongsTo(userId))
-            throw new UnauthorizedAccessException("Access denied");
 
         if (!string.IsNullOrEmpty(dto.Status) && Enum.TryParse<EventStatus>(dto.Status, true, out var newStatus))
         {
@@ -184,59 +167,50 @@ public class EventService : IEventService
         if (dto.GuestAppConfig != null)
             await SyncEventAppsFromConfigAsync(eventId, dto.GuestAppConfig, cancellationToken);
 
-        _logger.LogInformation("User {UserId} updated event {EventId}", userId, eventId);
+        _logger.LogInformation("Updated event {EventId}", eventId);
 
         return eventEntity.MapToDto();
     }
 
-    public async Task DeleteEventAsync(Guid eventId, string userId, CancellationToken cancellationToken = default)
+    public async Task DeleteEventAsync(Guid eventId, CancellationToken cancellationToken = default)
     {
         var eventEntity = await _eventRepository.GetByIdAsync(eventId, cancellationToken)
             ?? throw new KeyNotFoundException($"Event {eventId} not found");
-
-        if (!eventEntity.BelongsTo(userId))
-            throw new UnauthorizedAccessException("Access denied");
 
         eventEntity.Archive();
 
         _eventRepository.Update(eventEntity);
         await _eventRepository.SaveChangesAsync(cancellationToken);
 
-        _logger.LogInformation("User {UserId} deleted (archived) event {EventId}", userId, eventId);
+        _logger.LogInformation("Deleted (archived) event {EventId}", eventId);
     }
 
-    public async Task<EventDto> StartEventAsync(Guid eventId, string userId, CancellationToken cancellationToken = default)
+    public async Task<EventDto> StartEventAsync(Guid eventId, CancellationToken cancellationToken = default)
     {
         var eventEntity = await _eventRepository.GetByIdAsync(eventId, cancellationToken)
             ?? throw new KeyNotFoundException($"Event {eventId} not found");
-
-        if (!eventEntity.BelongsTo(userId))
-            throw new UnauthorizedAccessException("Access denied");
 
         eventEntity.Start();
 
         _eventRepository.Update(eventEntity);
         await _eventRepository.SaveChangesAsync(cancellationToken);
 
-        _logger.LogInformation("User {UserId} started event {EventId}", userId, eventId);
+        _logger.LogInformation("Started event {EventId}", eventId);
 
         return eventEntity.MapToDto();
     }
 
-    public async Task<EventDto> EndEventAsync(Guid eventId, string userId, CancellationToken cancellationToken = default)
+    public async Task<EventDto> EndEventAsync(Guid eventId, CancellationToken cancellationToken = default)
     {
         var eventEntity = await _eventRepository.GetByIdAsync(eventId, cancellationToken)
             ?? throw new KeyNotFoundException($"Event {eventId} not found");
-
-        if (!eventEntity.BelongsTo(userId))
-            throw new UnauthorizedAccessException("Access denied");
 
         eventEntity.End();
 
         _eventRepository.Update(eventEntity);
         await _eventRepository.SaveChangesAsync(cancellationToken);
 
-        _logger.LogInformation("User {UserId} ended event {EventId}", userId, eventId);
+        _logger.LogInformation("Ended event {EventId}", eventId);
 
         return eventEntity.MapToDto();
     }

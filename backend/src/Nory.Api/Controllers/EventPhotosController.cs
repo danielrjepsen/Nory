@@ -21,11 +21,8 @@ public class EventPhotosController(IPhotoService photoService) : ApiControllerBa
         [FromQuery] int offset = 0,
         CancellationToken cancellationToken = default)
     {
-        var userId = GetUserId();
-        if (userId is null) return Unauthorized();
-
         var result = await photoService.GetPhotosForDashboardAsync(
-            eventId, userId, categoryId, limit, offset, cancellationToken);
+            eventId, categoryId, limit, offset, cancellationToken);
 
         return ToActionResult(result);
     }
@@ -39,12 +36,9 @@ public class EventPhotosController(IPhotoService photoService) : ApiControllerBa
         [FromBody] MoveCategoryRequest request,
         CancellationToken cancellationToken)
     {
-        var userId = GetUserId();
-        if (userId is null) return Unauthorized();
-
         var command = new MovePhotoCategoryCommand(request.CategoryId);
         var result = await photoService.MovePhotoToCategoryAsync(
-            eventId, photoId, userId, command, cancellationToken);
+            eventId, photoId, command, cancellationToken);
 
         if (!result.IsSuccess)
             return ToActionResult(result);
@@ -60,10 +54,7 @@ public class EventPhotosController(IPhotoService photoService) : ApiControllerBa
         Guid photoId,
         CancellationToken cancellationToken)
     {
-        var userId = GetUserId();
-        if (userId is null) return Unauthorized();
-
-        var result = await photoService.DeletePhotoAsync(eventId, photoId, userId, cancellationToken);
+        var result = await photoService.DeletePhotoAsync(eventId, photoId, cancellationToken);
 
         if (!result.IsSuccess)
             return ToActionResult(result);
@@ -81,10 +72,7 @@ public class EventPhotosController(IPhotoService photoService) : ApiControllerBa
         Guid photoId,
         CancellationToken cancellationToken)
     {
-        var userId = GetUserId();
-        if (userId is null) return Unauthorized();
-
-        var result = await photoService.GetPhotoImageAsync(eventId, photoId, userId, cancellationToken);
+        var result = await photoService.GetPhotoImageAsync(eventId, photoId, cancellationToken);
 
         if (!result.IsSuccess)
             return NotFound();

@@ -1,8 +1,6 @@
-using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
-using Nory.Infrastructure.Identity;
 using Nory.Infrastructure.Persistence.Extensions;
 using Nory.Infrastructure.Persistence.SeedData;
 
@@ -10,15 +8,6 @@ namespace Nory.Infrastructure.Persistence;
 
 public static class DatabaseSeeder
 {
-    public static async Task SeedDevelopmentDataAsync(IServiceProvider serviceProvider)
-    {
-        using var scope = serviceProvider.CreateScope();
-        var userManager = scope.ServiceProvider.GetRequiredService<UserManager<ApplicationUser>>();
-        var logger = scope.ServiceProvider.GetRequiredService<ILogger<ApplicationDbContext>>();
-
-        await SeedAdminUserAsync(userManager, logger);
-    }
-
     public static async Task SeedRequiredDataAsync(IServiceProvider serviceProvider)
     {
         using var scope = serviceProvider.CreateScope();
@@ -27,42 +16,6 @@ public static class DatabaseSeeder
 
         await SeedAppTypesAsync(context, logger);
         await SeedDefaultThemesAsync(context, logger);
-    }
-
-    private static async Task SeedAdminUserAsync(
-        UserManager<ApplicationUser> userManager,
-        ILogger logger)
-    {
-        var adminEmail = "admin@nory.dev";
-        var existingUser = await userManager.FindByEmailAsync(adminEmail);
-
-        if (existingUser == null)
-        {
-            var adminUser = new ApplicationUser
-            {
-                UserName = adminEmail,
-                Email = adminEmail,
-                EmailConfirmed = true,
-                Name = "Admin User",
-                CreatedAt = DateTime.UtcNow
-            };
-
-            var result = await userManager.CreateAsync(adminUser, "Admin123!");
-
-            if (result.Succeeded)
-            {
-                logger.LogInformation("Development admin user created: {Email} / Admin123!", adminEmail);
-            }
-            else
-            {
-                logger.LogError("Failed to create admin user: {Errors}",
-                    string.Join(", ", result.Errors.Select(e => e.Description)));
-            }
-        }
-        else
-        {
-            logger.LogInformation("Development admin user already exists: {Email}", adminEmail);
-        }
     }
 
     private static async Task SeedAppTypesAsync(

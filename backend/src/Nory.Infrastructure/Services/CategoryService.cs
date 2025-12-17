@@ -26,11 +26,10 @@ public class CategoryService : ICategoryService
 
     public async Task<Result<CategoriesResponse>> GetCategoriesAsync(
         Guid eventId,
-        string userId,
         CancellationToken cancellationToken = default)
     {
-        if (!await _eventRepository.IsOwnedByUserAsync(eventId, userId, cancellationToken))
-            return Result<CategoriesResponse>.NotFound("Event not found or access denied");
+        if (!await _eventRepository.ExistsAsync(eventId, cancellationToken))
+            return Result<CategoriesResponse>.NotFound("Event not found");
 
         var categories = await _categoryRepository.GetByEventIdAsync(eventId, cancellationToken);
         var dtos = categories.Select(c => c.MapToDto()).ToList();
@@ -40,12 +39,11 @@ public class CategoryService : ICategoryService
 
     public async Task<Result<CategoryDto>> CreateCategoryAsync(
         Guid eventId,
-        string userId,
         CreateCategoryCommand command,
         CancellationToken cancellationToken = default)
     {
-        if (!await _eventRepository.IsOwnedByUserAsync(eventId, userId, cancellationToken))
-            return Result<CategoryDto>.NotFound("Event not found or access denied");
+        if (!await _eventRepository.ExistsAsync(eventId, cancellationToken))
+            return Result<CategoryDto>.NotFound("Event not found");
 
         if (await _categoryRepository.NameExistsAsync(eventId, command.Name, null, cancellationToken))
             return Result<CategoryDto>.BadRequest("A category with this name already exists");
@@ -67,16 +65,15 @@ public class CategoryService : ICategoryService
     public async Task<Result<CategoryDto>> UpdateCategoryAsync(
         Guid eventId,
         Guid categoryId,
-        string userId,
         UpdateCategoryCommand command,
         CancellationToken cancellationToken = default)
     {
-        if (!await _eventRepository.IsOwnedByUserAsync(eventId, userId, cancellationToken))
-            return Result<CategoryDto>.NotFound("Category not found or access denied");
+        if (!await _eventRepository.ExistsAsync(eventId, cancellationToken))
+            return Result<CategoryDto>.NotFound("Event not found");
 
         var category = await _categoryRepository.GetByIdAsync(categoryId, eventId, cancellationToken);
         if (category is null)
-            return Result<CategoryDto>.NotFound("Category not found or access denied");
+            return Result<CategoryDto>.NotFound("Category not found");
 
         if (await _categoryRepository.NameExistsAsync(eventId, command.Name, categoryId, cancellationToken))
             return Result<CategoryDto>.BadRequest("A category with this name already exists");
@@ -97,15 +94,14 @@ public class CategoryService : ICategoryService
     public async Task<Result> DeleteCategoryAsync(
         Guid eventId,
         Guid categoryId,
-        string userId,
         CancellationToken cancellationToken = default)
     {
-        if (!await _eventRepository.IsOwnedByUserAsync(eventId, userId, cancellationToken))
-            return Result.NotFound("Category not found or access denied");
+        if (!await _eventRepository.ExistsAsync(eventId, cancellationToken))
+            return Result.NotFound("Event not found");
 
         var category = await _categoryRepository.GetByIdAsync(categoryId, eventId, cancellationToken);
         if (category is null)
-            return Result.NotFound("Category not found or access denied");
+            return Result.NotFound("Category not found");
 
         if (category.IsDefault)
             return Result.BadRequest("Cannot delete the default category");
@@ -120,12 +116,11 @@ public class CategoryService : ICategoryService
 
     public async Task<Result> ReorderCategoriesAsync(
         Guid eventId,
-        string userId,
         ReorderCategoriesCommand command,
         CancellationToken cancellationToken = default)
     {
-        if (!await _eventRepository.IsOwnedByUserAsync(eventId, userId, cancellationToken))
-            return Result.NotFound("Event not found or access denied");
+        if (!await _eventRepository.ExistsAsync(eventId, cancellationToken))
+            return Result.NotFound("Event not found");
 
         if (command.CategoryIds.Count > 100)
             return Result.BadRequest("Cannot reorder more than 100 categories");

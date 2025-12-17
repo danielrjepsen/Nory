@@ -15,10 +15,10 @@ public class EventRepository : IEventRepository
         _context = context;
     }
 
-    public async Task<IReadOnlyList<Event>> GetByUserIdAsync(string userId, CancellationToken cancellationToken = default)
+    public async Task<IReadOnlyList<Event>> GetAllAsync(CancellationToken cancellationToken = default)
     {
         var dbModels = await _context.Events
-            .Where(e => e.UserId == userId && e.Status != EventStatus.Archived)
+            .Where(e => e.Status != EventStatus.Archived)
             .OrderByDescending(e => e.CreatedAt)
             .AsNoTracking()
             .ToListAsync(cancellationToken);
@@ -50,15 +50,10 @@ public class EventRepository : IEventRepository
         return await _context.Events.AnyAsync(e => e.Id == eventId, cancellationToken);
     }
 
-    public async Task<bool> IsOwnedByUserAsync(Guid eventId, string userId, CancellationToken cancellationToken = default)
-    {
-        return await _context.Events.AnyAsync(e => e.Id == eventId && e.UserId == userId, cancellationToken);
-    }
-
-    public async Task<int> CountByUserIdAsync(string userId, CancellationToken cancellationToken = default)
+    public async Task<int> CountAsync(CancellationToken cancellationToken = default)
     {
         return await _context.Events
-            .Where(e => e.UserId == userId && e.Status != EventStatus.Archived)
+            .Where(e => e.Status != EventStatus.Archived)
             .CountAsync(cancellationToken);
     }
 

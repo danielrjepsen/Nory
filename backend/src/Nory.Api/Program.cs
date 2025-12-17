@@ -90,9 +90,7 @@ using (var scope = app.Services.CreateScope())
     var db = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
     db.Database.Migrate();
     await DatabaseSeeder.SeedRequiredDataAsync(app.Services);
-
-    if (app.Environment.IsDevelopment())
-        await DatabaseSeeder.SeedDevelopmentDataAsync(app.Services);
+    // Note: Admin user is created via /wizard setup, not auto-seeded
 }
 
 if (app.Environment.IsDevelopment())

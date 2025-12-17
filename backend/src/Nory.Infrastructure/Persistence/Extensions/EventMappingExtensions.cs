@@ -9,7 +9,6 @@ public static class EventMappingExtensions
     {
         return new Event(
             id: dbModel.Id,
-            userId: dbModel.UserId,
             name: dbModel.Name,
             description: dbModel.Description,
             location: dbModel.Location,
@@ -29,7 +28,6 @@ public static class EventMappingExtensions
         return new EventDbModel
         {
             Id = domainEvent.Id,
-            UserId = domainEvent.UserId,
             Name = domainEvent.Name,
             Description = domainEvent.Description,
             Location = domainEvent.Location,
@@ -46,7 +44,6 @@ public static class EventMappingExtensions
 
     public static void UpdateFrom(this EventDbModel dbModel, Event domainEvent)
     {
-        dbModel.UserId = domainEvent.UserId;
         dbModel.Name = domainEvent.Name;
         dbModel.Description = domainEvent.Description;
         dbModel.Location = domainEvent.Location;

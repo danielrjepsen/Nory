@@ -13,12 +13,11 @@ namespace Nory.Api.Tests.Controllers;
 public class EventsControllerTests(CustomWebApplicationFactory factory) : IAsyncLifetime
 {
     private HttpClient _client = null!;
-    private const string UserId = "test-user-123";
 
     public async Task InitializeAsync()
     {
         await factory.ResetDatabaseAsync();
-        _client = factory.CreateAuthenticatedClient(UserId);
+        _client = factory.CreateAuthenticatedClient("test-user-123");
     }
 
     public Task DisposeAsync()
@@ -28,17 +27,17 @@ public class EventsControllerTests(CustomWebApplicationFactory factory) : IAsync
     }
 
     [Fact]
-    public async Task GetEvents_ReturnsUserEvents()
+    public async Task GetEvents_ReturnsAllEvents()
     {
-        await SeedEvent("Event 1", UserId);
-        await SeedEvent("Event 2", UserId);
-        await SeedEvent("Other Event", "other-user");
+        await SeedEvent("Event 1");
+        await SeedEvent("Event 2");
+        await SeedEvent("Event 3");
 
         var response = await _client.GetAsync("/api/v1/events");
 
         response.StatusCode.Should().Be(HttpStatusCode.OK);
         var events = await response.Content.ReadFromJsonAsync<List<EventDto>>();
-        events.Should().HaveCount(2);
+        events.Should().HaveCount(3);
     }
 
     [Fact]
@@ -54,7 +53,7 @@ public class EventsControllerTests(CustomWebApplicationFactory factory) : IAsync
     [Fact]
     public async Task GetEventById_ReturnsEvent()
     {
-        var eventId = await SeedEvent("Test Event", UserId);
+        var eventId = await SeedEvent("Test Event");
 
         var response = await _client.GetAsync($"/api/v1/events/{eventId}");
 
@@ -67,16 +66,6 @@ public class EventsControllerTests(CustomWebApplicationFactory factory) : IAsync
     public async Task GetEventById_WhenNotFound_Returns404()
     {
         var response = await _client.GetAsync($"/api/v1/events/{Guid.NewGuid()}");
-
-        response.StatusCode.Should().Be(HttpStatusCode.NotFound);
-    }
-
-    [Fact]
-    public async Task GetEventById_WhenNotOwned_Returns404()
-    {
-        var eventId = await SeedEvent("Other Event", "other-user");
-
-        var response = await _client.GetAsync($"/api/v1/events/{eventId}");
 
         response.StatusCode.Should().Be(HttpStatusCode.NotFound);
     }
@@ -108,7 +97,7 @@ public class EventsControllerTests(CustomWebApplicationFactory factory) : IAsync
     [Fact]
     public async Task UpdateEvent_ReturnsUpdated()
     {
-        var eventId = await SeedEvent("Original", UserId);
+        var eventId = await SeedEvent("Original");
 
         var response = await _client.PatchAsJsonAsync($"/api/v1/events/{eventId}",
             new UpdateEventDto { Name = "Updated" });
@@ -121,7 +110,7 @@ public class EventsControllerTests(CustomWebApplicationFactory factory) : IAsync
     [Fact]
     public async Task DeleteEvent_ArchivesEvent()
     {
-        var eventId = await SeedEvent("To Delete", UserId);
+        var eventId = await SeedEvent("To Delete");
 
         var response = await _client.DeleteAsync($"/api/v1/events/{eventId}");
 
@@ -134,7 +123,7 @@ public class EventsControllerTests(CustomWebApplicationFactory factory) : IAsync
     [Fact]
     public async Task StartEvent_TransitionsToLive()
     {
-        var eventId = await SeedEvent("Draft Event", UserId);
+        var eventId = await SeedEvent("Draft Event");
 
         var response = await _client.PostAsync($"/api/v1/events/{eventId}/start", null);
 
@@ -146,7 +135,7 @@ public class EventsControllerTests(CustomWebApplicationFactory factory) : IAsync
     [Fact]
     public async Task EndEvent_TransitionsToEnded()
     {
-        var eventId = await SeedLiveEvent("Live Event", UserId);
+        var eventId = await SeedLiveEvent("Live Event");
 
         var response = await _client.PostAsync($"/api/v1/events/{eventId}/end", null);
 
@@ -155,18 +144,18 @@ public class EventsControllerTests(CustomWebApplicationFactory factory) : IAsync
         @event!.Status.Should().Be("ended");
     }
 
-    private async Task<Guid> SeedEvent(string name, string userId)
+    private async Task<Guid> SeedEvent(string name)
     {
-        var @event = EventBuilder.Default().WithUserId(userId).WithName(name).Create();
+        var @event = EventBuilder.Default().WithName(name).Create();
         var db = factory.GetDbContext();
         db.Events.Add(@event.MapToDbModel());
         await db.SaveChangesAsync();
         return @event.Id;
     }
 
-    private async Task<Guid> SeedLiveEvent(string name, string userId)
+    private async Task<Guid> SeedLiveEvent(string name)
     {
-        var @event = EventBuilder.Default().WithUserId(userId).WithName(name).Create();
+        var @event = EventBuilder.Default().WithName(name).Create();
         @event.Start();
         var db = factory.GetDbContext();
         db.Events.Add(@event.MapToDbModel());

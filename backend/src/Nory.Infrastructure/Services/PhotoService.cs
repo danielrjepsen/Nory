@@ -29,7 +29,6 @@ public class PhotoService : IPhotoService
 
     public async Task<Result<PhotosResponse>> GetPhotosForDashboardAsync(
         Guid eventId,
-        string userId,
         Guid? categoryId = null,
         int limit = 50,
         int offset = 0,
@@ -38,9 +37,6 @@ public class PhotoService : IPhotoService
         var eventEntity = await _eventRepository.GetByIdAsync(eventId, cancellationToken);
 
         if (eventEntity is null)
-            return Result<PhotosResponse>.NotFound("Event not found");
-
-        if (!eventEntity.BelongsTo(userId))
             return Result<PhotosResponse>.NotFound("Event not found");
 
         if (eventEntity.Status == EventStatus.Archived)
@@ -150,14 +146,13 @@ public class PhotoService : IPhotoService
     public async Task<Result> MovePhotoToCategoryAsync(
         Guid eventId,
         Guid photoId,
-        string userId,
         MovePhotoCategoryCommand command,
         CancellationToken cancellationToken = default)
     {
         var eventEntity = await _eventRepository.GetByIdAsync(eventId, cancellationToken);
 
-        if (eventEntity is null || !eventEntity.BelongsTo(userId))
-            return Result.NotFound("Photo not found");
+        if (eventEntity is null)
+            return Result.NotFound("Event not found");
 
         var photo = await _photoRepository.GetByIdWithEventAsync(photoId, eventId, cancellationToken);
 
@@ -176,13 +171,12 @@ public class PhotoService : IPhotoService
     public async Task<Result> DeletePhotoAsync(
         Guid eventId,
         Guid photoId,
-        string userId,
         CancellationToken cancellationToken = default)
     {
         var eventEntity = await _eventRepository.GetByIdAsync(eventId, cancellationToken);
 
-        if (eventEntity is null || !eventEntity.BelongsTo(userId))
-            return Result.NotFound("Photo not found");
+        if (eventEntity is null)
+            return Result.NotFound("Event not found");
 
         var photo = await _photoRepository.GetByIdWithEventAsync(photoId, eventId, cancellationToken);
 
@@ -205,13 +199,12 @@ public class PhotoService : IPhotoService
     public async Task<Result<FileResult>> GetPhotoImageAsync(
         Guid eventId,
         Guid photoId,
-        string userId,
         CancellationToken cancellationToken = default)
     {
         var eventEntity = await _eventRepository.GetByIdAsync(eventId, cancellationToken);
 
-        if (eventEntity is null || !eventEntity.BelongsTo(userId))
-            return Result<FileResult>.NotFound("Photo not found");
+        if (eventEntity is null)
+            return Result<FileResult>.NotFound("Event not found");
 
         var photo = await _photoRepository.GetByIdWithEventAsync(photoId, eventId, cancellationToken);
 

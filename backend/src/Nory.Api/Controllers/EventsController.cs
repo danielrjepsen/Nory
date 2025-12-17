@@ -1,4 +1,3 @@
-using System.Security.Claims;
 using FluentValidation;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -18,11 +17,7 @@ public class EventsController(IEventService eventService) : ControllerBase
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     public async Task<IActionResult> GetEvents(CancellationToken cancellationToken)
     {
-        var userId = GetCurrentUserId();
-        if (userId is null)
-            return Unauthorized();
-
-        var events = await eventService.GetEventsAsync(userId, cancellationToken);
+        var events = await eventService.GetEventsAsync(cancellationToken);
         return Ok(events);
     }
 
@@ -32,11 +27,7 @@ public class EventsController(IEventService eventService) : ControllerBase
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     public async Task<IActionResult> GetEvent(Guid eventId, CancellationToken cancellationToken)
     {
-        var userId = GetCurrentUserId();
-        if (userId is null)
-            return Unauthorized();
-
-        var eventDto = await eventService.GetEventByIdAsync(eventId, userId, cancellationToken);
+        var eventDto = await eventService.GetEventByIdAsync(eventId, cancellationToken);
         if (eventDto is null)
             return NotFound(new { message = "Event not found" });
 
@@ -49,22 +40,14 @@ public class EventsController(IEventService eventService) : ControllerBase
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     public async Task<IActionResult> GetEventAttendees(Guid eventId, CancellationToken cancellationToken)
     {
-        var userId = GetCurrentUserId();
-        if (userId is null)
-            return Unauthorized();
-
         try
         {
-            var attendees = await eventService.GetEventAttendeesAsync(eventId, userId, cancellationToken);
+            var attendees = await eventService.GetEventAttendeesAsync(eventId, cancellationToken);
             return Ok(attendees);
         }
         catch (KeyNotFoundException)
         {
             return NotFound(new { message = "Event not found" });
-        }
-        catch (UnauthorizedAccessException)
-        {
-            return StatusCode(StatusCodes.Status403Forbidden, new { message = "Access denied" });
         }
     }
 
@@ -106,13 +89,9 @@ public class EventsController(IEventService eventService) : ControllerBase
         [FromBody] CreateEventDto dto,
         CancellationToken cancellationToken)
     {
-        var userId = GetCurrentUserId();
-        if (userId is null)
-            return Unauthorized();
-
         try
         {
-            var eventDto = await eventService.CreateEventAsync(dto, userId, cancellationToken);
+            var eventDto = await eventService.CreateEventAsync(dto, cancellationToken);
             return CreatedAtAction(nameof(GetEvent), new { eventId = eventDto.Id }, eventDto);
         }
         catch (ValidationException ex)
@@ -132,22 +111,14 @@ public class EventsController(IEventService eventService) : ControllerBase
         [FromBody] UpdateEventDto dto,
         CancellationToken cancellationToken)
     {
-        var userId = GetCurrentUserId();
-        if (userId is null)
-            return Unauthorized();
-
         try
         {
-            var eventDto = await eventService.UpdateEventAsync(eventId, dto, userId, cancellationToken);
+            var eventDto = await eventService.UpdateEventAsync(eventId, dto, cancellationToken);
             return Ok(eventDto);
         }
         catch (KeyNotFoundException)
         {
             return NotFound(new { message = "Event not found" });
-        }
-        catch (UnauthorizedAccessException)
-        {
-            return StatusCode(StatusCodes.Status403Forbidden, new { message = "Access denied" });
         }
         catch (InvalidOperationException ex)
         {
@@ -166,22 +137,14 @@ public class EventsController(IEventService eventService) : ControllerBase
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     public async Task<IActionResult> DeleteEvent(Guid eventId, CancellationToken cancellationToken)
     {
-        var userId = GetCurrentUserId();
-        if (userId is null)
-            return Unauthorized();
-
         try
         {
-            await eventService.DeleteEventAsync(eventId, userId, cancellationToken);
+            await eventService.DeleteEventAsync(eventId, cancellationToken);
             return NoContent();
         }
         catch (KeyNotFoundException)
         {
             return NotFound(new { message = "Event not found" });
-        }
-        catch (UnauthorizedAccessException)
-        {
-            return StatusCode(StatusCodes.Status403Forbidden, new { message = "Access denied" });
         }
         catch (InvalidOperationException ex)
         {
@@ -196,22 +159,14 @@ public class EventsController(IEventService eventService) : ControllerBase
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     public async Task<IActionResult> StartEvent(Guid eventId, CancellationToken cancellationToken)
     {
-        var userId = GetCurrentUserId();
-        if (userId is null)
-            return Unauthorized();
-
         try
         {
-            var eventDto = await eventService.StartEventAsync(eventId, userId, cancellationToken);
+            var eventDto = await eventService.StartEventAsync(eventId, cancellationToken);
             return Ok(eventDto);
         }
         catch (KeyNotFoundException)
         {
             return NotFound(new { message = "Event not found" });
-        }
-        catch (UnauthorizedAccessException)
-        {
-            return StatusCode(StatusCodes.Status403Forbidden, new { message = "Access denied" });
         }
         catch (InvalidOperationException ex)
         {
@@ -226,28 +181,18 @@ public class EventsController(IEventService eventService) : ControllerBase
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     public async Task<IActionResult> EndEvent(Guid eventId, CancellationToken cancellationToken)
     {
-        var userId = GetCurrentUserId();
-        if (userId is null)
-            return Unauthorized();
-
         try
         {
-            var eventDto = await eventService.EndEventAsync(eventId, userId, cancellationToken);
+            var eventDto = await eventService.EndEventAsync(eventId, cancellationToken);
             return Ok(eventDto);
         }
         catch (KeyNotFoundException)
         {
             return NotFound(new { message = "Event not found" });
         }
-        catch (UnauthorizedAccessException)
-        {
-            return StatusCode(StatusCodes.Status403Forbidden, new { message = "Access denied" });
-        }
         catch (InvalidOperationException ex)
         {
             return BadRequest(new { message = ex.Message });
         }
     }
-
-    private string? GetCurrentUserId() => User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
 }

@@ -11,10 +11,9 @@ public class EventTests
     [Fact]
     public void Create_WithValidData_CreatesEvent()
     {
-        var @event = Event.Create("user-123", "Birthday Party");
+        var @event = Event.Create("Birthday Party");
 
         @event.Id.Should().NotBeEmpty();
-        @event.UserId.Should().Be("user-123");
         @event.Name.Should().Be("Birthday Party");
         @event.Status.Should().Be(EventStatus.Draft);
         @event.IsPublic.Should().BeTrue();
@@ -27,7 +26,7 @@ public class EventTests
         var startsAt = DateTime.UtcNow.AddDays(7);
         var endsAt = DateTime.UtcNow.AddDays(8);
 
-        var @event = Event.Create("user-123", "Wedding", "Beautiful wedding", "Beach",
+        var @event = Event.Create("Wedding", "Beautiful wedding", "Beach",
             startsAt, endsAt, isPublic: false, "elegant");
 
         @event.Description.Should().Be("Beautiful wedding");
@@ -44,7 +43,7 @@ public class EventTests
     [InlineData(null)]
     public void Create_WithInvalidName_Throws(string? invalidName)
     {
-        var act = () => Event.Create("user-123", invalidName!);
+        var act = () => Event.Create(invalidName!);
 
         act.Should().Throw<ArgumentException>().WithMessage("*name*");
     }
@@ -52,7 +51,7 @@ public class EventTests
     [Fact]
     public void Create_WithNameOver200Chars_Throws()
     {
-        var act = () => Event.Create("user-123", new string('a', 201));
+        var act = () => Event.Create(new string('a', 201));
 
         act.Should().Throw<ArgumentException>().WithMessage("*200*");
     }
@@ -60,7 +59,7 @@ public class EventTests
     [Fact]
     public void Create_WithEndBeforeStart_Throws()
     {
-        var act = () => Event.Create("user-123", "Test",
+        var act = () => Event.Create("Test",
             startsAt: DateTime.UtcNow.AddDays(2),
             endsAt: DateTime.UtcNow.AddDays(1));
 
@@ -168,22 +167,6 @@ public class EventTests
     }
 
     [Fact]
-    public void BelongsTo_WithMatchingUser_ReturnsTrue()
-    {
-        var @event = EventBuilder.Default().WithUserId("user-123").Build();
-
-        @event.BelongsTo("user-123").Should().BeTrue();
-    }
-
-    [Fact]
-    public void BelongsTo_WithDifferentUser_ReturnsFalse()
-    {
-        var @event = EventBuilder.Default().WithUserId("user-123").Build();
-
-        @event.BelongsTo("other").Should().BeFalse();
-    }
-
-    [Fact]
     public void MarkHasContent_SetsFlag()
     {
         var @event = EventBuilder.Default().Build();
@@ -197,7 +180,7 @@ public class EventTests
     public void MarkHasContent_WhenAlreadySet_DoesNotUpdateTimestamp()
     {
         var originalUpdatedAt = DateTime.UtcNow.AddHours(-1);
-        var @event = new Event(Guid.NewGuid(), "user", "Test", null, null, null, null,
+        var @event = new Event(Guid.NewGuid(), "Test", null, null, null, null,
             EventStatus.Draft, true, true, null, DateTime.UtcNow.AddHours(-2), originalUpdatedAt);
 
         @event.MarkHasContent();

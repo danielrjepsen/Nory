@@ -34,17 +34,16 @@ public class EventServiceTests
     }
 
     [Fact]
-    public async Task GetEventsAsync_ReturnsUserEvents()
+    public async Task GetEventsAsync_ReturnsAllEvents()
     {
-        var userId = "user-123";
         var events = new List<Event>
         {
-            EventBuilder.Default().WithUserId(userId).WithName("Event 1").Build(),
-            EventBuilder.Default().WithUserId(userId).WithName("Event 2").Build()
+            EventBuilder.Default().WithName("Event 1").Build(),
+            EventBuilder.Default().WithName("Event 2").Build()
         };
-        _eventRepository.GetByUserIdAsync(userId, Arg.Any<CancellationToken>()).Returns(events);
+        _eventRepository.GetAllAsync(Arg.Any<CancellationToken>()).Returns(events);
 
-        var result = await _sut.GetEventsAsync(userId);
+        var result = await _sut.GetEventsAsync();
 
         result.Should().HaveCount(2);
     }
@@ -52,23 +51,22 @@ public class EventServiceTests
     [Fact]
     public async Task GetEventsAsync_WhenNoEvents_ReturnsEmpty()
     {
-        _eventRepository.GetByUserIdAsync(Arg.Any<string>(), Arg.Any<CancellationToken>())
+        _eventRepository.GetAllAsync(Arg.Any<CancellationToken>())
             .Returns(new List<Event>());
 
-        var result = await _sut.GetEventsAsync("user-123");
+        var result = await _sut.GetEventsAsync();
 
         result.Should().BeEmpty();
     }
 
     [Fact]
-    public async Task GetEventByIdAsync_WhenExistsAndOwned_ReturnsEvent()
+    public async Task GetEventByIdAsync_WhenExists_ReturnsEvent()
     {
         var eventId = Guid.NewGuid();
-        var userId = "user-123";
-        var @event = EventBuilder.Default().WithId(eventId).WithUserId(userId).Build();
+        var @event = EventBuilder.Default().WithId(eventId).Build();
         _eventRepository.GetByIdWithPhotosAsync(eventId, Arg.Any<CancellationToken>()).Returns(@event);
 
-        var result = await _sut.GetEventByIdAsync(eventId, userId);
+        var result = await _sut.GetEventByIdAsync(eventId);
 
         result.Should().NotBeNull();
         result!.Id.Should().Be(eventId);
@@ -80,18 +78,7 @@ public class EventServiceTests
         _eventRepository.GetByIdWithPhotosAsync(Arg.Any<Guid>(), Arg.Any<CancellationToken>())
             .Returns((Event?)null);
 
-        var result = await _sut.GetEventByIdAsync(Guid.NewGuid(), "user-123");
-
-        result.Should().BeNull();
-    }
-
-    [Fact]
-    public async Task GetEventByIdAsync_WhenNotOwned_ReturnsNull()
-    {
-        var @event = EventBuilder.Default().WithUserId("owner-user").Build();
-        _eventRepository.GetByIdWithPhotosAsync(Arg.Any<Guid>(), Arg.Any<CancellationToken>()).Returns(@event);
-
-        var result = await _sut.GetEventByIdAsync(@event.Id, "different-user");
+        var result = await _sut.GetEventByIdAsync(Guid.NewGuid());
 
         result.Should().BeNull();
     }
@@ -99,15 +86,14 @@ public class EventServiceTests
     [Fact]
     public async Task CreateEventAsync_CreatesEvent()
     {
-        var userId = "user-123";
         var dto = new CreateEventDto { Name = "New Event", Description = "Description", IsPublic = true };
         Event? captured = null;
         _eventRepository.When(x => x.Add(Arg.Any<Event>())).Do(x => captured = x.Arg<Event>());
 
-        var result = await _sut.CreateEventAsync(dto, userId);
+        var result = await _sut.CreateEventAsync(dto);
 
         result.Name.Should().Be(dto.Name);
-        captured!.UserId.Should().Be(userId);
+        captured.Should().NotBeNull();
         await _eventRepository.Received(1).SaveChangesAsync(Arg.Any<CancellationToken>());
     }
 
@@ -118,7 +104,7 @@ public class EventServiceTests
         var dto = new UpdateEventDto { Name = "Updated" };
         _eventRepository.GetByIdAsync(@event.Id, Arg.Any<CancellationToken>()).Returns(@event);
 
-        var result = await _sut.UpdateEventAsync(@event.Id, dto, @event.UserId);
+        var result = await _sut.UpdateEventAsync(@event.Id, dto);
 
         result.Name.Should().Be("Updated");
         await _eventRepository.Received(1).SaveChangesAsync(Arg.Any<CancellationToken>());
@@ -129,20 +115,9 @@ public class EventServiceTests
     {
         _eventRepository.GetByIdAsync(Arg.Any<Guid>(), Arg.Any<CancellationToken>()).Returns((Event?)null);
 
-        var act = () => _sut.UpdateEventAsync(Guid.NewGuid(), new UpdateEventDto(), "user");
+        var act = () => _sut.UpdateEventAsync(Guid.NewGuid(), new UpdateEventDto());
 
         await act.Should().ThrowAsync<KeyNotFoundException>();
-    }
-
-    [Fact]
-    public async Task UpdateEventAsync_WhenNotOwned_Throws()
-    {
-        var @event = EventBuilder.Default().WithUserId("owner").Build();
-        _eventRepository.GetByIdAsync(Arg.Any<Guid>(), Arg.Any<CancellationToken>()).Returns(@event);
-
-        var act = () => _sut.UpdateEventAsync(@event.Id, new UpdateEventDto(), "other");
-
-        await act.Should().ThrowAsync<UnauthorizedAccessException>();
     }
 
     [Fact]
@@ -151,7 +126,7 @@ public class EventServiceTests
         var @event = EventBuilder.Default().AsDraft().Build();
         _eventRepository.GetByIdAsync(Arg.Any<Guid>(), Arg.Any<CancellationToken>()).Returns(@event);
 
-        var result = await _sut.UpdateEventAsync(@event.Id, new UpdateEventDto { Status = "Live" }, @event.UserId);
+        var result = await _sut.UpdateEventAsync(@event.Id, new UpdateEventDto { Status = "Live" });
 
         result.Status.Should().Be("live");
     }
@@ -162,7 +137,7 @@ public class EventServiceTests
         var @event = EventBuilder.Default().AsDraft().Build();
         _eventRepository.GetByIdAsync(@event.Id, Arg.Any<CancellationToken>()).Returns(@event);
 
-        await _sut.DeleteEventAsync(@event.Id, @event.UserId);
+        await _sut.DeleteEventAsync(@event.Id);
 
         @event.Status.Should().Be(EventStatus.Archived);
     }
@@ -173,7 +148,7 @@ public class EventServiceTests
         var @event = EventBuilder.Default().AsDraft().Build();
         _eventRepository.GetByIdAsync(@event.Id, Arg.Any<CancellationToken>()).Returns(@event);
 
-        var result = await _sut.StartEventAsync(@event.Id, @event.UserId);
+        var result = await _sut.StartEventAsync(@event.Id);
 
         result.Status.Should().Be("live");
     }
@@ -184,7 +159,7 @@ public class EventServiceTests
         var @event = EventBuilder.Default().AsLive().Build();
         _eventRepository.GetByIdAsync(@event.Id, Arg.Any<CancellationToken>()).Returns(@event);
 
-        var result = await _sut.EndEventAsync(@event.Id, @event.UserId);
+        var result = await _sut.EndEventAsync(@event.Id);
 
         result.Status.Should().Be("ended");
     }

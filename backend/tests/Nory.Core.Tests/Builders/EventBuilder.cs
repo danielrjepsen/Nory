@@ -6,7 +6,6 @@ namespace Nory.Core.Tests.Builders;
 public class EventBuilder
 {
     private Guid _id = Guid.NewGuid();
-    private string _userId = "test-user-id";
     private string _name = "Test Event";
     private string? _description = "Test Description";
     private string? _location = "Test Location";
@@ -20,7 +19,6 @@ public class EventBuilder
     private DateTime _updatedAt = DateTime.UtcNow;
 
     public EventBuilder WithId(Guid id) { _id = id; return this; }
-    public EventBuilder WithUserId(string userId) { _userId = userId; return this; }
     public EventBuilder WithName(string name) { _name = name; return this; }
     public EventBuilder WithDescription(string? description) { _description = description; return this; }
     public EventBuilder WithLocation(string? location) { _location = location; return this; }
@@ -36,10 +34,10 @@ public class EventBuilder
     public EventBuilder WithTheme(string themeName) { _themeName = themeName; return this; }
     public EventBuilder CreatedAt(DateTime createdAt) { _createdAt = createdAt; return this; }
 
-    public Event Build() => new(_id, _userId, _name, _description, _location, _startsAt, _endsAt,
+    public Event Build() => new(_id, _name, _description, _location, _startsAt, _endsAt,
         _status, _isPublic, _hasContent, _themeName, _createdAt, _updatedAt);
 
-    public Event Create() => Event.Create(_userId, _name, _description, _location, _startsAt, _endsAt, _isPublic, _themeName);
+    public Event Create() => Event.Create(_name, _description, _location, _startsAt, _endsAt, _isPublic, _themeName);
 
     public static EventBuilder Default() => new();
     public static EventBuilder LiveEvent() => new EventBuilder().AsLive();

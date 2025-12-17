@@ -1,4 +1,3 @@
-using System.Security.Claims;
 using System.Text.Json;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -19,6 +18,7 @@ public class DashboardController(
     ILogger<DashboardController> logger
 ) : ControllerBase
 {
+    private const string DashboardCacheKey = "dashboard:overview";
     private const int DashboardOverviewCacheTtlSeconds = 60;
 
     [HttpGet("overview")]
@@ -26,22 +26,16 @@ public class DashboardController(
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     public async Task<IActionResult> GetDashboardOverview(CancellationToken cancellationToken)
     {
-        var userId = GetCurrentUserId();
-        if (userId is null)
-            return Unauthorized();
-
         try
         {
-            var cacheKey = $"dashboard:overview:{userId}";
-
-            var cachedData = await cache.GetStringAsync(cacheKey, cancellationToken);
+            var cachedData = await cache.GetStringAsync(DashboardCacheKey, cancellationToken);
             if (!string.IsNullOrEmpty(cachedData))
             {
-                logger.LogDebug("Returning dashboard data from cache for user {UserId}", userId);
+                logger.LogDebug("Returning dashboard data from cache");
                 return Ok(JsonSerializer.Deserialize<DashboardOverviewDto>(cachedData));
             }
 
-            var events = await eventService.GetEventsAsync(userId, cancellationToken);
+            var events = await eventService.GetEventsAsync(cancellationToken);
 
             if (events.Count == 0)
             {
@@ -64,7 +58,7 @@ public class DashboardController(
             };
 
             await CacheResultAsync(
-                cacheKey,
+                DashboardCacheKey,
                 result,
                 DashboardOverviewCacheTtlSeconds,
                 cancellationToken
@@ -74,7 +68,7 @@ public class DashboardController(
         }
         catch (Exception ex)
         {
-            logger.LogError(ex, "Failed to get dashboard overview for user {UserId}", userId);
+            logger.LogError(ex, "Failed to get dashboard overview");
             return StatusCode(500, new { error = "Failed to load dashboard data" });
         }
     }
@@ -101,6 +95,4 @@ public class DashboardController(
             logger.LogWarning(ex, "Failed to cache data for key {Key}", key);
         }
     }
-
-    private string? GetCurrentUserId() => User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
 }

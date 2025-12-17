@@ -1,4 +1,3 @@
-using System.Security.Claims;
 using System.Text.Json;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -26,12 +25,7 @@ public class AnalyticsController(
         [FromQuery] string periodType = "Total",
         CancellationToken cancellationToken = default)
     {
-        var userId = GetCurrentUserId();
-        if (userId is null)
-            return Unauthorized();
-
-        // Verify user owns this event
-        var eventData = await eventService.GetEventByIdAsync(eventId, userId, cancellationToken);
+        var eventData = await eventService.GetEventByIdAsync(eventId, cancellationToken);
         if (eventData is null)
             return NotFound(new { error = "Event not found" });
 
@@ -50,12 +44,7 @@ public class AnalyticsController(
         [FromQuery] int limit = 50,
         CancellationToken cancellationToken = default)
     {
-        var userId = GetCurrentUserId();
-        if (userId is null)
-            return Unauthorized();
-
-        // Verify user owns this event
-        var eventData = await eventService.GetEventByIdAsync(eventId, userId, cancellationToken);
+        var eventData = await eventService.GetEventByIdAsync(eventId, cancellationToken);
         if (eventData is null)
             return NotFound(new { error = "Event not found" });
 
@@ -131,9 +120,6 @@ public class AnalyticsController(
             _ => null
         };
     }
-
-    private string? GetCurrentUserId() =>
-        User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
 }
 
 public class TrackEventRequest
