@@ -22,6 +22,9 @@ public class EventMetricsDbModel
     public int TotalSlideshowViews { get; set; } = 0;
     public int TotalGalleryViews { get; set; } = 0;
     public int LiveGuestCount { get; set; } = 0;
+    public int TotalGuestRegistrations { get; set; } = 0;
+    public int TotalConsentUpdates { get; set; } = 0;
+    public int TotalGuestbookEntries { get; set; } = 0;
 
     // extended metrics in JSON format
     public JsonDocument? FeatureUsage { get; set; }

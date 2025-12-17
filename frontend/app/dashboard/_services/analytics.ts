@@ -31,6 +31,9 @@ const EMPTY_SUMMARY: OrgAnalyticsSummary & { events: EventAnalyticsSummary[] } =
     totalSlideshowViews: 0,
     totalGalleryViews: 0,
     liveGuestCount: 0,
+    totalGuestRegistrations: 0,
+    totalConsentUpdates: 0,
+    totalGuestbookEntries: 0,
     activeEvents: 0,
     events: [],
 };
@@ -77,8 +80,21 @@ export async function getAnalyticsSummary(eventIds: string[]): Promise<OrgAnalyt
             totalSlideshowViews: acc.totalSlideshowViews + s.totalSlideshowViews,
             totalGalleryViews: acc.totalGalleryViews + (s.totalGalleryViews ?? 0),
             liveGuestCount: acc.liveGuestCount + s.liveGuestCount,
+            totalGuestRegistrations: acc.totalGuestRegistrations + (s.totalGuestRegistrations ?? 0),
+            totalConsentUpdates: acc.totalConsentUpdates + (s.totalConsentUpdates ?? 0),
+            totalGuestbookEntries: acc.totalGuestbookEntries + (s.totalGuestbookEntries ?? 0),
         }),
-        { totalPhotosUploaded: 0, totalGuestAppOpens: 0, totalQrScans: 0, totalSlideshowViews: 0, totalGalleryViews: 0, liveGuestCount: 0 }
+        {
+            totalPhotosUploaded: 0,
+            totalGuestAppOpens: 0,
+            totalQrScans: 0,
+            totalSlideshowViews: 0,
+            totalGalleryViews: 0,
+            liveGuestCount: 0,
+            totalGuestRegistrations: 0,
+            totalConsentUpdates: 0,
+            totalGuestbookEntries: 0,
+        }
     );
 
     return { ...totals, activeEvents: summaries.filter((s) => s.liveGuestCount > 0).length, events: summaries };

@@ -31,9 +31,6 @@ public readonly struct Result
         new(false, error, ResultErrorType.Unauthorized);
 }
 
-/// <summary>
-/// result with data
-/// </summary>
 public readonly struct Result<T>
 {
     public bool IsSuccess { get; }

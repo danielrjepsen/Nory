@@ -9,6 +9,9 @@ public class AggregatedEventMetricsDto
     public int TotalSlideshowViews { get; set; }
     public int TotalGalleryViews { get; set; }
     public int LiveGuestCount { get; set; }
+    public int TotalGuestRegistrations { get; set; }
+    public int TotalConsentUpdates { get; set; }
+    public int TotalGuestbookEntries { get; set; }
 
     // summary
     public int ActiveEvents { get; set; }

@@ -51,6 +51,9 @@ public class MetricsService : IMetricsService
             TotalSlideshowViews = allMetrics.Sum(m => m.TotalSlideshowViews),
             TotalGalleryViews = allMetrics.Sum(m => m.TotalGalleryViews),
             LiveGuestCount = allMetrics.Sum(m => m.LiveGuestCount),
+            TotalGuestRegistrations = allMetrics.Sum(m => m.TotalGuestRegistrations),
+            TotalConsentUpdates = allMetrics.Sum(m => m.TotalConsentUpdates),
+            TotalGuestbookEntries = allMetrics.Sum(m => m.TotalGuestbookEntries),
             ActiveEvents = allMetrics.Count(m => m.LiveGuestCount > 0),
         };
     }
@@ -114,6 +117,15 @@ public class MetricsService : IMetricsService
                         break;
                     case ActivityType.GalleryViewed:
                         metrics.IncrementGalleryViews();
+                        break;
+                    case ActivityType.GuestRegistered:
+                        metrics.IncrementGuestRegistrations();
+                        break;
+                    case ActivityType.ConsentUpdated:
+                        metrics.IncrementConsentUpdates();
+                        break;
+                    case ActivityType.GuestbookEntryAdded:
+                        metrics.IncrementGuestbookEntries();
                         break;
                 }
             }

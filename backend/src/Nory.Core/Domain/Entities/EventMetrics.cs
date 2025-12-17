@@ -17,6 +17,9 @@ public class EventMetrics
     public int TotalSlideshowViews { get; private set; }
     public int TotalGalleryViews { get; private set; }
     public int LiveGuestCount { get; private set; }
+    public int TotalGuestRegistrations { get; private set; }
+    public int TotalConsentUpdates { get; private set; }
+    public int TotalGuestbookEntries { get; private set; }
 
     public JsonDocument? FeatureUsage { get; private set; }
 
@@ -36,9 +39,13 @@ public class EventMetrics
         int totalSlideshowViews,
         int totalGalleryViews,
         int liveGuestCount,
+        int totalGuestRegistrations,
+        int totalConsentUpdates,
+        int totalGuestbookEntries,
         JsonDocument? featureUsage,
         DateTime createdAt,
-        DateTime updatedAt)
+        DateTime updatedAt
+    )
     {
         Id = id;
         EventId = eventId;
@@ -51,17 +58,20 @@ public class EventMetrics
         TotalSlideshowViews = totalSlideshowViews;
         TotalGalleryViews = totalGalleryViews;
         LiveGuestCount = liveGuestCount;
+        TotalGuestRegistrations = totalGuestRegistrations;
+        TotalConsentUpdates = totalConsentUpdates;
+        TotalGuestbookEntries = totalGuestbookEntries;
         FeatureUsage = featureUsage;
         CreatedAt = createdAt;
         UpdatedAt = updatedAt;
     }
 
-    // Static factory method for creating new metrics
     public static EventMetrics Create(
         Guid eventId,
         MetricsPeriodType periodType,
         DateTime? periodStart = null,
-        DateTime? periodEnd = null)
+        DateTime? periodEnd = null
+    )
     {
         if (eventId == Guid.Empty)
             throw new ArgumentException("EventId is required", nameof(eventId));
@@ -78,13 +88,15 @@ public class EventMetrics
             totalSlideshowViews: 0,
             totalGalleryViews: 0,
             liveGuestCount: 0,
+            totalGuestRegistrations: 0,
+            totalConsentUpdates: 0,
+            totalGuestbookEntries: 0,
             featureUsage: null,
             createdAt: DateTime.UtcNow,
             updatedAt: DateTime.UtcNow
         );
     }
 
-    // Business methods
     public void IncrementPhotoUploads(int count = 1)
     {
         TotalPhotosUploaded += count;
@@ -121,6 +133,24 @@ public class EventMetrics
         Touch();
     }
 
+    public void IncrementGuestRegistrations(int count = 1)
+    {
+        TotalGuestRegistrations += count;
+        Touch();
+    }
+
+    public void IncrementConsentUpdates(int count = 1)
+    {
+        TotalConsentUpdates += count;
+        Touch();
+    }
+
+    public void IncrementGuestbookEntries(int count = 1)
+    {
+        TotalGuestbookEntries += count;
+        Touch();
+    }
+
     public void UpdateFeatureUsage(JsonDocument featureUsage)
     {
         FeatureUsage = featureUsage;
@@ -135,6 +165,9 @@ public class EventMetrics
         TotalSlideshowViews = 0;
         TotalGalleryViews = 0;
         LiveGuestCount = 0;
+        TotalGuestRegistrations = 0;
+        TotalConsentUpdates = 0;
+        TotalGuestbookEntries = 0;
         FeatureUsage = null;
         Touch();
     }
@@ -146,7 +179,10 @@ public class EventMetrics
             || TotalGuestAppOpens > 0
             || TotalQrScans > 0
             || TotalSlideshowViews > 0
-            || TotalGalleryViews > 0;
+            || TotalGalleryViews > 0
+            || TotalGuestRegistrations > 0
+            || TotalConsentUpdates > 0
+            || TotalGuestbookEntries > 0;
     }
 
     public bool IsTotalMetrics() => PeriodType == MetricsPeriodType.Total;
@@ -167,7 +203,9 @@ public class EventMetrics
             + TotalGuestAppOpens
             + TotalQrScans
             + TotalSlideshowViews
-            + TotalGalleryViews;
+            + TotalGalleryViews
+            + TotalGuestRegistrations
+            + TotalGuestbookEntries;
     }
 
     // Helper methods for feature JsonDocument

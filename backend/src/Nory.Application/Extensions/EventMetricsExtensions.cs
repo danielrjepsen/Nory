@@ -19,6 +19,9 @@ public static class EventMetricsExtensions
             TotalSlideshowViews = metrics.TotalSlideshowViews,
             TotalGalleryViews = metrics.TotalGalleryViews,
             LiveGuestCount = metrics.LiveGuestCount,
+            TotalGuestRegistrations = metrics.TotalGuestRegistrations,
+            TotalConsentUpdates = metrics.TotalConsentUpdates,
+            TotalGuestbookEntries = metrics.TotalGuestbookEntries,
             UpdatedAt = metrics.UpdatedAt,
         };
     }

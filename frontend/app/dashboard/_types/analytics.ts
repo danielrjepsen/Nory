@@ -18,6 +18,8 @@ export interface EventAnalyticsSummary {
     totalGalleryViews: number;
     uniqueGalleryViewers: number;
     totalGuestbookEntries: number;
+    totalGuestRegistrations: number;
+    totalConsentUpdates: number;
     totalSessions: number;
     liveGuestCount: number;
     lastUpdated: string;
@@ -59,6 +61,9 @@ export interface OrgAnalyticsSummary {
     totalSlideshowViews: number;
     totalGalleryViews: number;
     liveGuestCount: number;
+    totalGuestRegistrations: number;
+    totalConsentUpdates: number;
+    totalGuestbookEntries: number;
     activeEvents: number;
 }
 
