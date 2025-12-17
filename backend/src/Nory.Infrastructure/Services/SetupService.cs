@@ -1,8 +1,11 @@
+using System.Security.Cryptography;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Nory.Application.DTOs.Setup;
 using Nory.Application.Services;
+using Nory.Core.Domain.Entities;
+using Nory.Core.Domain.Repositories;
 using Nory.Infrastructure.Identity;
 using Nory.Infrastructure.Persistence;
 
@@ -13,17 +16,20 @@ public class SetupService : ISetupService
     private readonly ApplicationDbContext _dbContext;
     private readonly UserManager<ApplicationUser> _userManager;
     private readonly SignInManager<ApplicationUser> _signInManager;
+    private readonly ISystemSettingsRepository _systemSettings;
     private readonly ILogger<SetupService> _logger;
 
     public SetupService(
         ApplicationDbContext dbContext,
         UserManager<ApplicationUser> userManager,
         SignInManager<ApplicationUser> signInManager,
+        ISystemSettingsRepository systemSettings,
         ILogger<SetupService> logger)
     {
         _dbContext = dbContext;
         _userManager = userManager;
         _signInManager = signInManager;
+        _systemSettings = systemSettings;
         _logger = logger;
     }
 
@@ -78,9 +84,10 @@ public class SetupService : ISetupService
                 return SetupResult.Fail(identityErrors);
             }
 
+            await GenerateEncryptionKeyIfNeededAsync();
+
             _logger.LogInformation("Setup completed successfully. Admin user created: {Email}", request.AdminAccount.Email);
 
-            // Sign in the new admin user
             await _signInManager.SignInAsync(adminUser, isPersistent: true);
 
             return SetupResult.Ok();
@@ -166,5 +173,19 @@ public class SetupService : ISetupService
         {
             return false;
         }
+    }
+
+    private async Task GenerateEncryptionKeyIfNeededAsync()
+    {
+        var exists = await _systemSettings.ExistsAsync(SystemSetting.Keys.BackupEncryptionKey);
+        if (exists)
+            return;
+
+        var keyBytes = new byte[32];
+        RandomNumberGenerator.Fill(keyBytes);
+        var keyBase64 = Convert.ToBase64String(keyBytes);
+
+        await _systemSettings.SetValueAsync(SystemSetting.Keys.BackupEncryptionKey, keyBase64);
+        _logger.LogInformation("Generated backup encryption key");
     }
 }
