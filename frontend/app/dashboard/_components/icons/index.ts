@@ -12,3 +12,4 @@ export { SuccessIcon } from './SuccessIcon';
 export { WarningIcon } from './WarningIcon';
 export { InfoIcon } from './InfoIcon';
 export { CloseIcon } from './CloseIcon';
+export { UsersIcon } from './UsersIcon';

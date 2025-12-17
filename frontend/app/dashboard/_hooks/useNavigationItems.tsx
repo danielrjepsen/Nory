@@ -7,6 +7,7 @@ import {
   CalendarIcon,
   PhotoIcon,
   QRCodeIcon,
+  UsersIcon,
   ChartIcon,
   SettingsIcon
 } from '../_components/icons';
@@ -39,6 +40,12 @@ export function useNavigationItems(): NavigationItem[] {
       label: t('navigation.qrCodes'),
       icon: <QRCodeIcon />,
       path: '/dashboard/qr-codes'
+    },
+    {
+      id: 'guests',
+      label: t('navigation.guests'),
+      icon: <UsersIcon />,
+      path: '/dashboard/guests'
     },
     {
       id: 'analytics',

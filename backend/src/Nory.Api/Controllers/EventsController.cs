@@ -2,6 +2,7 @@ using System.Security.Claims;
 using FluentValidation;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Nory.Application.DTOs.Attendees;
 using Nory.Application.DTOs.Events;
 using Nory.Application.Services;
 
@@ -40,6 +41,31 @@ public class EventsController(IEventService eventService) : ControllerBase
             return NotFound(new { message = "Event not found" });
 
         return Ok(eventDto);
+    }
+
+    [HttpGet("{eventId:guid}/attendees")]
+    [ProducesResponseType(typeof(EventAttendeeListDto), StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+    public async Task<IActionResult> GetEventAttendees(Guid eventId, CancellationToken cancellationToken)
+    {
+        var userId = GetCurrentUserId();
+        if (userId is null)
+            return Unauthorized();
+
+        try
+        {
+            var attendees = await eventService.GetEventAttendeesAsync(eventId, userId, cancellationToken);
+            return Ok(attendees);
+        }
+        catch (KeyNotFoundException)
+        {
+            return NotFound(new { message = "Event not found" });
+        }
+        catch (UnauthorizedAccessException)
+        {
+            return StatusCode(StatusCodes.Status403Forbidden, new { message = "Access denied" });
+        }
     }
 
     [HttpGet("public/{eventId:guid}")]

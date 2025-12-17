@@ -6,6 +6,7 @@ const Endpoints = {
   events: '/api/v1/events',
   event: (id: string) => `/api/v1/events/${id}`,
   photos: (id: string) => `/api/v1/events/${id}/photos/dashboard`,
+  attendees: (id: string) => `/api/v1/events/${id}/attendees`,
   start: (id: string) => `/api/v1/events/${id}/start`,
   end: (id: string) => `/api/v1/events/${id}/end`,
 } as const;
@@ -18,6 +19,19 @@ const CacheKeys = {
 
 interface PhotosResponse {
   photos: EventPhoto[];
+  totalCount: number;
+}
+
+export interface EventAttendee {
+  id: string;
+  name: string;
+  email: string | null;
+  hasPhotoRevealConsent: boolean;
+  registeredAt: string;
+}
+
+export interface EventAttendeeListResponse {
+  attendees: EventAttendee[];
   totalCount: number;
 }
 
@@ -34,6 +48,10 @@ export async function getEventPhotos(eventId: string, limit = 6): Promise<EventP
     const res = await apiClient.get<PhotosResponse>(Endpoints.photos(eventId), { params: { limit } });
     return (res.photos || []).slice(0, limit);
   });
+}
+
+export async function getEventAttendees(eventId: string): Promise<EventAttendeeListResponse> {
+  return apiClient.get<EventAttendeeListResponse>(Endpoints.attendees(eventId));
 }
 
 export async function createEvent(event: CreateEventRequest): Promise<EventData> {

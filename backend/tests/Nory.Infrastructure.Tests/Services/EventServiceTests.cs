@@ -17,6 +17,7 @@ public class EventServiceTests
 {
     private readonly IEventRepository _eventRepository = Substitute.For<IEventRepository>();
     private readonly IEventAppRepository _eventAppRepository = Substitute.For<IEventAppRepository>();
+    private readonly IAttendeeRepository _attendeeRepository = Substitute.For<IAttendeeRepository>();
     private readonly IValidator<CreateEventDto> _createValidator = Substitute.For<IValidator<CreateEventDto>>();
     private readonly IValidator<UpdateEventDto> _updateValidator = Substitute.For<IValidator<UpdateEventDto>>();
     private readonly ILogger<EventService> _logger = Substitute.For<ILogger<EventService>>();
@@ -29,7 +30,7 @@ public class EventServiceTests
         _updateValidator.ValidateAsync(Arg.Any<UpdateEventDto>(), Arg.Any<CancellationToken>())
             .Returns(new ValidationResult());
 
-        _sut = new EventService(_eventRepository, _eventAppRepository, _createValidator, _updateValidator, _logger);
+        _sut = new EventService(_eventRepository, _eventAppRepository, _attendeeRepository, _createValidator, _updateValidator, _logger);
     }
 
     [Fact]

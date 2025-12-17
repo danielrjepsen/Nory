@@ -122,9 +122,12 @@ public class AnalyticsController(
         {
             "photo_upload" or "photo_uploaded" => ActivityType.PhotoUploaded,
             "guest_app_open" or "guest_app_opened" => ActivityType.GuestAppOpened,
+            "app_open" or "app_opened" => ActivityType.AppOpened,
             "qr_scan" or "qr_scanned" => ActivityType.QrCodeScanned,
             "slideshow_view" or "slideshow_viewed" => ActivityType.SlideshowViewed,
             "gallery_view" or "gallery_viewed" => ActivityType.GalleryViewed,
+            "guest_register" or "guest_registered" => ActivityType.GuestRegistered,
+            "consent_update" or "consent_updated" => ActivityType.ConsentUpdated,
             _ => null
         };
     }

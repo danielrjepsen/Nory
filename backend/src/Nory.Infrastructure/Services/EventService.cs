@@ -1,6 +1,7 @@
 using System.Text.Json;
 using FluentValidation;
 using Microsoft.Extensions.Logging;
+using Nory.Application.DTOs.Attendees;
 using Nory.Application.DTOs.Events;
 using Nory.Application.Extensions;
 using Nory.Application.Services;
@@ -14,6 +15,7 @@ public class EventService : IEventService
 {
     private readonly IEventRepository _eventRepository;
     private readonly IEventAppRepository _eventAppRepository;
+    private readonly IAttendeeRepository _attendeeRepository;
     private readonly IValidator<CreateEventDto> _createValidator;
     private readonly IValidator<UpdateEventDto> _updateValidator;
     private readonly ILogger<EventService> _logger;
@@ -26,12 +28,14 @@ public class EventService : IEventService
     public EventService(
         IEventRepository eventRepository,
         IEventAppRepository eventAppRepository,
+        IAttendeeRepository attendeeRepository,
         IValidator<CreateEventDto> createValidator,
         IValidator<UpdateEventDto> updateValidator,
         ILogger<EventService> logger)
     {
         _eventRepository = eventRepository;
         _eventAppRepository = eventAppRepository;
+        _attendeeRepository = attendeeRepository;
         _createValidator = createValidator;
         _updateValidator = updateValidator;
         _logger = logger;
@@ -81,6 +85,36 @@ public class EventService : IEventService
     public async Task<bool> ExistsAsync(Guid eventId, CancellationToken cancellationToken = default)
     {
         return await _eventRepository.ExistsAsync(eventId, cancellationToken);
+    }
+
+    public async Task<EventAttendeeListDto> GetEventAttendeesAsync(Guid eventId, string userId, CancellationToken cancellationToken = default)
+    {
+        var eventEntity = await _eventRepository.GetByIdAsync(eventId, cancellationToken)
+            ?? throw new KeyNotFoundException($"Event {eventId} not found");
+
+        if (!eventEntity.BelongsTo(userId))
+            throw new UnauthorizedAccessException("Access denied");
+
+        var attendees = await _attendeeRepository.GetByEventIdAsync(eventId, cancellationToken);
+
+        var activeAttendees = attendees
+            .Where(a => !a.IsDeleted)
+            .OrderByDescending(a => a.CreatedAt)
+            .Select(a => new EventAttendeeItemDto
+            {
+                Id = a.Id.ToString(),
+                Name = a.Name,
+                Email = a.Email,
+                HasPhotoRevealConsent = a.HasPhotoRevealConsent,
+                RegisteredAt = a.CreatedAt,
+            })
+            .ToList();
+
+        return new EventAttendeeListDto
+        {
+            Attendees = activeAttendees,
+            TotalCount = activeAttendees.Count,
+        };
     }
 
     public async Task<EventDto> CreateEventAsync(CreateEventDto dto, string userId, CancellationToken cancellationToken = default)

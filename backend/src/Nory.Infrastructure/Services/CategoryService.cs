@@ -1,4 +1,3 @@
-using System.Text.Encodings.Web;
 using Microsoft.Extensions.Logging;
 using Nory.Application.Common;
 using Nory.Application.DTOs;
@@ -53,8 +52,8 @@ public class CategoryService : ICategoryService
 
         var category = EventCategory.Create(
             eventId,
-            SanitizeInput(command.Name),
-            command.Description != null ? SanitizeInput(command.Description) : null,
+            command.Name.Trim(),
+            command.Description?.Trim(),
             command.SortOrder ?? 0);
 
         _categoryRepository.Add(category);
@@ -83,8 +82,8 @@ public class CategoryService : ICategoryService
             return Result<CategoryDto>.BadRequest("A category with this name already exists");
 
         category.Update(
-            SanitizeInput(command.Name),
-            command.Description != null ? SanitizeInput(command.Description) : null,
+            command.Name.Trim(),
+            command.Description?.Trim(),
             command.SortOrder);
 
         _categoryRepository.Update(category);
@@ -155,5 +154,4 @@ public class CategoryService : ICategoryService
         return Result.Success();
     }
 
-    private static string SanitizeInput(string input) => HtmlEncoder.Default.Encode(input.Trim());
 }

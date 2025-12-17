@@ -8,7 +8,9 @@ namespace Nory.Infrastructure.Extensions;
 
 public static class IdentityExtensions
 {
-    public static IServiceCollection AddIdentityConfiguration(this IServiceCollection services)
+    public static IServiceCollection AddIdentityConfiguration(
+        this IServiceCollection services,
+        bool isDevelopment = false)
     {
         services
             .AddIdentity<ApplicationUser, IdentityRole>(options =>
@@ -28,19 +30,19 @@ public static class IdentityExtensions
             .AddEntityFrameworkStores<ApplicationDbContext>()
             .AddDefaultTokenProviders();
 
-        // Note: AddIdentity() already configures authentication with cookies
-        // No need to call AddAuthentication().AddIdentityCookies() again
-
         services.ConfigureApplicationCookie(options =>
         {
             options.Cookie.Name = "Nory.Auth";
             options.Cookie.HttpOnly = true;
-            options.Cookie.SecurePolicy = CookieSecurePolicy.Always;
             options.Cookie.SameSite = SameSiteMode.Strict;
             options.ExpireTimeSpan = TimeSpan.FromHours(24);
             options.SlidingExpiration = true;
 
-            // redirect API calls
+            // Dev (HTTP): SameAsRequest, Prod (HTTPS): Always
+            options.Cookie.SecurePolicy = isDevelopment
+                ? CookieSecurePolicy.SameAsRequest
+                : CookieSecurePolicy.Always;
+
             options.Events.OnRedirectToLogin = context =>
             {
                 context.Response.StatusCode = 401;

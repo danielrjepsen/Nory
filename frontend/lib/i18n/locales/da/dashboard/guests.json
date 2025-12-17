@@ -1,0 +1,30 @@
+{
+  "title": "Gæsteregistreringer",
+  "description": "Se og eksporter registrerede gæster fra dine begivenheder",
+  "selectEvent": "Vælg begivenhed",
+  "chooseEvent": "Vælg en begivenhed...",
+  "selectEventPrompt": "Vælg en begivenhed",
+  "selectEventDescription": "Vælg en begivenhed ovenfor for at se registrerede gæster",
+  "onlyWithEmail": "Kun med e-mail",
+  "downloadCsv": "Download CSV",
+  "table": {
+    "name": "Navn",
+    "email": "E-mail",
+    "photoConsent": "Foto samtykke",
+    "registered": "Registreret"
+  },
+  "consent": {
+    "yes": "Ja",
+    "no": "Nej"
+  },
+  "empty": {
+    "noContactable": "Ingen kontaktbare gæster",
+    "noContactableDescription": "Ingen gæster har angivet deres e-mailadresse",
+    "noRegistrations": "Ingen registreringer endnu",
+    "noRegistrationsDescription": "Gæster vil blive vist her, når de registrerer sig til denne begivenhed"
+  },
+  "count": {
+    "contactable": "{{count}} kontaktbare af {{total}} i alt",
+    "total": "{{count}} registrerede gæster"
+  }
+}

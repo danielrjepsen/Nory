@@ -14,6 +14,7 @@ import dashboardGalleries from './dashboard/galleries.json';
 import dashboardSettings from './dashboard/settings.json';
 import dashboardQrCodes from './dashboard/qrCodes.json';
 import dashboardUser from './dashboard/user.json';
+import dashboardGuests from './dashboard/guests.json';
 import slideshowControls from './slideshow/controls.json';
 import slideshowSettings from './slideshow/settings.json';
 import slideshowDisplay from './slideshow/display.json';
@@ -42,6 +43,7 @@ export default {
     settings: dashboardSettings,
     qrCodes: dashboardQrCodes,
     user: dashboardUser,
+    guests: dashboardGuests,
   },
   slideshow: {
     controls: slideshowControls,
