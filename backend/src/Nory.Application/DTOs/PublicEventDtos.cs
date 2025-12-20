@@ -1,5 +1,20 @@
 namespace Nory.Application.DTOs;
 
+public record PublicEventDto(
+    Guid Id,
+    string Name,
+    string? Description,
+    string? Location,
+    DateTime? StartsAt,
+    DateTime? EndsAt,
+    string? ThemeName
+);
+
+public record PublicEventsResponse(
+    bool Success,
+    IReadOnlyList<PublicEventDto> Events
+);
+
 public record PublicPhotoDto(
     Guid Id,
     string ImageUrl,
