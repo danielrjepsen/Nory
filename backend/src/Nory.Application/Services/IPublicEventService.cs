@@ -5,6 +5,9 @@ namespace Nory.Application.Services;
 
 public interface IPublicEventService
 {
+    Task<Result<PublicEventsResponse>> GetPublicEventsAsync(
+        CancellationToken cancellationToken = default);
+
     Task<Result<PublicPhotosResponse>> GetPhotosAsync(
         Guid eventId,
         GetPhotosQuery query,

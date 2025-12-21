@@ -56,7 +56,7 @@ public class PhotoService : IPhotoService
             p.CreatedAt
         )).ToList();
 
-        _logger.LogInformation("Retrieved {Count} photos for event {EventId}", photoDtos.Count, eventId);
+        _logger.LogDebug("Retrieved {Count} photos for event {EventId}", photoDtos.Count, eventId);
 
         return Result<PhotosResponse>.Success(
             new PhotosResponse(true, photoDtos, photoDtos.Count));

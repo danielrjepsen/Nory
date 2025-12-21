@@ -26,6 +26,17 @@ public class EventRepository : IEventRepository
         return dbModels.MapToDomain();
     }
 
+    public async Task<IReadOnlyList<Event>> GetPublicAsync(CancellationToken cancellationToken = default)
+    {
+        var dbModels = await _context.Events
+            .Where(e => e.IsPublic && e.Status == EventStatus.Live)
+            .OrderByDescending(e => e.StartsAt ?? e.CreatedAt)
+            .AsNoTracking()
+            .ToListAsync(cancellationToken);
+
+        return dbModels.MapToDomain();
+    }
+
     public async Task<Event?> GetByIdAsync(Guid eventId, CancellationToken cancellationToken = default)
     {
         var dbModel = await _context.Events

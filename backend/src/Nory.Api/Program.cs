@@ -9,13 +9,12 @@ using Nory.Infrastructure.Persistence;
 
 var builder = WebApplication.CreateBuilder(args);
 
-builder.WebHost.ConfigureKestrel(options =>
-    options.Limits.MaxRequestBodySize = 1024 * 1024 * 1024);
+builder.WebHost.ConfigureKestrel(options => options.Limits.MaxRequestBodySize = 1024 * 1024 * 1024);
 
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection")!;
 
-builder.Services
-    .AddDatabaseConfiguration(connectionString)
+builder
+    .Services.AddDatabaseConfiguration(connectionString)
     .AddIdentityConfiguration(builder.Environment.IsDevelopment())
     .AddHangfireWithPostgres(connectionString)
     .AddApplicationServices()
@@ -31,13 +30,18 @@ builder.Services.AddStackExchangeRedisCache(options =>
 
 builder.Services.AddAuthorization();
 
-builder.Services.AddControllers()
+builder
+    .Services.AddControllers()
     .AddJsonOptions(options =>
     {
         options.JsonSerializerOptions.PropertyNamingPolicy = JsonNamingPolicy.CamelCase;
         options.JsonSerializerOptions.PropertyNameCaseInsensitive = true;
-        options.JsonSerializerOptions.DefaultIgnoreCondition =
-            System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull;
+        options.JsonSerializerOptions.DefaultIgnoreCondition = System
+            .Text
+            .Json
+            .Serialization
+            .JsonIgnoreCondition
+            .WhenWritingNull;
     });
 
 builder.Services.AddCors(options =>
@@ -48,13 +52,12 @@ builder.Services.AddCors(options =>
         if (origins is null || origins.Length == 0)
         {
             if (builder.Environment.IsProduction())
-                throw new InvalidOperationException("CORS origins must be configured in production");
+                throw new InvalidOperationException(
+                    "CORS origins must be configured in production"
+                );
             origins = ["http://localhost:3000", "http://localhost:3001", "http://localhost:3002"];
         }
-        policy.WithOrigins(origins)
-            .AllowAnyHeader()
-            .AllowAnyMethod()
-            .AllowCredentials();
+        policy.WithOrigins(origins).AllowAnyHeader().AllowAnyMethod().AllowCredentials();
     });
 });
 
@@ -62,25 +65,34 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(options =>
 {
     options.SwaggerDoc("v1", new() { Title = "Nory API", Version = "v1" });
-    options.AddSecurityDefinition("Bearer", new()
-    {
-        Name = "Authorization",
-        Type = SecuritySchemeType.Http,
-        Scheme = "bearer",
-        BearerFormat = "JWT",
-        In = ParameterLocation.Header,
-        Description = "Enter your JWT token"
-    });
-    options.AddSecurityRequirement(new()
-    {
+    options.AddSecurityDefinition(
+        "Bearer",
+        new()
         {
-            new()
-            {
-                Reference = new OpenApiReference { Type = ReferenceType.SecurityScheme, Id = "Bearer" }
-            },
-            Array.Empty<string>()
+            Name = "Authorization",
+            Type = SecuritySchemeType.Http,
+            Scheme = "bearer",
+            BearerFormat = "JWT",
+            In = ParameterLocation.Header,
+            Description = "Enter your JWT token",
         }
-    });
+    );
+    options.AddSecurityRequirement(
+        new()
+        {
+            {
+                new()
+                {
+                    Reference = new OpenApiReference
+                    {
+                        Type = ReferenceType.SecurityScheme,
+                        Id = "Bearer",
+                    },
+                },
+                Array.Empty<string>()
+            },
+        }
+    );
 });
 
 var app = builder.Build();
@@ -90,7 +102,7 @@ using (var scope = app.Services.CreateScope())
     var db = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
     db.Database.Migrate();
     await DatabaseSeeder.SeedRequiredDataAsync(app.Services);
-    // Note: Admin user is created via /wizard setup, not auto-seeded
+    // Admin user is created via /wizard setup, not auto-seeded
 }
 
 if (app.Environment.IsDevelopment())
@@ -110,8 +122,10 @@ if (app.Environment.IsDevelopment())
 }
 else
 {
-    app.UseHangfireDashboard("/hangfire",
-        new DashboardOptions { Authorization = [new HangfireAuthorizationFilter()] });
+    app.UseHangfireDashboard(
+        "/hangfire",
+        new DashboardOptions { Authorization = [new HangfireAuthorizationFilter()] }
+    );
 }
 
 app.MapControllers();
@@ -122,7 +136,15 @@ using (var scope = app.Services.CreateScope())
     recurringJobManager.AddOrUpdate<MetricsUpdateJob>(
         "update-all-metrics",
         job => job.UpdateAllMetricsAsync(),
-        Cron.MinuteInterval(5));
+        Cron.MinuteInterval(5)
+    );
+
+    // Backup job
+    recurringJobManager.AddOrUpdate<BackupJob>(
+        "backup-to-cloud",
+        job => job.ExecuteAsync(),
+        Cron.Daily(3)
+    );
 }
 
 app.Run();

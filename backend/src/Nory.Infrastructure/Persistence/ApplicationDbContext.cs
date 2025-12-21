@@ -24,6 +24,10 @@ public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
     public DbSet<ActivityLogDbModel> ActivityLogs { get; set; }
     public DbSet<EventMetricsDbModel> EventMetrics { get; set; }
     public DbSet<AttendeeDbModel> Attendees { get; set; }
+    public DbSet<BackupConfigurationDbModel> BackupConfigurations { get; set; }
+    public DbSet<BackupHistoryDbModel> BackupHistory { get; set; }
+    public DbSet<SystemSettingDbModel> SystemSettings { get; set; }
+    public DbSet<EmailConfigurationDbModel> EmailConfigurations { get; set; }
 
     protected override void OnModelCreating(ModelBuilder builder)
     {
@@ -217,5 +221,27 @@ public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
             .Entity<EventTemplateDbModel>()
             .Property(et => et.ThemeConfig)
             .HasColumnType("jsonb");
+
+        builder.Entity<BackupConfigurationDbModel>().ToTable("BackupConfigurations");
+        builder.Entity<BackupHistoryDbModel>().ToTable("BackupHistory");
+        builder.Entity<SystemSettingDbModel>().ToTable("SystemSettings");
+        builder.Entity<EmailConfigurationDbModel>().ToTable("EmailConfigurations");
+
+        builder
+            .Entity<BackupHistoryDbModel>()
+            .HasOne(h => h.BackupConfiguration)
+            .WithMany(c => c.BackupHistory)
+            .HasForeignKey(h => h.BackupConfigurationId)
+            .OnDelete(DeleteBehavior.Cascade);
+
+        builder
+            .Entity<BackupHistoryDbModel>()
+            .HasIndex(h => h.BackupConfigurationId)
+            .HasDatabaseName("IX_BackupHistory_BackupConfigurationId");
+
+        builder
+            .Entity<BackupHistoryDbModel>()
+            .HasIndex(h => h.StartedAt)
+            .HasDatabaseName("IX_BackupHistory_StartedAt");
     }
 }

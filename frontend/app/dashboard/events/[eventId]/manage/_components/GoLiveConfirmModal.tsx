@@ -31,26 +31,27 @@ export function GoLiveConfirmModal({
         if (e.target === e.currentTarget && !loading) onClose();
       }}
     >
-      <div className="bg-white rounded-2xl p-6 w-full max-w-sm mx-4 text-center">
-        <div className="w-16 h-16 rounded-full bg-green-100 flex items-center justify-center mx-auto mb-5">
+      <div className="bg-nory-card rounded-2xl p-6 w-full max-w-sm mx-4 text-center">
+        <div className="w-16 h-16 rounded-full bg-green-100 dark:bg-green-900/30 flex items-center justify-center mx-auto mb-5">
           <svg
             width="32"
             height="32"
             viewBox="0 0 24 24"
             fill="none"
-            stroke="#16a34a"
+            stroke="currentColor"
             strokeWidth="2"
+            className="text-green-600 dark:text-green-400"
           >
             <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14" />
             <polyline points="22 4 12 14.01 9 11.01" />
           </svg>
         </div>
 
-        <h2 className="text-xl font-bold text-gray-900 mb-3">
+        <h2 className="text-xl font-bold text-nory-text mb-3">
           {t('events.manage.goLiveModal.title', { name: event.name })}
         </h2>
 
-        <p className="text-sm text-gray-500 mb-6 leading-relaxed">
+        <p className="text-sm text-nory-muted mb-6 leading-relaxed">
           {t('events.manage.goLiveModal.description')}
         </p>
 

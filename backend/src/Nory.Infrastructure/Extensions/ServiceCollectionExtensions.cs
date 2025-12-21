@@ -3,6 +3,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Nory.Application.Services;
 using Nory.Core.Domain.Repositories;
+using Nory.Infrastructure.Jobs;
 using Nory.Infrastructure.Persistence.Repositories;
 using Nory.Infrastructure.Services;
 
@@ -23,6 +24,10 @@ public static class ServiceCollectionExtensions
         services.AddScoped<ICategoryService, CategoryService>();
         services.AddScoped<IPhotoService, PhotoService>();
         services.AddScoped<IPublicEventService, PublicEventService>();
+        services.AddScoped<IEncryptionService, AesEncryptionService>();
+        services.AddScoped<IBackupService, BackupService>();
+        services.AddScoped<IEmailService, SmtpEmailService>();
+        services.AddScoped<BackupJob>();
 
         return services;
     }
@@ -37,6 +42,9 @@ public static class ServiceCollectionExtensions
         services.AddScoped<IEventPhotoRepository, EventPhotoRepository>();
         services.AddScoped<IEventRepository, EventRepository>();
         services.AddScoped<IThemeRepository, ThemeRepository>();
+        services.AddScoped<IBackupRepository, BackupRepository>();
+        services.AddScoped<ISystemSettingsRepository, SystemSettingsRepository>();
+        services.AddScoped<IEmailConfigurationRepository, EmailConfigurationRepository>();
 
         return services;
     }

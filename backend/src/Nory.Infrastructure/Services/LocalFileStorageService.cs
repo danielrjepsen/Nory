@@ -55,7 +55,7 @@ public class LocalFileStorageService : IFileStorageService
 
             await WriteFileAsync(fullPath, fileStream, cancellationToken);
 
-            _logger.LogInformation(
+            _logger.LogDebug(
                 "Stored file: {FileName} -> {StoragePath} ({Size} bytes)",
                 fileName, storagePath, fileStream.Length);
 
@@ -113,7 +113,7 @@ public class LocalFileStorageService : IFileStorageService
             return Task.FromResult(false);
 
         File.Delete(fullPath);
-        _logger.LogInformation("Deleted file: {Path}", storagePath);
+        _logger.LogDebug("Deleted file: {Path}", storagePath);
         return Task.FromResult(true);
     }
 
