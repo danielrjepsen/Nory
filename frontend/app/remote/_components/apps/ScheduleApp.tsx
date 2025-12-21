@@ -19,7 +19,6 @@ export function ScheduleApp({ eventId }: ScheduleAppProps) {
     <>
       <AppHeader title={t('apps.schedule.title').toUpperCase()} icon="📅" eventId={eventId} />
       <AppContainer>
-        {/* Countdown Banner */}
         <div
           className="rounded-2xl p-5 mb-5 text-center text-white"
           style={{
@@ -30,7 +29,6 @@ export function ScheduleApp({ eventId }: ScheduleAppProps) {
           <div className="text-2xl font-semibold mt-1">2h 15m</div>
         </div>
 
-        {/* Schedule Card */}
         <div className="bg-white rounded-3xl p-6 shadow-[0_10px_30px_rgba(0,0,0,0.04)]">
           <h2 className="text-xl font-bold mb-5 text-center text-[#2F4C39]">
             {t('apps.schedule.title')}

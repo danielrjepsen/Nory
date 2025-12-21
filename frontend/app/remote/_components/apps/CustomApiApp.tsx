@@ -22,7 +22,6 @@ export function CustomApiApp({ eventId, appData }: CustomApiAppProps) {
             {t('apps.custom.subtitle')}
           </h2>
 
-          {/* Code Block */}
           <div className="bg-[#1A1A1A] text-emerald-500 p-4 rounded-lg font-mono text-xs mb-4">
             <div className="text-gray-500 mb-1">// {t('apps.custom.configTitle')}</div>
             <div>{'{'}</div>
@@ -35,7 +34,6 @@ export function CustomApiApp({ eventId, appData }: CustomApiAppProps) {
             <div>{'}'}</div>
           </div>
 
-          {/* Status Banner */}
           <div
             className={`p-3 rounded-lg text-center text-sm text-white ${
               endpoint ? 'bg-emerald-500' : 'bg-amber-500'
