@@ -33,13 +33,40 @@ public class PublicEventService : IPublicEventService
         _logger = logger;
     }
 
+    public async Task<Result<PublicEventsResponse>> GetPublicEventsAsync(
+        CancellationToken cancellationToken = default
+    )
+    {
+        _logger.LogDebug("Fetching public events");
+
+        var events = await _eventRepository.GetPublicAsync(cancellationToken);
+
+        var eventDtos = events
+            .Select(e => new PublicEventDto(
+                e.Id,
+                e.Name,
+                e.Description,
+                e.Location,
+                e.StartsAt,
+                e.EndsAt,
+                e.ThemeName
+            ))
+            .ToList();
+
+        _logger.LogDebug("Retrieved {Count} public events", eventDtos.Count);
+
+        return Result<PublicEventsResponse>.Success(
+            new PublicEventsResponse(true, eventDtos)
+        );
+    }
+
     public async Task<Result<PublicPhotosResponse>> GetPhotosAsync(
         Guid eventId,
         GetPhotosQuery query,
         CancellationToken cancellationToken = default
     )
     {
-        _logger.LogInformation(
+        _logger.LogDebug(
             "Fetching photos for event {EventId}, limit: {Limit}, offset: {Offset}, preview: {Preview}",
             eventId,
             query.Limit,
@@ -82,7 +109,7 @@ public class PublicEventService : IPublicEventService
             ))
             .ToList();
 
-        _logger.LogInformation(
+        _logger.LogDebug(
             "Retrieved {Count} photos for event {EventId}",
             photoDtos.Count,
             eventId
@@ -143,7 +170,7 @@ public class PublicEventService : IPublicEventService
         CancellationToken cancellationToken = default
     )
     {
-        _logger.LogInformation("Fetching categories for event {EventId}", eventId);
+        _logger.LogDebug("Fetching categories for event {EventId}", eventId);
 
         var categories = await _categoryRepository.GetByEventIdAsync(eventId, cancellationToken);
 

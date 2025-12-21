@@ -12,6 +12,14 @@ public class PublicEventsController(
     IPhotoService photoService
 ) : ApiControllerBase
 {
+    [HttpGet("public")]
+    [ProducesResponseType(typeof(PublicEventsResponse), StatusCodes.Status200OK)]
+    public async Task<IActionResult> GetPublicEvents(CancellationToken cancellationToken)
+    {
+        var result = await publicEventService.GetPublicEventsAsync(cancellationToken);
+        return ToActionResult(result);
+    }
+
     [HttpGet("{eventId:guid}/photos")]
     [ProducesResponseType(typeof(PublicPhotosResponse), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
