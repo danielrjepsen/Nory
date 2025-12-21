@@ -5,6 +5,7 @@ export interface TextareaProps extends React.TextareaHTMLAttributes<HTMLTextArea
   error?: string;
   hint?: string;
   fullWidth?: boolean;
+  noMargin?: boolean;
 }
 
 export function Textarea({
@@ -12,40 +13,47 @@ export function Textarea({
   error,
   hint,
   fullWidth = false,
+  noMargin = false,
   className = '',
+  required,
   ...props
 }: TextareaProps) {
   return (
-    <div className={`${fullWidth ? 'w-full' : ''} mb-4`}>
+    <div className={`${fullWidth ? 'w-full' : ''} ${noMargin ? '' : 'mb-4'}`}>
       {label && (
-        <label className="block text-sm font-semibold text-gray-700 mb-2">
+        <label className="block text-sm font-semibold text-nory-text mb-1.5 font-grotesk">
           {label}
+          {required && <span className="text-red-500 ml-1">*</span>}
         </label>
       )}
 
       <textarea
         className={`
           w-full px-4 py-3
-          border rounded-lg
-          transition-all duration-200
-          resize-y
-          ${error
-            ? 'border-red-300 focus:border-red-500 focus:ring-red-500'
-            : 'border-gray-300 focus:border-blue-500 focus:ring-blue-500'
-          }
-          focus:outline-none focus:ring-2 focus:ring-opacity-50
-          disabled:bg-gray-100 disabled:cursor-not-allowed
+          bg-nory-card
+          border-2 border-nory-border
+          rounded-btn
+          font-grotesk
+          text-nory-text
+          transition-all duration-150
+          resize-y min-h-[100px]
+          ${error ? 'border-red-500' : ''}
+          focus:outline-none
+          focus:shadow-brutal-sm
+          disabled:bg-nory-bg disabled:cursor-not-allowed
+          placeholder:text-nory-muted
           ${className}
         `}
+        required={required}
         {...props}
       />
 
       {error && (
-        <p className="mt-1 text-sm text-red-600">{error}</p>
+        <p className="mt-1.5 text-sm text-red-500 font-grotesk">{error}</p>
       )}
 
       {hint && !error && (
-        <p className="mt-1 text-sm text-gray-500">{hint}</p>
+        <p className="mt-1.5 text-sm text-nory-muted font-grotesk">{hint}</p>
       )}
     </div>
   );
