@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useEffect, useRef, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import QRCode from 'qrcode';
 import { getEventsUrl } from '@/utils/urls';
 
@@ -12,6 +13,7 @@ interface EventQRCodeProps {
 }
 
 export function EventQRCode({ eventId, eventName, size = 300, showActions = true }: EventQRCodeProps) {
+  const { t } = useTranslation('dashboard', { keyPrefix: 'events' });
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const [copied, setCopied] = useState<'guest' | 'slideshow' | null>(null);
 
@@ -55,6 +57,7 @@ export function EventQRCode({ eventId, eventName, size = 300, showActions = true
     const printWindow = window.open('', '', 'width=800,height=600');
     if (printWindow && canvasRef.current) {
       const imageUrl = canvasRef.current.toDataURL('image/png');
+      const scanToUploadText = t('qrCode.scanToUpload');
       printWindow.document.write(`
         <html>
           <head>
@@ -85,7 +88,7 @@ export function EventQRCode({ eventId, eventName, size = 300, showActions = true
           </head>
           <body>
             <h1>${eventName}</h1>
-            <div class="subtitle">Scan to Upload Photos</div>
+            <div class="subtitle">${scanToUploadText}</div>
             <img src="${imageUrl}" alt="QR Code" />
             <div class="url">${guestUploadUrl}</div>
           </body>
@@ -119,7 +122,6 @@ export function EventQRCode({ eventId, eventName, size = 300, showActions = true
 
   return (
     <div>
-      {/* QR Code */}
       <div style={{ textAlign: 'center', marginBottom: '24px' }}>
         <canvas
           ref={canvasRef}
@@ -132,10 +134,9 @@ export function EventQRCode({ eventId, eventName, size = 300, showActions = true
         />
       </div>
 
-      {/* Guest Upload URL */}
       <div style={{ marginBottom: '20px' }}>
         <label style={{ display: 'block', fontSize: '14px', fontWeight: '600', color: '#374151', marginBottom: '8px' }}>
-          Guest Upload Link
+          {t('qrCode.guestUploadLink')}
         </label>
         <div
           style={{
@@ -153,19 +154,18 @@ export function EventQRCode({ eventId, eventName, size = 300, showActions = true
         {showActions && (
           <div style={{ marginTop: '8px', display: 'flex', gap: '8px' }}>
             <button style={buttonStyle()} onClick={() => handleCopy('guest')}>
-              {copied === 'guest' ? 'Copied!' : 'Copy Link'}
+              {copied === 'guest' ? t('manage.links.copied') : t('manage.links.copy')}
             </button>
             <button style={buttonStyle()} onClick={() => window.open(guestUploadUrl, '_blank')}>
-              Open
+              {t('manage.links.open')}
             </button>
           </div>
         )}
       </div>
 
-      {/* Slideshow URL */}
       <div style={{ marginBottom: '24px' }}>
         <label style={{ display: 'block', fontSize: '14px', fontWeight: '600', color: '#374151', marginBottom: '8px' }}>
-          Slideshow Link
+          {t('qrCode.slideshowLink')}
         </label>
         <div
           style={{
@@ -183,23 +183,22 @@ export function EventQRCode({ eventId, eventName, size = 300, showActions = true
         {showActions && (
           <div style={{ marginTop: '8px', display: 'flex', gap: '8px' }}>
             <button style={buttonStyle()} onClick={() => handleCopy('slideshow')}>
-              {copied === 'slideshow' ? 'Copied!' : 'Copy Link'}
+              {copied === 'slideshow' ? t('manage.links.copied') : t('manage.links.copy')}
             </button>
             <button style={buttonStyle()} onClick={() => window.open(slideshowUrl, '_blank')}>
-              Open
+              {t('manage.links.open')}
             </button>
           </div>
         )}
       </div>
 
-      {/* Download/Print Actions */}
       {showActions && (
         <div style={{ display: 'flex', gap: '12px', justifyContent: 'center' }}>
           <button style={buttonStyle('primary')} onClick={handleDownload}>
-            <DownloadIcon /> Download QR
+            <DownloadIcon /> {t('qrCode.downloadQR')}
           </button>
           <button style={buttonStyle()} onClick={handlePrint}>
-            <PrintIcon /> Print
+            <PrintIcon /> {t('qrCode.print')}
           </button>
         </div>
       )}

@@ -1,6 +1,7 @@
 'use client';
 
 import React from 'react';
+import { useTranslation } from 'react-i18next';
 import { EventQRCode } from './EventQRCode';
 
 interface EventQRModalProps {
@@ -11,64 +12,38 @@ interface EventQRModalProps {
 }
 
 export function EventQRModal({ isOpen, onClose, eventId, eventName }: EventQRModalProps) {
+  const { t } = useTranslation('dashboard', { keyPrefix: 'events' });
+
   if (!isOpen) return null;
 
   return (
     <div
-      style={{
-        position: 'fixed',
-        inset: 0,
-        background: 'rgba(0, 0, 0, 0.5)',
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
-        zIndex: 50,
-        padding: '16px',
-      }}
+      className="fixed inset-0 bg-[#1a1a1a]/60 flex items-center justify-center z-50 p-4"
       onClick={(e) => {
         if (e.target === e.currentTarget) onClose();
       }}
     >
-      <div
-        style={{
-          background: 'white',
-          borderRadius: '16px',
-          padding: '24px',
-          width: '100%',
-          maxWidth: '440px',
-          maxHeight: '90vh',
-          overflow: 'auto',
-        }}
-      >
-        {/* Header */}
-        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px' }}>
+      <div className="bg-[#fffef9] rounded-[10px] border-brutal shadow-brutal p-6 w-full max-w-[440px] max-h-[90vh] overflow-auto">
+        <div className="flex justify-between items-center mb-5">
           <div>
-            <h2 style={{ fontSize: '20px', fontWeight: '700', color: '#111827', margin: 0 }}>
-              QR Code
+            <h2 className="text-xl font-bold text-[#1a1a1a] m-0 font-grotesk">
+              {t('qrCode.title')}
             </h2>
-            <p style={{ fontSize: '14px', color: '#6b7280', margin: '4px 0 0 0' }}>
+            <p className="text-sm text-[#1a1a1a]/60 mt-1 font-grotesk">
               {eventName}
             </p>
           </div>
           <button
             onClick={onClose}
-            style={{
-              background: 'none',
-              border: 'none',
-              padding: '8px',
-              cursor: 'pointer',
-              color: '#6b7280',
-              borderRadius: '8px',
-            }}
+            className="p-2 bg-[#fffef9] border-2 border-[#1a1a1a] rounded-[8px] cursor-pointer text-[#1a1a1a] transition-all duration-150 hover:bg-[#ffe951] hover:shadow-brutal-sm"
           >
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
               <line x1="18" y1="6" x2="6" y2="18" />
               <line x1="6" y1="6" x2="18" y2="18" />
             </svg>
           </button>
         </div>
 
-        {/* QR Code Content */}
         <EventQRCode eventId={eventId} eventName={eventName} size={280} />
       </div>
     </div>
