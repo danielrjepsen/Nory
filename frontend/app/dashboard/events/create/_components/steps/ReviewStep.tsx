@@ -1,8 +1,6 @@
 'use client';
 
-import { Box } from '../../../../_components/ui/Box';
-import { Heading, Text } from '../../../../_components/ui/Typography';
-import { Button, Alert } from '../../../../_components';
+import { useTranslation } from 'react-i18next';
 import { EventFormData } from '../../../../_hooks/useEventForm';
 
 interface ReviewStepProps {
@@ -10,23 +8,37 @@ interface ReviewStepProps {
   onEdit: (stepIndex: number) => void;
 }
 
+function SectionTitle({ children }: { children: React.ReactNode }) {
+  return (
+    <h3 className="text-[1.1rem] font-bold text-nory-text font-grotesk mb-5 flex items-center gap-2">
+      <span className="w-1 h-5 bg-nory-yellow rounded-sm" />
+      {children}
+    </h3>
+  );
+}
+
 interface ReviewSectionProps {
   title: string;
+  editLabel: string;
   onEdit: () => void;
   children: React.ReactNode;
 }
 
-function ReviewSection({ title, onEdit, children }: ReviewSectionProps) {
+function ReviewSection({ title, editLabel, onEdit, children }: ReviewSectionProps) {
   return (
-    <Box className="border border-gray-200 rounded-lg p-4">
-      <Box className="flex justify-between items-start mb-3">
-        <Heading as="h3" className="mb-0">{title}</Heading>
-        <Button variant="ghost" size="sm" onClick={onEdit}>
-          Edit
-        </Button>
-      </Box>
+    <div className="bg-nory-bg rounded-[14px] p-5 border-2 border-transparent hover:border-nory-border transition-all duration-150">
+      <div className="flex justify-between items-start mb-4">
+        <h4 className="font-bold text-nory-text font-grotesk">{title}</h4>
+        <button
+          type="button"
+          onClick={onEdit}
+          className="text-[0.8rem] font-semibold text-nory-muted hover:text-nory-text transition-colors font-grotesk"
+        >
+          {editLabel}
+        </button>
+      </div>
       {children}
-    </Box>
+    </div>
   );
 }
 
@@ -37,17 +49,19 @@ interface ReviewItemProps {
 
 function ReviewItem({ label, value }: ReviewItemProps) {
   return (
-    <Box>
-      <Text variant="muted" className="mb-0">{label}</Text>
-      <Text className="font-medium">{value}</Text>
-    </Box>
+    <div className="mb-2 last:mb-0">
+      <div className="text-[0.75rem] text-nory-muted font-grotesk uppercase tracking-wide">{label}</div>
+      <div className="text-[0.9rem] font-medium text-nory-text font-grotesk">{value}</div>
+    </div>
   );
 }
 
 export function ReviewStep({ formData, onEdit }: ReviewStepProps) {
+  const { t } = useTranslation('dashboard', { keyPrefix: 'eventCreation.review' });
+
   const formatDate = (date: Date | undefined) => {
-    if (!date) return 'Not set';
-    return new Date(date).toLocaleString('en-US', {
+    if (!date) return t('notSpecified');
+    return new Date(date).toLocaleString('da-DK', {
       weekday: 'long',
       year: 'numeric',
       month: 'long',
@@ -58,55 +72,65 @@ export function ReviewStep({ formData, onEdit }: ReviewStepProps) {
   };
 
   return (
-    <Box className="space-y-6">
-      <Box>
-        <Heading>Review & Create</Heading>
-        <Text variant="muted">
-          Review your event details before creating
-        </Text>
-      </Box>
+    <div className="space-y-6">
+      <SectionTitle>{t('title')}</SectionTitle>
 
-      <ReviewSection title="Event Details" onEdit={() => onEdit(0)}>
-        <Box className="space-y-2">
-          <ReviewItem label="Name" value={formData.name || 'Not set'} />
-          {formData.description && (
-            <ReviewItem label="Description" value={formData.description} />
-          )}
-          <ReviewItem label="Start Date" value={formatDate(formData.startDate)} />
-          {formData.endDate && (
-            <ReviewItem label="End Date" value={formatDate(formData.endDate)} />
-          )}
-          <ReviewItem
-            label="Privacy"
-            value={formData.isPublic ? 'Public - Anyone with link' : 'Private - Invited guests only'}
-          />
-        </Box>
-      </ReviewSection>
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <ReviewSection title={t('eventDetails')} editLabel={t('edit')} onEdit={() => onEdit(0)}>
+          <div className="space-y-3">
+            <ReviewItem label={t('name')} value={formData.name || t('notSpecified')} />
+            {formData.description && (
+              <ReviewItem label={t('description')} value={formData.description} />
+            )}
+            <ReviewItem label={t('startDate')} value={formatDate(formData.startDate)} />
+            {formData.endDate && (
+              <ReviewItem label={t('endDate')} value={formatDate(formData.endDate)} />
+            )}
+            <ReviewItem
+              label={t('visibility')}
+              value={formData.isPublic ? t('publicWithLink') : t('privateInviteOnly')}
+            />
+          </div>
+        </ReviewSection>
 
-      <ReviewSection title="Theme" onEdit={() => onEdit(1)}>
-        <Box className="flex items-center space-x-3">
-          <div className="w-12 h-12 rounded-lg bg-gradient-to-br from-pink-400 to-purple-600" />
-          <Box>
-            <Text className="font-medium capitalize">{formData.selectedTheme}</Text>
-            <Text variant="muted">Selected theme</Text>
-          </Box>
-        </Box>
-      </ReviewSection>
+        <div className="space-y-4">
+          <ReviewSection title={t('theme')} editLabel={t('edit')} onEdit={() => onEdit(1)}>
+            <div className="flex items-center gap-3">
+              <div className="w-10 h-10 rounded-lg bg-nory-yellow border-2 border-nory-border" />
+              <div>
+                <div className="text-[0.9rem] font-medium text-nory-text font-grotesk capitalize">
+                  {formData.selectedTheme || t('defaultTheme')}
+                </div>
+                <div className="text-[0.75rem] text-nory-muted font-grotesk">{t('selectedTheme')}</div>
+              </div>
+            </div>
+          </ReviewSection>
 
-      <ReviewSection title="Guest App" onEdit={() => onEdit(1)}>
-        <Text variant="muted">
-          {formData.guestApp.components.length > 0
-            ? `${formData.guestApp.components.length} component(s) configured`
-            : 'Default configuration'}
-        </Text>
-      </ReviewSection>
+          <ReviewSection title={t('guestApp')} editLabel={t('edit')} onEdit={() => onEdit(1)}>
+            <div className="text-[0.85rem] text-nory-muted font-grotesk">
+              {formData.guestApp.components.length > 0
+                ? t('componentsConfigured', { count: formData.guestApp.components.length })
+                : t('defaultConfig')}
+            </div>
+          </ReviewSection>
+        </div>
+      </div>
 
-      <Alert variant="warning">
-        <Text className="font-medium mb-1">Ready to create</Text>
-        <Text variant="small">
-          Once created, you'll be able to upload photos and share your event with guests.
-        </Text>
-      </Alert>
-    </Box>
+      <div className="bg-nory-yellow border-2 border-nory-border rounded-[14px] p-5 shadow-brutal-sm dark:shadow-none">
+        <div className="flex items-start gap-3">
+          <div className="w-8 h-8 bg-nory-black rounded-lg flex items-center justify-center flex-shrink-0">
+            <svg className="w-5 h-5 text-nory-yellow" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+              <polyline points="20 6 9 17 4 12" />
+            </svg>
+          </div>
+          <div>
+            <div className="font-bold text-nory-black font-grotesk mb-1">{t('readyToCreate')}</div>
+            <div className="text-[0.85rem] text-nory-black/70 font-grotesk">
+              {t('readyToCreateDescription')}
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
   );
 }

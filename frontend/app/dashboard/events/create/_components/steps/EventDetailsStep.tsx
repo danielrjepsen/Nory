@@ -1,9 +1,8 @@
 'use client';
 
-import { Box } from '../../../../_components/ui/Box';
-import { Heading, Label } from '../../../../_components/ui/Typography';
-import { Input, Textarea, Checkbox } from '../../../../_components/ui/Input';
-import { DateTimePicker } from '../../../../_components';
+import { useState } from 'react';
+import { useTranslation } from 'react-i18next';
+import { Checkbox, Toggle } from '../../../../_components/form';
 import { EventFormData } from '../../../../_hooks/useEventForm';
 
 interface EventDetailsStepProps {
@@ -11,61 +10,121 @@ interface EventDetailsStepProps {
   onChange: (field: keyof EventFormData, value: any) => void;
 }
 
-export function EventDetailsStep({ formData, onChange }: EventDetailsStepProps) {
+function SectionTitle({ children }: { children: React.ReactNode }) {
   return (
-    <Box className="space-y-6">
-      <Heading>Event Information</Heading>
+    <h3 className="text-[1.1rem] font-bold text-nory-text font-grotesk mb-5 flex items-center gap-2">
+      <span className="w-1 h-5 bg-nory-yellow rounded-sm" />
+      {children}
+    </h3>
+  );
+}
 
-      <Box>
-        <Label htmlFor="name" required>Event Name</Label>
-        <Input
-          id="name"
+const GlobeIcon = () => (
+  <svg
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke="currentColor"
+    strokeWidth="2"
+    className="w-[18px] h-[18px] text-nory-text"
+  >
+    <path d="M3 12a9 9 0 1 0 18 0a9 9 0 0 0-18 0" />
+    <path d="M3.6 9h16.8" />
+    <path d="M3.6 15h16.8" />
+    <path d="M12 3a17 17 0 0 1 0 18" />
+    <path d="M12 3a17 17 0 0 0 0 18" />
+  </svg>
+);
+
+export function EventDetailsStep({ formData, onChange }: EventDetailsStepProps) {
+  const { t } = useTranslation('dashboard', { keyPrefix: 'eventCreation.details' });
+  const [isMultiDay, setIsMultiDay] = useState(!!formData.endDate);
+
+  const formatDateForInput = (date: Date | null | undefined): string => {
+    if (!date) return '';
+    return date.toISOString().split('T')[0];
+  };
+
+  const parseDateFromInput = (value: string): Date | null => {
+    if (!value) return null;
+    return new Date(value);
+  };
+
+  return (
+    <div className="space-y-4">
+      <SectionTitle>{t('sectionTitle')}</SectionTitle>
+
+      <div>
+        <label className="block text-[0.8rem] font-semibold text-nory-text mb-1.5 font-grotesk">
+          {t('nameLabel')} <span className="text-red-500">*</span>
+        </label>
+        <input
           type="text"
           value={formData.name}
           onChange={(e) => onChange('name', e.target.value)}
-          placeholder="Sarah & John's Wedding"
-          required
+          placeholder={t('namePlaceholder')}
+          autoFocus
+          className="w-full px-4 py-3 bg-nory-card border-2 border-nory-border rounded-btn font-grotesk text-[0.9rem] text-nory-text transition-all duration-150 focus:outline-none focus:shadow-brutal-sm placeholder:text-nory-muted"
         />
-      </Box>
+      </div>
 
-      <Box>
-        <Label htmlFor="description">Description</Label>
-        <Textarea
-          id="description"
+      <div>
+        <label className="block text-[0.8rem] font-semibold text-nory-text mb-1.5 font-grotesk">
+          {t('descriptionLabel')}
+        </label>
+        <textarea
           value={formData.description}
           onChange={(e) => onChange('description', e.target.value)}
-          placeholder="Join us for a celebration of love..."
+          placeholder={t('descriptionPlaceholder')}
           rows={3}
+          className="w-full px-4 py-3 bg-nory-card border-2 border-nory-border rounded-btn font-grotesk text-[0.9rem] text-nory-text transition-all duration-150 focus:outline-none focus:shadow-brutal-sm placeholder:text-nory-muted resize-y min-h-[90px]"
         />
-      </Box>
+      </div>
 
-      <Box className="grid grid-cols-1 md:grid-cols-2 gap-4">
-        <DateTimePicker
-          id="startDate"
-          label="Start Date & Time"
-          value={formData.startDate}
-          onChange={(value) => onChange('startDate', value)}
-          required
+      <div>
+        <label className="block text-[0.8rem] font-semibold text-nory-text mb-1.5 font-grotesk">
+          {t('dateLabel')} <span className="text-red-500">*</span>
+        </label>
+        <input
+          type="date"
+          value={formatDateForInput(formData.startDate)}
+          onChange={(e) => onChange('startDate', parseDateFromInput(e.target.value))}
+          className="w-full px-4 py-3 bg-nory-card border-2 border-nory-border rounded-btn font-grotesk text-[0.9rem] text-nory-text transition-all duration-150 focus:outline-none focus:shadow-brutal-sm"
         />
-        <DateTimePicker
-          id="endDate"
-          label="End Date & Time"
-          value={formData.endDate}
-          onChange={(value) => onChange('endDate', value)}
-          min={formData.startDate}
-        />
-      </Box>
-
-      <Box>
         <Checkbox
-          checked={formData.isPublic}
-          onChange={(e) => onChange('isPublic', e.target.checked)}
-          label="Public Event"
-          description={formData.isPublic
-            ? 'Anyone with the link can access'
-            : 'Only invited guests can access'}
+          checked={isMultiDay}
+          onChange={(checked) => {
+            setIsMultiDay(checked);
+            if (!checked) {
+              onChange('endDate', null);
+            }
+          }}
+          label={t('multiDayCheckbox')}
+          className="mt-3"
         />
-      </Box>
-    </Box>
+      </div>
+
+      {isMultiDay && (
+        <div>
+          <label className="block text-[0.8rem] font-semibold text-nory-text mb-1.5 font-grotesk">
+            {t('endDateLabel')}
+          </label>
+          <input
+            type="date"
+            value={formatDateForInput(formData.endDate)}
+            onChange={(e) => onChange('endDate', parseDateFromInput(e.target.value))}
+            min={formatDateForInput(formData.startDate)}
+            className="w-full px-4 py-3 bg-nory-card border-2 border-nory-border rounded-btn font-grotesk text-[0.9rem] text-nory-text transition-all duration-150 focus:outline-none focus:shadow-brutal-sm"
+          />
+        </div>
+      )}
+
+      <Toggle
+        label={t('publicEvent')}
+        description={t('publicEventDescription')}
+        icon={<GlobeIcon />}
+        checked={formData.isPublic}
+        onChange={(checked) => onChange('isPublic', checked)}
+      />
+    </div>
   );
 }
