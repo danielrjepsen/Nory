@@ -6,9 +6,10 @@ export function FormDivider() {
   const { t } = useTranslation('common');
 
   return (
-    <div className="text-center my-6 relative text-[#636e72] text-sm">
-      <div className="absolute top-1/2 left-0 right-0 h-px bg-[#e9ecef]" />
-      <span className="bg-white/95 px-4 relative">{t('or')}</span>
+    <div className="flex items-center my-6 text-[#888] text-[0.85rem] font-medium font-grotesk">
+      <div className="flex-1 h-0.5 bg-[#e8e8e6]" />
+      <span className="px-4">{t('or')}</span>
+      <div className="flex-1 h-0.5 bg-[#e8e8e6]" />
     </div>
   );
 }

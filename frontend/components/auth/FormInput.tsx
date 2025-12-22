@@ -12,35 +12,36 @@ export function FormInput({
   ...props
 }: FormInputProps) {
   return (
-    <div className="mb-6">
+    <div className="mb-5">
       {label && (
-        <label className="block mb-2 text-[#2d3436] font-medium text-sm">
+        <label className="block mb-2 text-[#1a1a1a] font-semibold text-sm font-grotesk">
           {label}
         </label>
       )}
 
       <input
         className={`
-          w-full px-4 py-3
-          border-2 border-[#e9ecef]
-          rounded-xl
+          w-full px-4 py-3.5
+          border-brutal
+          rounded-[10px]
           text-base
-          transition-all duration-300
-          bg-white
-          text-[#2d3436]
+          font-grotesk
+          bg-[#fffef9]
+          text-[#1a1a1a]
+          transition-all duration-150
           focus:outline-none
-          focus:border-[#74b9ff]
-          focus:shadow-[0_0_0_3px_rgba(116,185,255,0.1)]
+          focus:shadow-brutal-sm
+          focus:-translate-x-0.5
           focus:-translate-y-0.5
-          disabled:bg-gray-100 disabled:cursor-not-allowed
-          ${error ? 'border-red-300 focus:border-red-500' : ''}
+          disabled:bg-[#f5f5f3] disabled:cursor-not-allowed
+          ${error ? 'border-red-500' : ''}
           ${className}
         `}
         {...props}
       />
 
       {error && (
-        <p className="mt-2 text-sm text-red-600">{error}</p>
+        <p className="mt-2 text-sm text-red-600 font-grotesk">{error}</p>
       )}
     </div>
   );
