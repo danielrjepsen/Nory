@@ -1,8 +1,8 @@
 'use client';
 
 import { useState, useEffect, useCallback } from 'react';
-import { settingsService, UpdateProfileRequest, ChangePasswordRequest } from '../../_services/settings';
-import { authService } from '../../_services/auth';
+import { updateProfile, changePassword, getCurrentUser, type UpdateProfileRequest, type ChangePasswordRequest } from '../../_services/settings';
+import { getUser } from '../../_services/auth';
 import type { User } from '../../_types/auth';
 
 interface UseSettingsReturn {
@@ -26,15 +26,12 @@ export function useSettings(): UseSettingsReturn {
   const fetchUser = useCallback(async () => {
     try {
       setLoading(true);
-      const currentUser = await settingsService.getCurrentUser();
+      const currentUser = await getCurrentUser();
       setUser(currentUser);
     } catch (err) {
       console.error('Failed to fetch user:', err);
-      // Fall back to local user
-      const localUser = authService.getUser();
-      if (localUser) {
-        setUser(localUser);
-      }
+      const localUser = getUser();
+      if (localUser) setUser(localUser);
     } finally {
       setLoading(false);
     }
@@ -49,37 +46,33 @@ export function useSettings(): UseSettingsReturn {
     setSuccess(null);
   }, []);
 
-  const updateProfile = useCallback(async (data: UpdateProfileRequest): Promise<boolean> => {
+  const handleUpdateProfile = useCallback(async (data: UpdateProfileRequest): Promise<boolean> => {
     try {
       setSaving(true);
       clearMessages();
-
-      const updatedUser = await settingsService.updateProfile(data);
+      const updatedUser = await updateProfile(data);
       setUser(updatedUser);
       setSuccess('settings.profileUpdated');
       return true;
     } catch (err: any) {
       console.error('Failed to update profile:', err);
-      const errorMessage = err?.response?.data?.error || err?.message || 'settings.profileUpdateFailed';
-      setError(errorMessage);
+      setError(err?.response?.data?.error || err?.message || 'settings.profileUpdateFailed');
       return false;
     } finally {
       setSaving(false);
     }
   }, [clearMessages]);
 
-  const changePassword = useCallback(async (data: ChangePasswordRequest): Promise<boolean> => {
+  const handleChangePassword = useCallback(async (data: ChangePasswordRequest): Promise<boolean> => {
     try {
       setSaving(true);
       clearMessages();
-
-      await settingsService.changePassword(data);
+      await changePassword(data);
       setSuccess('settings.passwordChanged');
       return true;
     } catch (err: any) {
       console.error('Failed to change password:', err);
-      const errorMessage = err?.response?.data?.error || err?.message || 'settings.passwordChangeFailed';
-      setError(errorMessage);
+      setError(err?.response?.data?.error || err?.message || 'settings.passwordChangeFailed');
       return false;
     } finally {
       setSaving(false);
@@ -92,8 +85,8 @@ export function useSettings(): UseSettingsReturn {
     saving,
     error,
     success,
-    updateProfile,
-    changePassword,
+    updateProfile: handleUpdateProfile,
+    changePassword: handleChangePassword,
     clearMessages,
   };
 }

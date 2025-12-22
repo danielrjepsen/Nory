@@ -5,7 +5,8 @@ import { useTranslation } from 'react-i18next';
 import { useSettings } from '../_hooks/useSettings';
 import { ProfileSection } from './ProfileSection';
 import { PasswordSection } from './PasswordSection';
-import { ContentHeader } from '../../_components/ContentHeader';
+import { EmailSection } from './EmailSection';
+import { BackupSection } from './BackupSection';
 import { Alert } from '../../_components/Alert';
 
 export function SettingsContent() {
@@ -21,7 +22,6 @@ export function SettingsContent() {
     clearMessages,
   } = useSettings();
 
-  // Auto-clear messages after 5 seconds
   useEffect(() => {
     if (success || error) {
       const timer = setTimeout(clearMessages, 5000);
@@ -31,22 +31,22 @@ export function SettingsContent() {
 
   if (loading) {
     return (
-      <div className="p-6 space-y-6 max-w-3xl">
-        <div className="h-8 w-48 bg-gray-200 rounded animate-pulse" />
-        <div className="h-4 w-64 bg-gray-200 rounded animate-pulse" />
-        <div className="bg-white rounded-lg border border-gray-200 p-6 space-y-4">
-          <div className="h-6 w-40 bg-gray-200 rounded animate-pulse" />
+      <div className="space-y-6 max-w-[700px]">
+        <div className="h-8 w-48 bg-nory-bg rounded animate-pulse" />
+        <div className="h-4 w-64 bg-nory-bg rounded animate-pulse" />
+        <div className="bg-nory-card rounded-card p-6 space-y-4">
+          <div className="h-6 w-40 bg-nory-bg rounded animate-pulse" />
           <div className="grid grid-cols-2 gap-4">
-            <div className="h-12 bg-gray-200 rounded animate-pulse" />
-            <div className="h-12 bg-gray-200 rounded animate-pulse" />
+            <div className="h-12 bg-nory-bg rounded animate-pulse" />
+            <div className="h-12 bg-nory-bg rounded animate-pulse" />
           </div>
         </div>
-        <div className="bg-white rounded-lg border border-gray-200 p-6 space-y-4">
-          <div className="h-6 w-40 bg-gray-200 rounded animate-pulse" />
-          <div className="h-12 bg-gray-200 rounded animate-pulse" />
+        <div className="bg-nory-card rounded-card p-6 space-y-4">
+          <div className="h-6 w-40 bg-nory-bg rounded animate-pulse" />
+          <div className="h-12 bg-nory-bg rounded animate-pulse" />
           <div className="grid grid-cols-2 gap-4">
-            <div className="h-12 bg-gray-200 rounded animate-pulse" />
-            <div className="h-12 bg-gray-200 rounded animate-pulse" />
+            <div className="h-12 bg-nory-bg rounded animate-pulse" />
+            <div className="h-12 bg-nory-bg rounded animate-pulse" />
           </div>
         </div>
       </div>
@@ -54,12 +54,7 @@ export function SettingsContent() {
   }
 
   return (
-    <div className="p-6 space-y-6">
-      <ContentHeader
-        title={t('settings.title')}
-        subtitle={t('settings.subtitle')}
-      />
-
+    <div className="space-y-6">
       {success && (
         <Alert variant="success" onDismiss={clearMessages}>
           {t(success)}
@@ -72,7 +67,7 @@ export function SettingsContent() {
         </Alert>
       )}
 
-      <div className="space-y-6 max-w-3xl">
+      <div className="space-y-6 max-w-[700px]">
         <ProfileSection
           user={user}
           saving={saving}
@@ -83,6 +78,10 @@ export function SettingsContent() {
           saving={saving}
           onSave={changePassword}
         />
+
+        <EmailSection />
+
+        <BackupSection />
       </div>
     </div>
   );
