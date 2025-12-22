@@ -1,0 +1,118 @@
+.logoIllustration {
+  position: relative;
+  width: 44px;
+  height: 36px;
+  cursor: pointer;
+}
+
+.logoIllustration.small {
+  width: 32px;
+  height: 26px;
+}
+
+.logoCard {
+  position: absolute;
+  width: 20px;
+  height: 24px;
+  border: 2px solid var(--card-border, #1a1a1a);
+  border-radius: 4px;
+  overflow: hidden;
+  transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.small .logoCard {
+  width: 14px;
+  height: 17px;
+  border-width: 1.5px;
+  border-radius: 3px;
+}
+
+.logoCardInner {
+  height: 16px;
+}
+
+.small .logoCardInner {
+  height: 11px;
+}
+
+.logoCardBottom {
+  height: 8px;
+  background: var(--card-bottom, #fffef9);
+  border-top: 2px solid var(--card-border, #1a1a1a);
+}
+
+.small .logoCardBottom {
+  height: 6px;
+  border-top-width: 1.5px;
+}
+
+.purple {
+  background: #a78bfa;
+  left: 2px;
+  top: 6px;
+  transform: rotate(-12deg);
+  z-index: 1;
+}
+
+.small .purple {
+  left: 1px;
+  top: 4px;
+}
+
+.yellow {
+  background: #fef445;
+  left: 50%;
+  top: 2px;
+  transform: translateX(-50%);
+  z-index: 3;
+}
+
+.small .yellow {
+  top: 1px;
+}
+
+.pink {
+  background: #f472b6;
+  right: 2px;
+  top: 6px;
+  transform: rotate(12deg);
+  z-index: 2;
+}
+
+.small .pink {
+  right: 1px;
+  top: 4px;
+}
+
+.logoIllustration:hover .purple {
+  left: -4px;
+  transform: rotate(-20deg) scale(1.05);
+}
+
+.logoIllustration:hover .yellow {
+  top: -2px;
+  transform: translateX(-50%) scale(1.1);
+}
+
+.logoIllustration:hover .pink {
+  right: -4px;
+  transform: rotate(20deg) scale(1.05);
+}
+
+.small:hover .purple {
+  left: -3px;
+}
+
+.small:hover .pink {
+  right: -3px;
+}
+
+.small:hover .yellow {
+  top: -1px;
+}
+
+/* Dark mode adjustments */
+.dark {
+  --card-border: #fff;
+  --card-bottom: #2a2a2a;
+}
