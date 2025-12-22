@@ -94,7 +94,7 @@ export function LoginForm({ onSubmit, loading, error }: LoginFormProps) {
                     required
                 />
 
-                <div className="flex justify-between items-center mb-8 text-sm">
+                <div className="flex justify-between items-center mb-6 text-sm font-grotesk">
                     <Checkbox
                         checked={rememberMe}
                         onChange={() => setRememberMe(!rememberMe)}
@@ -102,7 +102,7 @@ export function LoginForm({ onSubmit, loading, error }: LoginFormProps) {
                     />
                     <Link
                         href="/forgot-password"
-                        className="text-blue-400 font-medium hover:underline"
+                        className="text-[#1a1a1a] font-semibold px-1 py-0.5 rounded transition-all duration-150 hover:bg-[#ffe951]"
                     >
                         {t('login.forgotPassword')}
                     </Link>

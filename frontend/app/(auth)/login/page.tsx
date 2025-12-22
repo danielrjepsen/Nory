@@ -35,9 +35,9 @@ export default function LoginPage() {
                 loading={loading}
                 error={error}
             />
-            <div className="text-center text-[#636e72] text-sm mt-4">
+            <div className="text-center text-[#1a1a1a] text-sm font-grotesk">
                 {t('login.noAccount')}{' '}
-                <Link href="/register" className="text-[#74b9ff] font-semibold hover:underline cursor-pointer">
+                <Link href="/register" className="text-[#1a1a1a] font-bold border-b-2 border-[#1a1a1a] transition-all duration-150 hover:bg-[#ffe951]">
                     {t('login.signUp')}
                 </Link>
             </div>

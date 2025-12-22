@@ -1,4 +1,4 @@
-import Image from 'next/image';
+import { NoryLogo } from '@/components/icons/NoryLogo';
 
 interface AuthHeaderProps {
     title: string;
@@ -7,19 +7,22 @@ interface AuthHeaderProps {
 
 export function AuthHeader({ title, subtitle }: AuthHeaderProps) {
     return (
-        <div className="mb-8 text-center">
-            <div className="mb-4">
-                <Image
-                    src="/NORY-logo.svg"
-                    alt="Nory"
-                    width={120}
-                    height={40}
-                    priority
-                    className="mx-auto"
-                />
+        <div className="mb-8">
+            <div className="flex items-center gap-3 mb-10">
+                <div className="w-11 h-11 bg-nory-yellow border-brutal rounded-btn flex items-center justify-center shadow-brutal-sm">
+                    <NoryLogo width={28} height={28} className="text-nory-black" />
+                </div>
+                <span className="font-grotesk text-[1.6rem] font-bold tracking-tight text-nory-black">
+                    NORY
+                </span>
             </div>
-            <h1 className="text-3xl font-semibold text-gray-800 mb-2">{title}</h1>
-            <p className="text-gray-600 text-[0.95rem] leading-relaxed">{subtitle}</p>
+
+            <h1 className="text-heading xl:text-heading-xl font-grotesk text-nory-black mb-2">
+                {title}
+            </h1>
+            <p className="text-body text-nory-muted leading-relaxed">
+                {subtitle}
+            </p>
         </div>
     );
 }
