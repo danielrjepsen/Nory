@@ -1,118 +1,80 @@
 'use client';
 
-import React from 'react';
+import React, { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import type { ActivityLogEntry } from '../../_types/analytics';
 
 interface ActivityFeedProps {
   activities: ActivityLogEntry[];
   loading?: boolean;
+  initialLimit?: number;
 }
 
-function getActivityIcon(type: string): React.ReactNode {
-  const iconStyle = { width: 16, height: 16 };
+const ACTIVITY_TYPE_KEYS: Record<string, string> = {
+  photo_upload: 'photosUploaded',
+  PhotoUploaded: 'photosUploaded',
+  photo_view: 'photoViewed',
+  PhotoViewed: 'photoViewed',
+  photo_download: 'photoDownloaded',
+  PhotoDownloaded: 'photoDownloaded',
+  photo_like: 'photoLiked',
+  PhotoLiked: 'photoLiked',
+  photo_share: 'photoShared',
+  PhotoShared: 'photoShared',
+  guest_registration: 'guestRegistered',
+  GuestRegistered: 'guestRegistered',
+  guest_app_open: 'guestAppOpened',
+  GuestAppOpened: 'guestAppOpened',
+  AppOpened: 'appOpened',
+  event_join: 'eventJoined',
+  EventJoined: 'eventJoined',
+  qr_scan: 'qrScanned',
+  QrCodeScanned: 'qrScanned',
+  slideshow_view: 'slideshowStarted',
+  SlideshowViewed: 'slideshowStarted',
+  gallery_view: 'galleryViewed',
+  GalleryViewed: 'galleryViewed',
+  guestbook_entry: 'guestbookEntry',
+  GuestbookEntryAdded: 'guestbookEntry',
+};
 
-  switch (type) {
-    case 'photo_upload':
-      return (
-        <svg {...iconStyle} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-          <rect x="3" y="3" width="18" height="18" rx="2" ry="2" />
-          <circle cx="8.5" cy="8.5" r="1.5" />
-          <polyline points="21 15 16 10 5 21" />
-        </svg>
-      );
-    case 'qr_scan':
-      return (
-        <svg {...iconStyle} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-          <rect x="3" y="3" width="7" height="7" />
-          <rect x="14" y="3" width="7" height="7" />
-          <rect x="3" y="14" width="7" height="7" />
-          <rect x="14" y="14" width="7" height="7" />
-        </svg>
-      );
-    case 'slideshow_view':
-      return (
-        <svg {...iconStyle} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-          <rect x="2" y="3" width="20" height="14" rx="2" ry="2" />
-          <line x1="8" y1="21" x2="16" y2="21" />
-          <line x1="12" y1="17" x2="12" y2="21" />
-        </svg>
-      );
-    case 'guest_app_open':
-      return (
-        <svg {...iconStyle} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-          <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
-          <circle cx="9" cy="7" r="4" />
-          <path d="M23 21v-2a4 4 0 0 0-3-3.87" />
-          <path d="M16 3.13a4 4 0 0 1 0 7.75" />
-        </svg>
-      );
-    default:
-      return (
-        <svg {...iconStyle} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-          <circle cx="12" cy="12" r="10" />
-          <line x1="12" y1="16" x2="12" y2="12" />
-          <line x1="12" y1="8" x2="12.01" y2="8" />
-        </svg>
-      );
-  }
-}
+export function ActivityFeed({ activities = [], loading = false, initialLimit = 5 }: ActivityFeedProps) {
+  const { t } = useTranslation('dashboard', { keyPrefix: 'analytics' });
+  const [isExpanded, setIsExpanded] = useState(false);
 
-function getActivityColor(type: string): string {
-  switch (type) {
-    case 'photo_upload':
-      return '#10b981';
-    case 'qr_scan':
-      return '#8b5cf6';
-    case 'slideshow_view':
-      return '#f59e0b';
-    case 'guest_app_open':
-      return '#3b82f6';
-    default:
-      return '#6b7280';
-  }
-}
+  const displayedActivities = isExpanded ? activities : activities.slice(0, initialLimit);
+  const hasMore = activities.length > initialLimit;
 
-function formatTimestamp(timestamp: string): string {
-  const date = new Date(timestamp);
-  const now = new Date();
-  const diffMs = now.getTime() - date.getTime();
-  const diffMins = Math.floor(diffMs / 60000);
-  const diffHours = Math.floor(diffMs / 3600000);
-  const diffDays = Math.floor(diffMs / 86400000);
+  const getActivityLabel = (type: string) => {
+    const key = ACTIVITY_TYPE_KEYS[type] || 'default';
+    return t(`activity.types.${key}`);
+  };
 
-  if (diffMins < 1) return 'Just now';
-  if (diffMins < 60) return `${diffMins}m ago`;
-  if (diffHours < 24) return `${diffHours}h ago`;
-  if (diffDays < 7) return `${diffDays}d ago`;
+  const formatTimestamp = (timestamp: string): string => {
+    const date = new Date(timestamp);
+    const now = new Date();
+    const diffMs = now.getTime() - date.getTime();
+    const diffMins = Math.floor(diffMs / 60000);
+    const diffHours = Math.floor(diffMs / 3600000);
+    const diffDays = Math.floor(diffMs / 86400000);
 
-  return date.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
-}
+    if (diffMins < 1) return t('activity.time.now');
+    if (diffMins < 60) return `${diffMins} ${t('activity.time.minute')}`;
+    if (diffHours < 24) return `${diffHours} ${diffHours > 1 ? t('activity.time.hours') : t('activity.time.hour')}`;
+    if (diffDays < 7) return `${diffDays} ${diffDays > 1 ? t('activity.time.days') : t('activity.time.day')}`;
 
-export function ActivityFeed({ activities = [], loading = false }: ActivityFeedProps) {
+    return date.toLocaleDateString('da-DK', { month: 'short', day: 'numeric' });
+  };
+
   if (loading) {
     return (
-      <div
-        style={{
-          background: 'white',
-          borderRadius: '16px',
-          padding: '24px',
-          boxShadow: '0 4px 20px rgba(0,0,0,0.08)',
-        }}
-      >
-        <h3 style={{ fontSize: '18px', fontWeight: '600', color: '#111827', margin: '0 0 16px 0' }}>
-          Recent Activity
-        </h3>
-        <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
+      <div className="bg-nory-card border-[3px] border-nory-border rounded-xl p-6 flex flex-col shadow-brutal">
+        <h3 className="text-lg font-bold font-grotesk text-nory-text mb-6">{t('activity.title')}</h3>
+        <div className="flex flex-col flex-1">
           {[1, 2, 3, 4, 5].map((i) => (
-            <div
-              key={i}
-              style={{
-                height: '48px',
-                background: '#f3f4f6',
-                borderRadius: '8px',
-                animation: 'pulse 2s infinite',
-              }}
-            />
+            <div key={i} className="py-3.5 border-b-2 border-[#eee] last:border-b-0">
+              <div className="h-5 bg-nory-bg rounded animate-pulse" />
+            </div>
           ))}
         </div>
       </div>
@@ -120,93 +82,61 @@ export function ActivityFeed({ activities = [], loading = false }: ActivityFeedP
   }
 
   return (
-    <div
-      style={{
-        background: 'white',
-        borderRadius: '16px',
-        padding: '24px',
-        boxShadow: '0 4px 20px rgba(0,0,0,0.08)',
-      }}
-    >
-      <h3 style={{ fontSize: '18px', fontWeight: '600', color: '#111827', margin: '0 0 16px 0' }}>
-        Recent Activity
-      </h3>
+    <div className="bg-nory-card border-[3px] border-nory-border rounded-xl p-6 flex flex-col shadow-brutal">
+      <h3 className="text-lg font-bold font-grotesk text-nory-text mb-6">{t('activity.title')}</h3>
 
       {activities.length === 0 ? (
-        <p style={{ color: '#6b7280', fontSize: '14px', textAlign: 'center', padding: '24px 0' }}>
-          No recent activity
-        </p>
+        <div className="flex-1 flex items-center justify-center text-center py-10 px-5 border-[3px] border-dashed border-[#ccc] rounded-lg">
+          <p className="text-nory-muted text-sm font-medium">{t('activity.empty')}</p>
+        </div>
       ) : (
-        <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
-          {activities.map((activity) => {
-            const color = getActivityColor(activity.type);
-            return (
+        <>
+          <div className="flex flex-col flex-1">
+            {displayedActivities.map((activity, index) => (
               <div
                 key={activity.id}
-                style={{
-                  display: 'flex',
-                  alignItems: 'center',
-                  gap: '12px',
-                  padding: '12px',
-                  background: '#f9fafb',
-                  borderRadius: '8px',
-                }}
+                className={`
+                  flex items-start gap-3.5 py-3.5
+                  ${index < displayedActivities.length - 1 ? 'border-b-2 border-[#eee]' : ''}
+                `}
               >
-                <div
-                  style={{
-                    width: '36px',
-                    height: '36px',
-                    borderRadius: '8px',
-                    background: `${color}15`,
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    color: color,
-                    flexShrink: 0,
-                  }}
-                >
-                  {getActivityIcon(activity.type)}
-                </div>
-                <div style={{ flex: 1, minWidth: 0 }}>
-                  <p
-                    style={{
-                      fontSize: '14px',
-                      fontWeight: '500',
-                      color: '#111827',
-                      margin: 0,
-                      overflow: 'hidden',
-                      textOverflow: 'ellipsis',
-                      whiteSpace: 'nowrap',
-                    }}
-                  >
-                    {activity.description}
-                  </p>
-                  {activity.eventName && (
-                    <p
-                      style={{
-                        fontSize: '12px',
-                        color: '#6b7280',
-                        margin: '2px 0 0 0',
-                      }}
-                    >
-                      {activity.eventName}
-                    </p>
-                  )}
-                </div>
-                <span
-                  style={{
-                    fontSize: '12px',
-                    color: '#9ca3af',
-                    flexShrink: 0,
-                  }}
-                >
+                <span className="text-[11px] font-semibold text-[#888] bg-[#f0f0ec] px-2 py-1 rounded flex-shrink-0 whitespace-nowrap">
                   {formatTimestamp(activity.timestamp)}
                 </span>
+                <span className="text-sm font-medium text-nory-text leading-relaxed">
+                  {activity.description || getActivityLabel(activity.type)}
+                </span>
               </div>
-            );
-          })}
-        </div>
+            ))}
+          </div>
+
+          {hasMore && (
+            <button
+              onClick={() => setIsExpanded(!isExpanded)}
+              className="flex items-center justify-center gap-2 mt-4 py-2.5 text-xs font-bold text-nory-text bg-nory-bg border-2 border-nory-border rounded-lg transition-all duration-150 hover:bg-nory-yellow hover:text-nory-black hover:shadow-brutal-sm hover:-translate-x-0.5 hover:-translate-y-0.5"
+            >
+              <ChevronIcon expanded={isExpanded} />
+              {isExpanded ? t('activity.showLess') : `${t('activity.showAll')} (${activities.length})`}
+            </button>
+          )}
+        </>
       )}
     </div>
+  );
+}
+
+function ChevronIcon({ expanded }: { expanded: boolean }) {
+  return (
+    <svg
+      width="16"
+      height="16"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+      className={`transition-transform duration-200 ${expanded ? 'rotate-180' : ''}`}
+    >
+      <path d="M6 9l6 6 6-6" />
+    </svg>
   );
 }
