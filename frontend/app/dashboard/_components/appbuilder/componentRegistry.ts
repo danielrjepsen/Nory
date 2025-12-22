@@ -22,7 +22,7 @@ export interface ComponentSchema {
 
 export interface ComponentMeta {
   name: string;
-  icon: string;
+  icon: string; // Icon identifier for SVG lookup
   description: string;
   category: string;
 }
@@ -54,8 +54,8 @@ export const componentRegistry: { [key: string]: ComponentDefinition } = {
     id: 'remote',
     meta: {
       name: 'TV Remote',
-      icon: '🎮',
-      description: 'Control slideshow and media on TV',
+      icon: 'remote',
+      description: 'Styr slideshow og medier på TV',
       category: 'control',
     },
     schema: {
@@ -110,9 +110,9 @@ export const componentRegistry: { [key: string]: ComponentDefinition } = {
   guestbook: {
     id: 'guestbook',
     meta: {
-      name: 'Guestbook',
-      icon: '💬',
-      description: 'Collect messages and wishes from guests',
+      name: 'Gæstebog',
+      icon: 'guestbook',
+      description: 'Saml beskeder og ønsker fra gæster',
       category: 'interaction',
     },
     schema: {
@@ -168,9 +168,9 @@ export const componentRegistry: { [key: string]: ComponentDefinition } = {
   lists: {
     id: 'lists',
     meta: {
-      name: 'Smart Lists',
-      icon: '📝',
-      description: 'Create wishlists, registries, or checklists',
+      name: 'Smart Lister',
+      icon: 'lists',
+      description: 'Opret ønskelister, registre eller tjeklister',
       category: 'organization',
     },
     schema: {
@@ -224,9 +224,9 @@ export const componentRegistry: { [key: string]: ComponentDefinition } = {
   gallery: {
     id: 'gallery',
     meta: {
-      name: 'Image Gallery',
-      icon: '🖼️',
-      description: 'Beautiful photo galleries',
+      name: 'Billedgalleri',
+      icon: 'gallery',
+      description: 'Smukke fotogallerier',
       category: 'media',
     },
     schema: {
@@ -287,8 +287,8 @@ export const componentRegistry: { [key: string]: ComponentDefinition } = {
     id: 'schedule',
     meta: {
       name: 'Event Program',
-      icon: '📅',
-      description: 'Timeline and schedule',
+      icon: 'schedule',
+      description: 'Tidslinje og program',
       category: 'information',
     },
     schema: {
@@ -330,9 +330,9 @@ export const componentRegistry: { [key: string]: ComponentDefinition } = {
   polls: {
     id: 'polls',
     meta: {
-      name: 'Live Polls',
-      icon: '📊',
-      description: 'Real-time voting',
+      name: 'Live Afstemning',
+      icon: 'polls',
+      description: 'Afstemning i realtid',
       category: 'interaction',
     },
     schema: {
@@ -380,8 +380,8 @@ export const componentRegistry: { [key: string]: ComponentDefinition } = {
     id: 'custom',
     meta: {
       name: 'Custom API',
-      icon: '⚡',
-      description: 'Build your own',
+      icon: 'custom',
+      description: 'Byg din egen',
       category: 'advanced',
     },
     schema: {

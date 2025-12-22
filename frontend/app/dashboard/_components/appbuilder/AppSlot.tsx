@@ -1,5 +1,6 @@
 import React from 'react';
 import type { ComponentInstance } from './componentRegistry';
+import { ComponentIcon } from './ComponentIcons';
 
 interface AppSlotProps {
   app?: ComponentInstance;
@@ -10,11 +11,11 @@ interface AppSlotProps {
 export function AppSlot({ app, onAddClick, onRemoveClick }: AppSlotProps) {
   if (app) {
     return (
-      <div className="relative aspect-square flex flex-col items-center justify-center rounded-2xl cursor-pointer transition-all duration-200 hover:scale-105">
-        <div className="w-14 h-14 bg-white rounded-[14px] flex items-center justify-center text-[1.75rem] shadow-[0_2px_12px_rgba(0,0,0,0.08)] transition-all duration-200 hover:scale-110 hover:-translate-y-0.5 hover:shadow-[0_4px_20px_rgba(0,0,0,0.12)]">
-          {app.config.meta.icon}
+      <div className="relative aspect-square flex flex-col items-center justify-center rounded-btn cursor-pointer transition-all duration-200 hover:scale-105">
+        <div className="w-14 h-14 bg-nory-card rounded-btn border-2 border-nory-border flex items-center justify-center shadow-brutal-sm transition-all duration-200 hover:scale-110 hover:-translate-y-0.5">
+          <ComponentIcon type={app.config.meta.icon} className="w-7 h-7 text-nory-text" />
         </div>
-        <p className="text-[0.7rem] font-medium text-gray-900 text-center max-w-full overflow-hidden text-ellipsis whitespace-nowrap mt-2">
+        <p className="text-[0.7rem] font-semibold text-nory-text font-grotesk text-center max-w-full overflow-hidden text-ellipsis whitespace-nowrap mt-2">
           {app.config.properties.title || app.config.meta.name}
         </p>
         <button
@@ -32,10 +33,10 @@ export function AppSlot({ app, onAddClick, onRemoveClick }: AppSlotProps) {
 
   return (
     <div
-      className="aspect-square flex flex-col items-center justify-center gap-1 cursor-pointer rounded-2xl border-2 border-dashed border-gray-300 bg-white transition-all duration-200 hover:scale-105 hover:border-black hover:bg-gray-50"
+      className="aspect-square flex flex-col items-center justify-center gap-1 cursor-pointer rounded-btn border-2 border-dashed border-nory-border/30 bg-nory-card transition-all duration-200 hover:scale-105 hover:border-nory-border hover:bg-nory-bg"
       onClick={onAddClick}
     >
-      <span className="text-gray-300 text-2xl font-light transition-all duration-200 hover:text-black hover:rotate-90">
+      <span className="text-nory-muted text-2xl font-light transition-all duration-200 group-hover:text-nory-text group-hover:rotate-90">
         +
       </span>
     </div>
