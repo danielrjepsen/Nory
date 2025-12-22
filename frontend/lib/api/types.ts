@@ -1,7 +1,3 @@
-// ============================================================================
-// Request Types
-// ============================================================================
-
 export type RequestParams = Record<string, string | number | boolean | undefined | null>;
 
 export interface RequestConfig {
@@ -15,10 +11,6 @@ export interface ApiRequestConfig extends RequestConfig {
   body?: BodyInit | null;
   method?: string;
 }
-
-// ============================================================================
-// Response Types
-// ============================================================================
 
 export interface ApiErrorData {
   message?: string;
@@ -50,10 +42,6 @@ export class ApiError extends Error {
     return error instanceof ApiError || (error as ApiError)?.isApiError === true;
   }
 }
-
-// ============================================================================
-// Interceptor Types
-// ============================================================================
 
 export type RequestInterceptor = (
   url: string,

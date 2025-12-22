@@ -1,9 +1,7 @@
-// Clients
 export { ApiClient, apiClient } from './client';
 export { PublicApiClient, publicApi } from './public';
 export { BaseApiClient } from './base';
 
-// Types
 export {
   ApiError,
   type ApiErrorData,

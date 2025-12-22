@@ -9,15 +9,7 @@ import {
   ErrorInterceptor,
 } from './types';
 
-// ============================================================================
-// Constants
-// ============================================================================
-
-const DEFAULT_TIMEOUT = 30_000; // 30 seconds
-
-// ============================================================================
-// Base API Client
-// ============================================================================
+const DEFAULT_TIMEOUT = 30_000;
 
 export abstract class BaseApiClient {
   protected readonly baseUrl: string;
@@ -28,13 +20,8 @@ export abstract class BaseApiClient {
   };
 
   constructor(baseUrl: string) {
-    // Remove trailing slash for consistency
     this.baseUrl = baseUrl.replace(/\/$/, '');
   }
-
-  // --------------------------------------------------------------------------
-  // Interceptor Management
-  // --------------------------------------------------------------------------
 
   addRequestInterceptor(interceptor: RequestInterceptor): () => void {
     this.interceptors.request.push(interceptor);
@@ -60,12 +47,7 @@ export abstract class BaseApiClient {
     };
   }
 
-  // --------------------------------------------------------------------------
-  // URL Building
-  // --------------------------------------------------------------------------
-
   protected buildUrl(endpoint: string, params?: RequestParams): string {
-    // Ensure endpoint starts with /
     const normalizedEndpoint = endpoint.startsWith('/') ? endpoint : `/${endpoint}`;
     const url = new URL(`${this.baseUrl}${normalizedEndpoint}`);
 
@@ -80,10 +62,6 @@ export abstract class BaseApiClient {
     return url.toString();
   }
 
-  // --------------------------------------------------------------------------
-  // Headers
-  // --------------------------------------------------------------------------
-
   protected buildHeaders(
     existingHeaders?: HeadersInit,
     isFormData = false
@@ -96,10 +74,6 @@ export abstract class BaseApiClient {
 
     return headers;
   }
-
-  // --------------------------------------------------------------------------
-  // Response Handling
-  // --------------------------------------------------------------------------
 
   protected async parseResponseBody<T>(response: Response): Promise<T | null> {
     const contentType = response.headers.get('content-type');
@@ -123,7 +97,6 @@ export abstract class BaseApiClient {
         data = parsed;
       }
     } catch {
-      // Failed to parse error body
     }
 
     const message = data?.message ?? data?.error ?? response.statusText ?? 'Request failed';
@@ -131,29 +104,22 @@ export abstract class BaseApiClient {
     return new ApiError(message, response.status, response.statusText, data);
   }
 
-  // --------------------------------------------------------------------------
-  // Request Execution
-  // --------------------------------------------------------------------------
-
   protected async executeRequest<T>(
     url: string,
     config: RequestInit,
     timeout?: number
   ): Promise<T> {
-    // Apply request interceptors
     let finalConfig = config;
     for (const interceptor of this.interceptors.request) {
       finalConfig = await interceptor(url, finalConfig);
     }
 
-    // Create abort controller for timeout
     const controller = new AbortController();
     const timeoutId = setTimeout(
       () => controller.abort(),
       timeout ?? DEFAULT_TIMEOUT
     );
 
-    // Merge signals if one was provided
     const existingSignal = finalConfig.signal;
     if (existingSignal) {
       existingSignal.addEventListener('abort', () => controller.abort());
@@ -165,7 +131,6 @@ export abstract class BaseApiClient {
         signal: controller.signal,
       });
 
-      // Apply response interceptors
       for (const interceptor of this.interceptors.response) {
         response = await interceptor(response);
       }
@@ -178,7 +143,6 @@ export abstract class BaseApiClient {
       return body as T;
     } catch (error) {
       if (error instanceof ApiError) {
-        // Apply error interceptors
         let finalError = error;
         for (const interceptor of this.interceptors.error) {
           finalError = await interceptor(finalError);
@@ -186,7 +150,6 @@ export abstract class BaseApiClient {
         throw finalError;
       }
 
-      // Handle abort errors
       if (error instanceof DOMException && error.name === 'AbortError') {
         throw new ApiError('Request timeout', 408, 'Request Timeout');
       }
@@ -196,10 +159,6 @@ export abstract class BaseApiClient {
       clearTimeout(timeoutId);
     }
   }
-
-  // --------------------------------------------------------------------------
-  // HTTP Methods
-  // --------------------------------------------------------------------------
 
   async get<T>(endpoint: string, config?: RequestConfig): Promise<T> {
     const url = this.buildUrl(endpoint, config?.params);
