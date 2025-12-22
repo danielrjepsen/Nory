@@ -1,10 +1,31 @@
 {
   "title": "Begivenheder",
+  "filters": {
+    "all": "Alle",
+    "active": "Aktive",
+    "ended": "Afsluttede",
+    "archived": "Arkiverede"
+  },
+  "stats": {
+    "activeEvents": "Aktive events",
+    "photos": "Billeder",
+    "guests": "Gæster"
+  },
   "createNew": "Opret ny begivenhed",
   "createNewDescription": "Begynd at indsamle billeder til din næste begivenhed",
   "noEvents": "Ingen begivenheder endnu",
   "noEventsDescription": "Opret din første begivenhed for at komme i gang!",
   "createButton": "Opret begivenhed",
+  "empty": {
+    "title": "Ingen begivenheder endnu",
+    "description": "Opret din første begivenhed og lad dine gæster dele deres billeder og videoer. Vis dem live på et slideshow!",
+    "cta": "Opret din første begivenhed",
+    "feature": {
+      "photos": "Saml billeder",
+      "slideshow": "Live slideshow",
+      "app": "Gæste-app"
+    }
+  },
   "locationTbd": "Lokation følger",
   "viewQRCode": "Se QR-kode",
   "noPhotos": "Ingen billeder endnu",
@@ -15,8 +36,23 @@
   "status": {
     "live": "Aktiv",
     "ended": "Afsluttet",
-    "draft": "Kladde",
-    "scheduled": "Planlagt"
+    "draft": "Kommende",
+    "scheduled": "Planlagt",
+    "archived": "Arkiveret"
+  },
+  "header": {
+    "status": {
+      "live": "Live nu",
+      "draft": "Kladde",
+      "ended": "Afsluttet",
+      "scheduled": "Planlagt"
+    },
+    "settings": "Indstillinger",
+    "openGuestApp": "Åbn gæste-app"
+  },
+  "card": {
+    "photos": "Billeder",
+    "guests": "Gæster"
   },
   "actions": {
     "edit": "Rediger",
@@ -53,12 +89,13 @@
     "stats": {
       "photos": "Billeder",
       "visits": "Besøg",
+      "guests": "Gæster",
       "date": "Dato"
     },
     "links": {
       "open": "Åbn",
-      "copy": "Kopier",
-      "copied": "Kopieret",
+      "copy": "Kopier link",
+      "copied": "Kopieret!",
       "guestApp": {
         "title": "Gæste-app",
         "description": "Del med gæster for at uploade billeder"
@@ -80,5 +117,13 @@
       "goLive": "Gå live!",
       "goingLive": "Går live..."
     }
+  },
+  "qrCode": {
+    "title": "QR-kode",
+    "guestUploadLink": "Gæste upload link",
+    "slideshowLink": "Slideshow link",
+    "downloadQR": "Download QR",
+    "print": "Print",
+    "scanToUpload": "Scan for at uploade billeder"
   }
 }

@@ -2,6 +2,27 @@
   "title": "Temtilpasning",
   "loading": "Indlæser temaer...",
   "selectTheme": "Vælg tema",
+  "preview": {
+    "eventName": "Din begivenhed",
+    "eventDescription": "Vær med til at fejre dette særlige øjeblik",
+    "welcomeMessage": "Velkommen til vores særlige begivenhed. Del dine bedste øjeblikke med funktionerne nedenfor.",
+    "welcome": "Velkommen til vores dag!",
+    "photos": "Billeder",
+    "guests": "Gæster",
+    "uploadButton": "Upload billede",
+    "uploadMedia": "Upload medie",
+    "defaultTheme": "Standard",
+    "defaultDate": "14. september 2025",
+    "livePreview": "Live forhåndsvisning",
+    "colorPalette": "Farvepalet",
+    "colors": {
+      "primary": "Primær",
+      "secondary": "Sekundær",
+      "accent": "Accent",
+      "bg1": "BG1",
+      "bg2": "BG2"
+    }
+  },
   "custom": {
     "title": "Brugerdefineret tema",
     "description": "Opret din egen farvepalet",

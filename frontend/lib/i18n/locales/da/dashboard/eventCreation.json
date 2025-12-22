@@ -6,6 +6,77 @@
     "creating": "Opretter...",
     "submit": "Opret begivenhed"
   },
+  "wizard": {
+    "steps": {
+      "step1": { "label": "Trin 1", "title": "Detaljer" },
+      "step2": { "label": "Trin 2", "title": "Tema" },
+      "step3": { "label": "Trin 3", "title": "Gæste-app" },
+      "step4": { "label": "Trin 4", "title": "Opret" }
+    },
+    "explanation": {
+      "step1": {
+        "tag": "Trin 1 af 4",
+        "title": "Skab uforglemmelige minder",
+        "description": "Din begivenhed samler alle billeder ét sted, så I kan genopleve dagen sammen.",
+        "previewSubtitle": "Et øjeblik værd at huske",
+        "features": [
+          "Ubegrænset antal billeder",
+          "QR-kode til nem deling",
+          "Live slideshow på TV"
+        ]
+      },
+      "step2": {
+        "tag": "Trin 2 af 4",
+        "title": "Vælg dit tema",
+        "description": "Dit tema bestemmer farver og stil for din begivenhed og gæsteapp.",
+        "features": [
+          "Flere smukke temaer",
+          "Tilpassede farver",
+          "Professionelt design"
+        ]
+      },
+      "step3": {
+        "tag": "Trin 3 af 4",
+        "title": "Design din gæste-app",
+        "description": "Tilpas farver, funktioner og tilføj komponenter til din gæsteapp.",
+        "features": [
+          "Vælg tema og farver",
+          "Tilføj interaktive komponenter",
+          "Live preview af din app"
+        ]
+      },
+      "step4": {
+        "tag": "Trin 4 af 4",
+        "title": "Klar til at gå live",
+        "description": "Gennemgå dine indstillinger og opret din begivenhed.",
+        "features": [
+          "Del QR-kode med gæster",
+          "Start med at modtage billeder",
+          "Vis slideshow på storskærm"
+        ]
+      }
+    },
+    "preview": {
+      "photos": "Billeder",
+      "guests": "Gæster",
+      "defaultTitle": "Din begivenhed"
+    },
+    "errors": {
+      "createFailed": "Kunne ikke oprette begivenhed"
+    }
+  },
+  "details": {
+    "sectionTitle": "Begivenhedsinfo",
+    "nameLabel": "Navn",
+    "namePlaceholder": "f.eks. Sarah & Johns Bryllup",
+    "descriptionLabel": "Beskrivelse",
+    "descriptionPlaceholder": "Fortæl gæsterne lidt om begivenheden...",
+    "dateLabel": "Dato",
+    "multiDayCheckbox": "Begivenheden varer flere dage",
+    "endDateLabel": "Slutdato",
+    "publicEvent": "Offentlig begivenhed",
+    "publicEventDescription": "Vis på forsiden så andre kan finde den"
+  },
   "eventType": {
     "title": "Hvad vil du bruge Nory til?",
     "subtitle": "Vælg den løsning, der passer bedst til dine behov",
@@ -53,19 +124,29 @@
     "title": "Tilpas gæsteapp",
     "subtitle": "Konfigurer, hvordan dine gæster interagerer med din begivenhed"
   },
+  "theme": {
+    "title": "Vælg tema"
+  },
   "review": {
-    "title": "Gennemse og opret",
+    "title": "Gennemse & opret",
     "subtitle": "Gennemse dine begivenhedsdetaljer og opret din begivenhed",
-    "name": "Navn:",
-    "defaultName": "Unavngivet begivenhed",
-    "description": "Beskrivelse:",
-    "noDescription": "Ingen beskrivelse angivet",
-    "start": "Start:",
-    "end": "Slut:",
-    "visibility": "Synlighed:",
-    "public": "Offentlig",
-    "private": "Privat",
-    "theme": "Tema:",
-    "settings": "Indstillinger:"
+    "edit": "Rediger",
+    "eventDetails": "Begivenhedsdetaljer",
+    "name": "Navn",
+    "notSpecified": "Ikke angivet",
+    "description": "Beskrivelse",
+    "startDate": "Startdato",
+    "endDate": "Slutdato",
+    "visibility": "Synlighed",
+    "publicWithLink": "Offentlig - Alle med link",
+    "privateInviteOnly": "Privat - Kun inviterede",
+    "theme": "Tema",
+    "defaultTheme": "Standard",
+    "selectedTheme": "Valgt tema",
+    "guestApp": "Gæste-app",
+    "componentsConfigured": "{{count}} komponent(er) konfigureret",
+    "defaultConfig": "Standard konfiguration",
+    "readyToCreate": "Klar til at oprette",
+    "readyToCreateDescription": "Når begivenheden er oprettet, kan du uploade billeder og dele med dine gæster."
   }
 }

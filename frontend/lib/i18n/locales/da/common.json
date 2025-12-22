@@ -55,5 +55,110 @@
   "brand": {
     "name": "Nory",
     "tagline": "Skab magiske begivenheder"
+  },
+  "emailProviderGuide": {
+    "title": "Vælg email udbyder",
+    "helpButton": "Hjælp mig med opsætning",
+    "back": "Tilbage",
+    "next": "Næste",
+    "useThisProvider": "Brug denne udbyder",
+    "providers": {
+      "gmail": {
+        "name": "Gmail",
+        "description": "Brug din Gmail konto med App Password"
+      },
+      "outlook": {
+        "name": "Outlook / Microsoft 365",
+        "description": "Brug din Outlook eller Microsoft 365 konto"
+      },
+      "custom": {
+        "name": "Anden SMTP server",
+        "description": "Konfigurer din egen SMTP server"
+      }
+    },
+    "gmail": {
+      "openSecurity": "Åbn Google sikkerhedsindstillinger",
+      "openAppPasswords": "Åbn App Passwords",
+      "passwordTip": "Gem dette app password et sikkert sted - du kan kun se det én gang!",
+      "steps": {
+        "enableTwoFactor": {
+          "title": "1. Aktiver to-faktor godkendelse",
+          "description": "Gå til din Google konto sikkerhedsside og aktiver 2-trins bekræftelse hvis det ikke allerede er aktiveret."
+        },
+        "generateAppPassword": {
+          "title": "2. Opret et App Password",
+          "description": "Gå til App Passwords (kræver 2-trins bekræftelse), vælg \"Mail\" og din enhed, og klik \"Generer\"."
+        },
+        "copyPassword": {
+          "title": "3. Kopier dit App Password",
+          "description": "Google viser et 16-tegns password. Kopier dette og brug det som din adgangskode i Nory i stedet for din normale Google adgangskode."
+        }
+      }
+    },
+    "outlook": {
+      "smtpSettings": "SMTP indstillinger",
+      "host": "Server",
+      "port": "Port",
+      "steps": {
+        "signIn": {
+          "title": "1. SMTP indstillinger",
+          "description": "Outlook/Microsoft 365 bruger SMTP serveren smtp.office365.com på port 587 med TLS kryptering."
+        },
+        "useEmailAsUsername": {
+          "title": "2. Brug din email som brugernavn",
+          "description": "Indtast din fulde email adresse (f.eks. din@outlook.com eller din@firma.dk) som brugernavn."
+        },
+        "useRegularPassword": {
+          "title": "3. Brug din adgangskode",
+          "description": "Brug din normale Outlook/Microsoft adgangskode. Hvis du bruger to-faktor godkendelse, skal du muligvis oprette et app password."
+        }
+      }
+    },
+    "custom": {
+      "title": "Brugerdefineret SMTP server",
+      "description": "Indtast dine SMTP server detaljer manuelt. Kontakt din email udbyder for de korrekte indstillinger.",
+      "requiredInfo": "Du skal bruge følgende",
+      "smtpHost": "SMTP server adresse (f.eks. smtp.example.com)",
+      "smtpPort": "Port nummer (typisk 587 for TLS eller 465 for SSL)",
+      "username": "Brugernavn (ofte din email adresse)",
+      "password": "Adgangskode"
+    }
+  },
+  "serviceAccountGuide": {
+    "title": "Sådan får du din nøglefil",
+    "helpButton": "Hvordan får jeg nøglefilen?",
+    "previous": "Forrige",
+    "next": "Næste",
+    "done": "Færdig",
+    "openConsole": "Åbn Google Cloud Console",
+    "openDriveApi": "Åbn Drive API",
+    "createAccount": "Opret servicekonto",
+    "shareTip": "Vigtigt: Kopier service account e-mailen (ender på @...iam.gserviceaccount.com) og del din Google Drive mappe med denne e-mail. Giv den \"Redaktør\" adgang.",
+    "steps": {
+      "createProject": {
+        "title": "1. Opret et Google Cloud projekt",
+        "description": "Gå til Google Cloud Console og opret et nyt projekt. Giv det et navn du kan genkende, f.eks. \"Nory Backup\"."
+      },
+      "enableApi": {
+        "title": "2. Aktiver Google Drive API",
+        "description": "Søg efter \"Google Drive API\" i API-biblioteket og klik på \"Aktiver\" for at tillade dit projekt at bruge Google Drive."
+      },
+      "createServiceAccount": {
+        "title": "3. Opret en servicekonto",
+        "description": "Gå til \"IAM og administration\" → \"Servicekonti\" og klik \"Opret servicekonto\". Giv den et navn og spring rollerne over."
+      },
+      "createKey": {
+        "title": "4. Opret en nøgle",
+        "description": "Klik på din nye servicekonto, gå til fanen \"Nøgler\", klik \"Tilføj nøgle\" → \"Opret ny nøgle\" og vælg JSON-format."
+      },
+      "downloadKey": {
+        "title": "5. Download nøglefilen",
+        "description": "JSON-filen downloades automatisk. Denne fil er din nøgle - gem den sikkert og upload den her i Nory."
+      },
+      "shareFolder": {
+        "title": "6. Del din Drive-mappe",
+        "description": "Opret en mappe i Google Drive til backups. Højreklik → \"Del\" og tilføj service account e-mailen med \"Redaktør\" adgang."
+      }
+    }
   }
 }

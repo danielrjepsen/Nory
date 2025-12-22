@@ -1,0 +1,198 @@
+{
+  "brand": "Nory",
+  "tagline": "Begivenhedsfotogalleri og gæstehåndtering",
+  "footer": "Nory er en open-source platform til begivenhedsfotodeling",
+  "security": {
+    "alreadyConfigured": {
+      "title": "Adgang nægtet",
+      "description": "Denne installation er allerede konfigureret. Opsætningsguiden er deaktiveret af sikkerhedsmæssige årsager.",
+      "redirecting": "Omdirigerer til login..."
+    },
+    "error": {
+      "title": "Kan ikke verificere status",
+      "description": "Kunne ikke bekræfte installationens status. Kontakt din systemadministrator hvis problemet fortsætter.",
+      "retry": "Prøv igen"
+    }
+  },
+  "buttons": {
+    "back": "Tilbage",
+    "next": "Næste",
+    "skip": "Spring over",
+    "complete": "Fuldfør opsætning",
+    "completing": "Opsætter...",
+    "skipAndComplete": "Spring over og fuldfør"
+  },
+  "steps": {
+    "site": {
+      "label": "Website",
+      "title": "Website indstillinger",
+      "description": "Konfigurer dit websites grundlæggende oplysninger",
+      "fields": {
+        "name": {
+          "label": "Website navn",
+          "placeholder": "Mit Event Galleri"
+        },
+        "url": {
+          "label": "Website URL",
+          "placeholder": "https://events.example.com",
+          "help": "Den fulde URL hvor dit site vil være tilgængeligt"
+        }
+      }
+    },
+    "admin": {
+      "label": "Admin",
+      "title": "Administrator konto",
+      "description": "Opret din administratorkonto for at logge ind",
+      "fields": {
+        "name": {
+          "label": "Navn",
+          "placeholder": "Dit navn"
+        },
+        "email": {
+          "label": "E-mail",
+          "placeholder": "admin@example.com"
+        },
+        "password": {
+          "label": "Adgangskode",
+          "placeholder": "Vælg en stærk adgangskode"
+        },
+        "confirmPassword": {
+          "label": "Bekræft adgangskode",
+          "placeholder": "Gentag din adgangskode"
+        }
+      },
+      "errors": {
+        "invalidEmail": "Indtast en gyldig e-mailadresse",
+        "passwordTooShort": "Adgangskoden skal være mindst 8 tegn",
+        "passwordMismatch": "Adgangskoderne matcher ikke"
+      },
+      "passwordRequirements": {
+        "title": "Krav til adgangskode:",
+        "minLength": "Mindst 8 tegn"
+      }
+    },
+    "storage": {
+      "label": "Lagring",
+      "title": "Fillagring",
+      "description": "Vælg hvor uploadede billeder og filer skal gemmes",
+      "types": {
+        "local": {
+          "title": "Lokal lagring",
+          "description": "Gem filer på serverens harddisk"
+        },
+        "s3": {
+          "title": "Amazon S3",
+          "description": "Gem filer i cloud storage"
+        }
+      },
+      "fields": {
+        "localPath": {
+          "label": "Sti til uploads",
+          "placeholder": "./uploads",
+          "help": "Relativ eller absolut sti til upload-mappen"
+        },
+        "s3Bucket": {
+          "label": "S3 Bucket navn",
+          "placeholder": "my-event-bucket"
+        },
+        "s3Region": {
+          "label": "AWS Region",
+          "placeholder": "eu-west-1"
+        },
+        "s3AccessKey": {
+          "label": "Access Key ID",
+          "placeholder": "AKIAIOSFODNN7EXAMPLE"
+        },
+        "s3SecretKey": {
+          "label": "Secret Access Key",
+          "placeholder": "wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY"
+        }
+      }
+    },
+    "email": {
+      "label": "Email",
+      "title": "Email opsætning",
+      "description": "Konfigurer email så systemet kan sende notifikationer og beskeder",
+      "enableEmail": "Aktiver email",
+      "enableEmailDescription": "Send emails fra systemet via SMTP",
+      "provider": {
+        "label": "Email udbyder",
+        "custom": "Brugerdefineret SMTP"
+      },
+      "selectProvider": "Vælg email udbyder",
+      "changeProvider": "Skift udbyder",
+      "smtpHost": "SMTP server",
+      "smtpPort": "Port",
+      "username": "Brugernavn",
+      "password": "Adgangskode",
+      "appPassword": "Gmail App Password",
+      "passwordPlaceholder": "Din adgangskode",
+      "fromEmail": "Afsender email",
+      "fromName": "Afsender navn",
+      "useSsl": "Brug SSL/TLS",
+      "skipNotice": "Du kan springe dette trin over og konfigurere email senere i indstillingerne."
+    },
+    "backup": {
+      "label": "Backup",
+      "title": "Cloud backup",
+      "description": "Opsæt automatisk backup af dine billeder og videoer til Google Drive",
+      "enableBackup": "Aktiver cloud backup",
+      "enableBackupDescription": "Backup dine medier automatisk til Google Drive",
+      "provider": {
+        "googleDrive": "Google Drive",
+        "googleDriveDescription": "Sikker backup med Google servicekonto"
+      },
+      "schedule": {
+        "label": "Backupfrekvens",
+        "daily": "Daglig",
+        "dailyDescription": "Hver dag kl. 03:00",
+        "weekly": "Ugentlig",
+        "weeklyDescription": "Hver søndag kl. 03:00"
+      },
+      "folderName": {
+        "label": "Mappenavn i Google Drive",
+        "placeholder": "NoryBackup"
+      },
+      "serviceAccount": {
+        "label": "Google servicekonto (JSON)",
+        "upload": "Klik for at uploade JSON-fil",
+        "help": "Download en servicekonto nøglefil fra Google Cloud Console"
+      },
+      "skipNotice": "Du kan springe dette trin over og konfigurere backup senere i indstillingerne."
+    },
+    "welcome": {
+      "title": "Velkommen til Nory",
+      "description": "Lad os komme i gang med at opsætte din begivenhedsplatform. Det tager kun få minutter.",
+      "button": "Start opsætning",
+      "features": {
+        "photos": {
+          "title": "Fotogalleri",
+          "description": "Live billedvisning fra dine events"
+        },
+        "guests": {
+          "title": "Gæstehåndtering",
+          "description": "Registrer og administrer deltagere"
+        },
+        "qr": {
+          "title": "QR-koder",
+          "description": "Nem adgang for gæster"
+        },
+        "analytics": {
+          "title": "Statistik",
+          "description": "Indsigt i begivenheder"
+        }
+      }
+    },
+    "complete": {
+      "title": "Opsætning fuldført!",
+      "description": "Din Nory-instans er nu klar til brug. Du kan logge ind med din nye administratorkonto.",
+      "button": "Gå til dashboard",
+      "whatsNext": {
+        "title": "Hvad nu?",
+        "item1": "Opret din første begivenhed",
+        "item2": "Tilpas temaer og udseende",
+        "item3": "Inviter gæster med QR-koder"
+      }
+    }
+  }
+}

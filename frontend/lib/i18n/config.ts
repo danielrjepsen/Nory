@@ -8,7 +8,7 @@ export const defaultLocale = 'da';
 export const supportedLocales = ['da'] as const;
 export type SupportedLocale = (typeof supportedLocales)[number];
 
-export const namespaces = ['common', 'auth', 'dashboard', 'slideshow'] as const;
+export const namespaces = ['common', 'auth', 'dashboard', 'slideshow', 'remote', 'wizard'] as const;
 export type Namespace = (typeof namespaces)[number];
 
 export const resources = {

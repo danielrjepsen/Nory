@@ -10,11 +10,8 @@ import dashboardGuestApp from './dashboard/guestApp.json';
 import dashboardThemes from './dashboard/themes.json';
 import dashboardPhotos from './dashboard/photos.json';
 import dashboardAnalytics from './dashboard/analytics.json';
-import dashboardGalleries from './dashboard/galleries.json';
 import dashboardSettings from './dashboard/settings.json';
-import dashboardQrCodes from './dashboard/qrCodes.json';
 import dashboardUser from './dashboard/user.json';
-import dashboardGuests from './dashboard/guests.json';
 import slideshowControls from './slideshow/controls.json';
 import slideshowSettings from './slideshow/settings.json';
 import slideshowDisplay from './slideshow/display.json';
@@ -22,6 +19,7 @@ import remoteCommon from './remote/common.json';
 import remoteWelcome from './remote/welcome.json';
 import remoteGallery from './remote/gallery.json';
 import remoteApps from './remote/apps.json';
+import wizard from './wizard.json';
 
 export default {
   common,
@@ -39,11 +37,8 @@ export default {
     themes: dashboardThemes,
     photos: dashboardPhotos,
     analytics: dashboardAnalytics,
-    galleries: dashboardGalleries,
     settings: dashboardSettings,
-    qrCodes: dashboardQrCodes,
     user: dashboardUser,
-    guests: dashboardGuests,
   },
   slideshow: {
     controls: slideshowControls,
@@ -56,4 +51,5 @@ export default {
     gallery: remoteGallery,
     apps: remoteApps,
   },
+  wizard,
 };

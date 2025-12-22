@@ -7,40 +7,58 @@
     "eventName": "Begivenhedsnavn",
     "eventNamePlaceholder": "Sarah & Johns bryllup",
     "welcomeMessage": "Velkomstbesked",
-    "welcomeMessagePlaceholder": "Velkommen til vores særlige dag",
+    "welcomeMessagePlaceholder": "Skriv en velkomstbesked...",
+    "welcomeMessageDefault": "Velkommen til vores store dag!",
+    "welcomeDefault": "Velkommen!",
+    "eventNameDefault": "Dit Event Navn",
     "exportNotice": "Konfiguration eksporteret til konsol (tjek DevTools)",
     "qrNotice": "QR-kodegenerering ville blive implementeret her",
     "addComponent": "Tilføj komponent",
-    "removeComponent": "Fjern komponent"
+    "removeComponent": "Fjern komponent",
+    "themeColor": "Tema farve",
+    "features": "Funktioner"
+  },
+  "colors": {
+    "yellow": "Gul",
+    "pink": "Pink",
+    "purple": "Lilla",
+    "blue": "Blå",
+    "green": "Grøn",
+    "orange": "Orange"
+  },
+  "features": {
+    "upload": "Upload billeder",
+    "comments": "Kommentarer",
+    "likes": "Likes"
   },
   "components": {
     "remote": {
-      "name": "Fjernbetjening",
-      "description": "Styr præsentationen"
+      "name": "TV Fjernbetjening",
+      "description": "Styr slideshow og medier på TV"
     },
     "guestbook": {
       "name": "Gæstebog",
-      "description": "Lad gæster skrive beskeder"
+      "description": "Saml beskeder og ønsker fra gæster"
     },
     "lists": {
-      "name": "Lister",
-      "description": "Vis lister til gæster"
+      "name": "Smart Lister",
+      "description": "Opret ønskelister, registre eller tjeklister"
     },
     "gallery": {
-      "name": "Galleri",
-      "description": "Vis og upload billeder"
+      "name": "Billedgalleri",
+      "description": "Smukke fotogallerier"
     },
     "schedule": {
-      "name": "Program",
-      "description": "Vis begivenhedens program"
+      "name": "Event Program",
+      "description": "Tidslinje og program"
     },
     "polls": {
-      "name": "Afstemninger",
-      "description": "Opret interaktive afstemninger"
+      "name": "Live Afstemning",
+      "description": "Afstemning i realtid"
     },
     "custom": {
-      "name": "Brugerdefineret",
-      "description": "Tilføj brugerdefineret indhold"
+      "name": "Custom API",
+      "description": "Byg din egen komponent"
     }
   },
   "modal": {

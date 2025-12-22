@@ -5,5 +5,19 @@
   "qrCodes": "QR-koder",
   "guests": "Gæster",
   "analytics": "Statistik",
-  "settings": "Indstillinger"
+  "settings": "Indstillinger",
+  "subtitles": {
+    "overview": "Administrer dine begivenheder og se statistik",
+    "analytics": "Se statistik og indsigt for dine begivenheder",
+    "settings": "Administrer din konto og præferencer"
+  },
+  "eventNavigation": {
+    "overview": "Oversigt",
+    "photos": "Billeder",
+    "qrCode": "QR-kode",
+    "guests": "Gæster",
+    "analytics": "Statistik",
+    "apps": "Apps",
+    "settings": "Indstillinger"
+  }
 }

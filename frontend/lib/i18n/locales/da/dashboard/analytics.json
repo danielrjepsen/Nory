@@ -4,6 +4,58 @@
   "photos": "Billeder",
   "guests": "Gæster",
   "engagement": "Engagement",
+  "stats": {
+    "photosUploaded": "Fotos Uploadet",
+    "qrScans": "QR Scanninger",
+    "slideshowViews": "Slideshow Visninger",
+    "guestAppVisits": "Gæste-App Besøg",
+    "galleryViews": "Galleri Visninger",
+    "guestbookEntries": "Gæstebog Indlæg",
+    "registrations": "Registreringer",
+    "vsPreviousWeek": "vs forrige uge"
+  },
+  "chart": {
+    "title": "Aktivitet Over Tid",
+    "total": "Total",
+    "average": "Gennemsnit",
+    "noData": "Ingen data for denne periode",
+    "periods": {
+      "week": "Uge",
+      "month": "Måned",
+      "year": "År"
+    }
+  },
+  "activity": {
+    "title": "Seneste Aktivitet",
+    "empty": "Ingen aktivitet endnu",
+    "showAll": "Vis alle",
+    "showLess": "Vis færre",
+    "types": {
+      "photosUploaded": "Nye billeder uploadet",
+      "photoViewed": "Foto set",
+      "photoDownloaded": "Foto downloadet",
+      "photoLiked": "Foto liket",
+      "photoShared": "Foto delt",
+      "guestRegistered": "Ny gæst registreret",
+      "guestAppOpened": "Gæste-app åbnet",
+      "appOpened": "App åbnet",
+      "eventJoined": "Deltager tilsluttet",
+      "qrScanned": "QR kode scannet",
+      "slideshowStarted": "Slideshow startet",
+      "galleryViewed": "Galleri set",
+      "guestbookEntry": "Nyt gæstebog indlæg",
+      "default": "Aktivitet"
+    },
+    "time": {
+      "now": "Lige nu",
+      "minute": "min",
+      "hour": "time",
+      "hours": "timer",
+      "day": "dag",
+      "days": "dage",
+      "ago": "siden"
+    }
+  },
   "metrics": {
     "totalPhotos": "Totalt antal billeder",
     "totalGuests": "Totalt antal gæster",
@@ -17,6 +69,7 @@
     "guestActivity": "Gæsteaktivitet"
   },
   "noData": "Ingen data tilgængelig",
+  "retry": "Prøv Igen",
   "timeRanges": {
     "today": "I dag",
     "week": "Denne uge",
