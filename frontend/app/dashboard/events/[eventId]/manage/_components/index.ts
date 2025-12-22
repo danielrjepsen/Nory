@@ -1,4 +1,12 @@
 export { ManageEventContent } from './ManageEventContent';
+export { EventOverviewHeader } from './EventOverviewHeader';
+export { EventStatsRow } from './EventStatsRow';
+export { QuickActionsCard } from './QuickActionsCard';
+export { RecentPhotosCard } from './RecentPhotosCard';
+export { EventActivityFeed } from './EventActivityFeed';
+export { QRCodeCard } from './QRCodeCard';
+export { EventLinksCard } from './EventLinksCard';
+export { GuestsPreviewCard } from './GuestsPreviewCard';
 export { EventHeader } from './EventHeader';
 export { EventStats } from './EventStats';
 export { EventLinks } from './EventLinks';

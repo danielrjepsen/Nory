@@ -8,6 +8,7 @@ interface EventStatsProps {
   analytics: {
     photoCount: number;
     guestCount: number;
+    visitCount?: number;
   };
   event: EventData;
 }
@@ -18,15 +19,14 @@ interface StatItemProps {
 }
 
 function StatItem({ value, label }: StatItemProps) {
-  const isNumber = typeof value === 'number';
   return (
     <div className="text-center">
-      <div
-        className={`text-gray-900 ${isNumber ? 'text-2xl font-extrabold' : 'text-sm font-semibold'}`}
-      >
+      <div className="font-mono text-stat xl:text-stat-xl text-nory-text">
         {value}
       </div>
-      <div className="text-xs uppercase tracking-wide text-gray-500">{label}</div>
+      <div className="text-body text-nory-muted mt-0.5 font-grotesk">
+        {label}
+      </div>
     </div>
   );
 }
@@ -34,18 +34,30 @@ function StatItem({ value, label }: StatItemProps) {
 export function EventStats({ analytics, event }: EventStatsProps) {
   const { t, i18n } = useTranslation('dashboard');
 
-  const formattedDate = event.startsAt
-    ? new Date(event.startsAt).toLocaleDateString(i18n.language, {
-        month: 'short',
-        day: 'numeric',
-      })
-    : null;
+  const eventDate = event.startsAt ? new Date(event.startsAt) : null;
+  const dayNumber = eventDate?.getDate();
+  const monthName = eventDate?.toLocaleDateString(i18n.language, { month: 'long' });
 
   return (
-    <div className="flex justify-center gap-8 mb-12 text-gray-500">
-      <StatItem value={analytics.photoCount} label={t('events.manage.stats.photos')} />
-      <StatItem value={analytics.guestCount} label={t('events.manage.stats.visits')} />
-      {formattedDate && <StatItem value={formattedDate} label={t('events.manage.stats.date')} />}
+    <div className="flex justify-center gap-12 mb-10">
+      <StatItem
+        value={analytics.photoCount}
+        label={t('events.manage.stats.photos')}
+      />
+      <StatItem
+        value={analytics.visitCount ?? analytics.guestCount}
+        label={t('events.manage.stats.visits')}
+      />
+      <StatItem
+        value={analytics.guestCount}
+        label={t('events.manage.stats.guests')}
+      />
+      {dayNumber && monthName && (
+        <StatItem
+          value={dayNumber}
+          label={monthName}
+        />
+      )}
     </div>
   );
 }

@@ -1,4 +1,4 @@
-export type EventStatus = 'live' | 'draft' | 'ended';
+export type EventStatus = 'live' | 'draft' | 'ended' | 'archived';
 
 export interface EventAnalytics {
   totalPhotosUploaded: number;
@@ -51,7 +51,6 @@ export interface CreateEventRequest {
   status?: EventStatus;
 }
 
-// Form data for create/edit event flows
 export interface EventFormData {
   name: string;
   description: string;

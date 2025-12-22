@@ -58,13 +58,13 @@ export function EditEventModal({ isOpen, onClose, event, onEventUpdated }: EditE
 
   return (
     <div
-      className="fixed inset-0 bg-black/50 flex items-center justify-center z-50"
+      className="fixed inset-0 bg-black/60 flex items-center justify-center z-50 p-4"
       onClick={(e) => {
         if (e.target === e.currentTarget) onClose();
       }}
     >
-      <div className="bg-white rounded-2xl p-6 w-full max-w-md mx-4">
-        <h2 className="text-xl font-bold text-gray-900 mb-5">
+      <div className="bg-nory-card rounded-[10px] border-brutal shadow-brutal p-6 w-full max-w-md">
+        <h2 className="text-xl font-bold text-nory-text mb-5 font-grotesk">
           {t('events.editEvent.title')}
         </h2>
 
@@ -76,7 +76,7 @@ export function EditEventModal({ isOpen, onClose, event, onEventUpdated }: EditE
           )}
 
           <div className="mb-4">
-            <label className="block text-sm font-semibold text-gray-700 mb-1.5">
+            <label className="block text-sm font-bold text-nory-text mb-1.5 font-grotesk">
               {t('events.editEvent.fields.name')} *
             </label>
             <Input
@@ -89,7 +89,7 @@ export function EditEventModal({ isOpen, onClose, event, onEventUpdated }: EditE
           </div>
 
           <div className="mb-6">
-            <label className="block text-sm font-semibold text-gray-700 mb-1.5">
+            <label className="block text-sm font-bold text-nory-text mb-1.5 font-grotesk">
               {t('events.editEvent.fields.description')}
             </label>
             <Textarea

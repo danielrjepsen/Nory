@@ -7,8 +7,11 @@ export function LoadingState() {
   const { t } = useTranslation('dashboard');
 
   return (
-    <div className="flex justify-center items-center h-[50vh] text-lg text-gray-500">
-      {t('events.manage.loading')}
+    <div className="flex flex-col justify-center items-center pt-20">
+      <div className="w-8 h-8 border-3 border-nory-bg border-t-nory-text rounded-full animate-spin mb-4" />
+      <div className="text-nory-muted font-grotesk">
+        {t('events.manage.loading')}
+      </div>
     </div>
   );
 }

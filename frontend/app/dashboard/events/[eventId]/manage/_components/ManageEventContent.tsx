@@ -1,12 +1,15 @@
 'use client';
 
 import React from 'react';
-import { useManageEvent, useEventTabs } from '../_hooks';
-import { EventHeader } from './EventHeader';
-import { EventStats } from './EventStats';
-import { EventLinks } from './EventLinks';
-import { EventControls } from './EventControls';
-import { EventActionTabs } from './EventActionTabs';
+import { useManageEvent } from '../_hooks';
+import { EventOverviewHeader } from './EventOverviewHeader';
+import { EventStatsRow } from './EventStatsRow';
+import { QuickActionsCard } from './QuickActionsCard';
+import { RecentPhotosCard } from './RecentPhotosCard';
+import { EventActivityFeed } from './EventActivityFeed';
+import { QRCodeCard } from './QRCodeCard';
+import { EventLinksCard } from './EventLinksCard';
+import { GuestsPreviewCard } from './GuestsPreviewCard';
 import { EditEventModal } from './EditEventModal';
 import { GoLiveConfirmModal } from './GoLiveConfirmModal';
 import { LoadingState } from './LoadingState';
@@ -22,20 +25,13 @@ export function ManageEventContent() {
     loading,
     updating,
     error,
-    copying,
     showEditModal,
     setShowEditModal,
     showGoLiveModal,
     setShowGoLiveModal,
-    activeTab,
-    copyToClipboard,
     handleEventUpdated,
-    handleStatusToggle,
     handleGoLive,
-    handleTabChange,
   } = useManageEvent();
-
-  const tabs = useEventTabs({ eventId, event, analytics });
 
   if (loading) {
     return <LoadingState />;
@@ -46,22 +42,42 @@ export function ManageEventContent() {
   }
 
   return (
-    <div className="min-h-screen relative">
-      <EventActionTabs tabs={tabs} activeTab={activeTab} onTabChange={handleTabChange} />
+    <>
+      <div className="flex flex-col gap-5">
+        <EventOverviewHeader event={event} guestAppUrl={guestAppUrl} />
+        <EventStatsRow event={event} analytics={analytics} />
 
-      <div className="px-6 pb-6 text-center">
-        <EventHeader event={event} />
-        <EventStats analytics={analytics} event={event} />
-        <EventLinks
-          guestAppUrl={guestAppUrl}
-          slideshowUrl={slideshowUrl}
-          copying={copying}
-          onCopy={copyToClipboard}
-        />
-        <EventControls event={event} updating={updating} onStatusToggle={handleStatusToggle} />
+        <div className="grid grid-cols-1 xl:grid-cols-[1fr_320px] gap-4">
+          <div className="flex flex-col gap-4">
+            <QuickActionsCard
+              eventId={eventId}
+              guestAppUrl={guestAppUrl}
+              slideshowUrl={slideshowUrl}
+            />
+            <RecentPhotosCard
+              eventId={eventId}
+              totalPhotoCount={analytics.photoCount}
+            />
+            <EventActivityFeed eventId={eventId} />
+          </div>
+
+          <div className="flex flex-col gap-4 xl:grid xl:grid-cols-1">
+            <QRCodeCard
+              eventId={eventId}
+              eventName={event.name}
+              guestAppUrl={guestAppUrl}
+            />
+            <EventLinksCard
+              guestAppUrl={guestAppUrl}
+              slideshowUrl={slideshowUrl}
+            />
+            <GuestsPreviewCard
+              eventId={eventId}
+              totalGuestCount={analytics.guestCount}
+            />
+          </div>
+        </div>
       </div>
-
-      <div className="h-8" />
 
       <EditEventModal
         isOpen={showEditModal}
@@ -77,6 +93,6 @@ export function ManageEventContent() {
         event={event}
         loading={updating}
       />
-    </div>
+    </>
   );
 }

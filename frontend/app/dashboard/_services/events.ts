@@ -1,5 +1,5 @@
 import { apiClient } from '@/lib/api';
-import { eventCache } from './cache';
+import { eventCache, analyticsCache } from './cache';
 import type { CreateEventRequest, EventData, EventPhoto } from '../_types/events';
 
 const Endpoints = {
@@ -7,6 +7,7 @@ const Endpoints = {
   event: (id: string) => `/api/v1/events/${id}`,
   photos: (id: string) => `/api/v1/events/${id}/photos/dashboard`,
   attendees: (id: string) => `/api/v1/events/${id}/attendees`,
+  analytics: (id: string) => `/api/v1/events/${id}/analytics`,
   start: (id: string) => `/api/v1/events/${id}/start`,
   end: (id: string) => `/api/v1/events/${id}/end`,
 } as const;
@@ -54,6 +55,25 @@ export async function getEventAttendees(eventId: string): Promise<EventAttendeeL
   return apiClient.get<EventAttendeeListResponse>(Endpoints.attendees(eventId));
 }
 
+export interface EventAnalyticsResponse {
+  photoCount: number;
+  guestCount: number;
+  visitCount: number;
+}
+
+export async function getEventAnalytics(eventId: string): Promise<EventAnalyticsResponse> {
+  try {
+    return await apiClient.get<EventAnalyticsResponse>(Endpoints.analytics(eventId));
+  } catch {
+    const event = await getEventDetails(eventId);
+    return {
+      photoCount: event.photoCount || event.analytics?.totalPhotosUploaded || 0,
+      guestCount: event.analytics?.totalGuestAppOpens || 0,
+      visitCount: event.analytics?.totalQrScans || 0,
+    };
+  }
+}
+
 export async function createEvent(event: CreateEventRequest): Promise<EventData> {
   return apiClient.post<EventData>(Endpoints.events, event);
 }
@@ -88,6 +108,9 @@ export function invalidateEvent(eventId: string): void {
   eventCache.delete(CacheKeys.events);
   eventCache.delete(CacheKeys.event(eventId));
   eventCache.invalidateByPrefix(`photos:${eventId}:`);
+  // Also clear analytics cache to refresh dashboard overview
+  analyticsCache.delete('dashboard:overview');
+  analyticsCache.invalidateByPrefix(`summary:${eventId}:`);
 }
 
 export function clearCache(): void {
