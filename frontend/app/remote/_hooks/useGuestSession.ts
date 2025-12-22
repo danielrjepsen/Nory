@@ -34,10 +34,15 @@ function toSessionData(data: AttendeeStatusResponse | undefined): SessionData {
   };
 }
 
-export function useGuestSession(eventId: string): UseGuestSessionReturn {
+export function useGuestSession(eventId: string, _onRefresh?: () => void): UseGuestSessionReturn {
   const queryClient = useQueryClient();
   const hasTrackedOpen = useRef(false);
   const [forceShowWelcome, setForceShowWelcome] = useState(getForceWelcome);
+  const [isMounted, setIsMounted] = useState(false);
+
+  useEffect(() => {
+    setIsMounted(true);
+  }, []);
 
   const { data: session = EMPTY_SESSION, isLoading: statusLoading } = useQuery({
     queryKey: queryKeys.attendees.status(eventId),
@@ -111,6 +116,7 @@ export function useGuestSession(eventId: string): UseGuestSessionReturn {
   }, [eventId, queryClient]);
 
   return {
+    isMounted,
     showWelcome,
     userName: session.userName,
     isRegistered: session.isRegistered,

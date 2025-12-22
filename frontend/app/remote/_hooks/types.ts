@@ -33,6 +33,7 @@ export interface SessionData {
 }
 
 export interface UseGuestSessionReturn {
+  isMounted: boolean;
   showWelcome: boolean;
   userName: string;
   isRegistered: boolean;

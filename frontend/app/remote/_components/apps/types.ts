@@ -1,4 +1,3 @@
-// Shared types for app components
 import type { PublicEventData, AppData } from '@/app/_shared/types';
 
 export interface EventTheme {

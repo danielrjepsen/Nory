@@ -34,7 +34,6 @@ export function AppHeader({
     }
   };
 
-  // Themed header (e.g., for Remote app)
   if (themed && primaryColor && secondaryColor) {
     return (
       <header
@@ -74,7 +73,6 @@ export function AppHeader({
     );
   }
 
-  // Standard header (glass morphism style)
   return (
     <header className="fixed top-0 left-0 right-0 z-50 px-5 pt-6 pb-5 bg-white/80 backdrop-blur-xl border-b border-black/5">
       <div className="max-w-[500px] mx-auto flex items-center justify-between">

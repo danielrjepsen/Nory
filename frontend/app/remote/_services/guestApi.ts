@@ -29,7 +29,7 @@ const ENDPOINTS = {
   attendeeConsent: (eventId: string) => `/api/v1/attendees/events/${eventId}/consent`,
   appContent: (eventId: string, appInstanceId: string) =>
     `/api/v1/events/${eventId}/apps/${appInstanceId}/content`,
-  analytics: (eventId: string) => `/api/analytics/events/${eventId}/track`,
+  analytics: (eventId: string) => `/api/v1/analytics/events/${eventId}/track`,
 } as const;
 
 export async function getPublicEvent(eventId: string): Promise<PublicEventData> {
@@ -113,7 +113,7 @@ export async function trackEvent(
   data: Record<string, unknown> = {}
 ): Promise<void> {
   try {
-    await publicApi.post(ENDPOINTS.analytics(eventId), { event: eventType, ...data });
+    await publicApi.post(ENDPOINTS.analytics(eventId), { eventType, data });
   } catch {
     // silent
   }

@@ -18,7 +18,7 @@ export interface GuestGalleryProps {
   eventTheme: EventTheme | null;
   apps: EventApp[];
   photoManagement: UsePhotoManagementReturn;
-  onMemoryOptInSuccess: () => Promise<void>;
+  onMemoryOptInSuccess: (email: string) => Promise<void>;
 }
 
 export function GuestGallery({

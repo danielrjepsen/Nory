@@ -1,0 +1,263 @@
+.overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: radial-gradient(circle at 20% 80%, var(--modal-primary, #7877c6) 0%, transparent 50%),
+    radial-gradient(circle at 80% 20%, var(--modal-secondary, #ff77c6) 0%, transparent 50%),
+    radial-gradient(circle at 40% 40%, var(--modal-accent, #e8b4ff) 0%, transparent 50%),
+    rgba(0, 0, 0, 0.85);
+  backdrop-filter: blur(15px);
+  z-index: 9999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.modal {
+  background: rgba(255, 255, 255, 0.08);
+  backdrop-filter: blur(25px);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  width: 90%;
+  max-width: 520px;
+  max-height: 85vh;
+  border-radius: 28px;
+  overflow: hidden;
+  box-shadow: 0 32px 64px -12px rgba(0, 0, 0, 0.4),
+    0 0 0 1px rgba(255, 255, 255, 0.1),
+    inset 0 1px 0 0 rgba(255, 255, 255, 0.2),
+    0 8px 32px var(--modal-primary-glow, rgba(120, 119, 198, 0.2));
+  animation: modalSlideIn 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+/* Header */
+.header {
+  text-align: center;
+  position: relative;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.15);
+  overflow: hidden;
+  padding: 24px 60px 24px 24px;
+}
+
+.header::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    135deg,
+    rgba(255, 255, 255, 0.12) 0%,
+    rgba(255, 255, 255, 0.05) 50%,
+    rgba(255, 255, 255, 0.12) 100%
+  );
+  pointer-events: none;
+}
+
+.closeButton {
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  color: rgba(255, 255, 255, 0.6);
+  font-size: 28px;
+  font-weight: bold;
+  background: none;
+  border: none;
+  cursor: pointer;
+  z-index: 10;
+  transition: all 0.3s ease;
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 8px;
+  line-height: 1;
+}
+
+.closeButton:hover {
+  color: rgba(255, 255, 255, 0.9);
+  background: rgba(255, 255, 255, 0.1);
+  transform: scale(1.05);
+}
+
+.title {
+  color: rgba(255, 255, 255, 0.95);
+  font-size: 24px;
+  font-weight: 700;
+  margin: 0 0 8px 0;
+  position: relative;
+  z-index: 1;
+}
+
+.subtitle {
+  color: rgba(255, 255, 255, 0.6);
+  font-size: 14px;
+  margin: 0 0 24px 0;
+  position: relative;
+  z-index: 1;
+}
+
+.stepDots {
+  display: flex;
+  justify-content: center;
+  gap: 8px;
+  position: relative;
+  z-index: 1;
+}
+
+.dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.3);
+  transition: all 0.3s ease;
+}
+
+.dotActive {
+  background: rgba(255, 255, 255, 0.8);
+  transform: scale(1.2);
+}
+
+/* Body */
+.body {
+  padding: 30px;
+  max-height: 60vh;
+  overflow-y: auto;
+  background: rgba(255, 255, 255, 0.02);
+}
+
+/* Upload Zone */
+.uploadZone {
+  border: 2px dashed rgba(255, 255, 255, 0.3);
+  border-radius: 16px;
+  padding: 40px 20px;
+  text-align: center;
+  background: rgba(255, 255, 255, 0.04);
+  cursor: pointer;
+  transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+  position: relative;
+  overflow: hidden;
+}
+
+.uploadZone:hover {
+  border-color: rgba(255, 255, 255, 0.5);
+  background: rgba(255, 255, 255, 0.08);
+  transform: translateY(-2px);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+}
+
+.uploadIcon {
+  font-size: 48px;
+  margin-bottom: 16px;
+}
+
+.uploadText {
+  color: rgba(255, 255, 255, 0.9);
+  font-size: 18px;
+  font-weight: 600;
+  margin-bottom: 8px;
+}
+
+.uploadHint {
+  color: rgba(255, 255, 255, 0.6);
+  font-size: 14px;
+}
+
+.hiddenInput {
+  display: none;
+}
+
+/* Category Selection */
+.categorySelection {
+  margin-top: 20px;
+  padding: 0 20px;
+}
+
+.categoryLabel {
+  display: block;
+  margin-bottom: 8px;
+  font-size: 14px;
+  font-weight: 600;
+  color: rgba(255, 255, 255, 0.9);
+}
+
+.categorySelect {
+  width: 100%;
+  padding: 12px;
+  border-radius: 8px;
+  border: 2px solid rgba(255, 255, 255, 0.2);
+  font-size: 14px;
+  background: rgba(255, 255, 255, 0.1);
+  color: white;
+  cursor: pointer;
+  outline: none;
+  transition: border-color 0.3s ease;
+}
+
+.categorySelect:focus {
+  border-color: var(--modal-primary, #7877c6);
+}
+
+/* Footer */
+.footer {
+  padding: 24px 30px;
+  display: flex;
+  gap: 16px;
+  justify-content: flex-end;
+  background: rgba(0, 0, 0, 0.1);
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+/* Buttons */
+.btn {
+  padding: 12px 24px;
+  border-radius: 25px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  border: none;
+  font-size: 14px;
+}
+
+.btnSecondary {
+  background: rgba(255, 255, 255, 0.1);
+  color: rgba(255, 255, 255, 0.8);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.btnSecondary:hover {
+  background: rgba(255, 255, 255, 0.15);
+  color: rgba(255, 255, 255, 0.9);
+}
+
+.btnPrimary {
+  background: linear-gradient(
+    135deg,
+    var(--modal-primary, #7877c6),
+    var(--modal-secondary, #ff77c6)
+  );
+  color: white;
+  box-shadow: 0 4px 15px var(--modal-primary-glow, rgba(120, 119, 198, 0.4));
+}
+
+.btnPrimary:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px var(--modal-primary-glow, rgba(120, 119, 198, 0.6));
+}
+
+.btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* Animation */
+@keyframes modalSlideIn {
+  from {
+    opacity: 0;
+    transform: scale(0.7) translateY(100px);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+}

@@ -37,8 +37,6 @@ export default function EventGuestApp() {
     return (
       <EventLoadingScreen
         eventTheme={eventDataResult.eventTheme}
-        themeLoading={eventDataResult.themeLoading}
-        hasLoadedOnce={false}
         eventData={eventDataResult.eventData}
       />
     );
@@ -62,7 +60,7 @@ export default function EventGuestApp() {
       <WelcomeScreen
         eventId={eventId}
         eventName={eventDataResult.eventData.name}
-        onNameSubmit={guestSession.handleNameSubmit}
+        onNameSubmit={guestSession.register}
       />
     );
   }
@@ -72,10 +70,9 @@ export default function EventGuestApp() {
       <GuestGallery
         eventData={eventDataResult.eventData}
         eventTheme={eventDataResult.eventTheme}
-        userName={guestSession.userName}
         apps={eventDataResult.apps}
         photoManagement={photoManagement}
-        onMemoryOptInSuccess={guestSession.handleMemoryOptInSuccess}
+        onMemoryOptInSuccess={guestSession.updateConsent}
       />
       <DebugTools eventId={eventId} onClearSession={guestSession.clearSession} />
     </ThemeWrapper>

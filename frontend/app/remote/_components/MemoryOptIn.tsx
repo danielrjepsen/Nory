@@ -5,7 +5,7 @@ import { useTranslation } from 'react-i18next';
 
 interface MemoryOptInProps {
   eventId: string;
-  onOptInSuccess: () => Promise<void>;
+  onOptInSuccess: (email: string) => Promise<void>;
 }
 
 export function MemoryOptIn({ eventId, onOptInSuccess }: MemoryOptInProps) {
