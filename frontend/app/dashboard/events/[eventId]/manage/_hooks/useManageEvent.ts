@@ -13,74 +13,51 @@ interface EventAnalytics {
 }
 
 interface UseManageEventReturn {
-  // Data
   event: EventData | null;
   analytics: EventAnalytics;
   eventId: string;
   guestAppUrl: string;
   slideshowUrl: string;
-
-  // Loading states
   loading: boolean;
   loadingAnalytics: boolean;
   updating: boolean;
-
-  // Error state
   error: string;
-
-  // Copy state
   copying: string | null;
-
-  // Modal states
   showEditModal: boolean;
   setShowEditModal: (show: boolean) => void;
   showGoLiveModal: boolean;
   setShowGoLiveModal: (show: boolean) => void;
-
-  // Tab state
   activeTab: string | null;
   setActiveTab: (tab: string | null) => void;
-
-  // Actions
   copyToClipboard: (text: string, type: string) => Promise<void>;
   handleEventUpdated: (updatedEvent: EventData) => void;
   handleStatusToggle: () => void;
   handleGoLive: () => void;
   handleTabChange: (tabId: string | null) => void;
-
-  // Navigation
   router: ReturnType<typeof useRouter>;
 }
 
-const ANALYTICS_REFRESH_INTERVAL = 30000; // 30 seconds
+const ANALYTICS_REFRESH_INTERVAL = 30000;
 
 export function useManageEvent(): UseManageEventReturn {
   const params = useParams();
   const router = useRouter();
   const eventId = params.eventId as string;
 
-  // Data state
   const [event, setEvent] = useState<EventData | null>(null);
   const [analytics, setAnalytics] = useState<EventAnalytics>({
     photoCount: 0,
     guestCount: 0,
   });
-
-  // Loading states
   const [loading, setLoading] = useState(true);
   const [loadingAnalytics, setLoadingAnalytics] = useState(false);
   const [updating, setUpdating] = useState(false);
-
-  // Error state
   const [error, setError] = useState('');
-
-  // UI states
   const [copying, setCopying] = useState<string | null>(null);
   const [showEditModal, setShowEditModal] = useState(false);
   const [showGoLiveModal, setShowGoLiveModal] = useState(false);
   const [activeTab, setActiveTab] = useState<string | null>(null);
 
-  // URLs
   const guestAppUrl = `${getEventsUrl()}/remote/${eventId}`;
   const slideshowUrl = `${getEventsUrl()}/slideshow/${eventId}`;
 
@@ -175,42 +152,27 @@ export function useManageEvent(): UseManageEventReturn {
   };
 
   return {
-    // Data
     event,
     analytics,
     eventId,
     guestAppUrl,
     slideshowUrl,
-
-    // Loading states
     loading,
     loadingAnalytics,
     updating,
-
-    // Error state
     error,
-
-    // Copy state
     copying,
-
-    // Modal states
     showEditModal,
     setShowEditModal,
     showGoLiveModal,
     setShowGoLiveModal,
-
-    // Tab state
     activeTab,
     setActiveTab,
-
-    // Actions
     copyToClipboard,
     handleEventUpdated,
     handleStatusToggle,
     handleGoLive,
     handleTabChange,
-
-    // Navigation
     router,
   };
 }

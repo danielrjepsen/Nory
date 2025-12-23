@@ -9,7 +9,6 @@ interface EventAnalytics {
   guestCount: number;
 }
 
-// Icon components
 function QrCodeIcon() {
   return (
     <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
@@ -135,11 +134,6 @@ export function useEventTabs({ eventId, event, analytics }: UseEventTabsProps): 
               variant: 'primary' as const,
               onClick: () => router.push(`/dashboard/events/${eventId}/photos`),
             },
-            {
-              label: 'View Gallery',
-              variant: 'secondary' as const,
-              onClick: () => router.push(`/galleries`),
-            },
           ],
         },
       },
@@ -170,7 +164,7 @@ export function useEventTabs({ eventId, event, analytics }: UseEventTabsProps): 
             {
               label: 'View Registrations',
               variant: 'primary' as const,
-              onClick: () => router.push(`/dashboard/guests?eventId=${eventId}`),
+              onClick: () => router.push(`/dashboard/events/${eventId}/guests`),
             },
           ],
         },
@@ -186,7 +180,7 @@ export function useEventTabs({ eventId, event, analytics }: UseEventTabsProps): 
             {
               label: 'View Full Analytics',
               variant: 'primary' as const,
-              onClick: () => router.push(`/dashboard/analytics?eventId=${eventId}`),
+              onClick: () => router.push(`/dashboard/events/${eventId}/analytics`),
             },
           ],
           customContent: (
