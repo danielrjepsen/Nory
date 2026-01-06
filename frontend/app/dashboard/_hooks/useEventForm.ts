@@ -45,14 +45,12 @@ export function useEventForm() {
   const [slotsLoading, setSlotsLoading] = useState(true);
   const [needsUpgrade, setNeedsUpgrade] = useState(false);
 
-  // Fetch event slots
   const fetchEventSlots = async () => {
     setSlotsLoading(true);
     try {
       const events = await getEvents();
       const usedSlots = events.length;
 
-      // Calculate available slots based on plan
       let maxEvents = 0;
 
       const purchasedSlots = 0;
@@ -68,7 +66,6 @@ export function useEventForm() {
     setSlotsLoading(false);
   };
 
-  // Set upgrade flow for event organizers
   useEffect(() => {
     if (formData.eventType === 'organizer') {
       setNeedsUpgrade(true);

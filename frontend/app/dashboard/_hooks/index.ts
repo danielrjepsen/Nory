@@ -1,11 +1,10 @@
 export { useActiveNav } from './useActiveNav';
-export { useNavigation } from './useNavigation';
 export { useNavigationItems } from './useNavigationItems';
+export { useEventNavigationItems } from './useEventNavigationItems';
 export { usePageTitle } from './usePageTitle';
 export { useClickOutside } from './useClickOutside';
 export { useAuthenticatedImage } from './useAuthenticatedImage';
 export { useIntersectionObserver } from './useIntersectionObserver';
-export { useCreateEventModal } from './useCreateEventModal';
 export { useThemes } from './useThemes';
 export { useEventForm, type EventFormData } from './useEventForm';
 export { useStepper } from './useStepper';
