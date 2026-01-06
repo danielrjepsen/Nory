@@ -1,6 +1,7 @@
 'use client';
 
 import React from 'react';
+import { Card } from './Card';
 
 interface ContentCardProps {
   children: React.ReactNode;
@@ -20,12 +21,15 @@ const maxWidthClasses = {
   full: 'max-w-full',
 };
 
+/**
+ * for centered content on a page.. for cards within a layout use card directly.
+ */
 export function ContentCard({ children, maxWidth = '4xl', className = '' }: ContentCardProps) {
   return (
     <div className={`${maxWidthClasses[maxWidth]} mx-auto py-8 px-4`}>
-      <div className={`bg-white rounded-lg shadow-sm border border-gray-200 p-6 ${className}`}>
+      <Card className={className}>
         {children}
-      </div>
+      </Card>
     </div>
   );
 }

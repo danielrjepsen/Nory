@@ -5,9 +5,10 @@ import type { EventPhoto } from '@/app/dashboard/_types/events';
 interface AuthenticatedImageProps {
   photo: EventPhoto;
   className?: string;
+  aspectRatio?: 'square' | 'auto';
 }
 
-export function AuthenticatedImage({ photo, className = '' }: AuthenticatedImageProps) {
+export function AuthenticatedImage({ photo, className = '', aspectRatio = 'square' }: AuthenticatedImageProps) {
   const {
     imageSrc,
     isLoading,
@@ -20,8 +21,10 @@ export function AuthenticatedImage({ photo, className = '' }: AuthenticatedImage
     imageUrl: photo.imageUrl,
   });
 
+  const aspectClass = aspectRatio === 'square' ? 'aspect-square' : '';
+
   return (
-    <div className={`relative overflow-hidden aspect-square rounded-lg ${className}`}>
+    <div className={`relative overflow-hidden rounded-lg ${aspectClass} ${className}`}>
       {(isLoading || (!imageLoaded && imageSrc)) && !error && (
         <div className="absolute inset-0 flex items-center justify-center bg-gray-200 animate-pulse">
           <div className="text-gray-400 text-xs">📸</div>

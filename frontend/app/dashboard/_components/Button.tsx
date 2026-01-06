@@ -3,23 +3,24 @@
 import React from 'react';
 
 interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
-  variant?: 'primary' | 'secondary' | 'outline' | 'ghost';
+  variant?: 'primary' | 'secondary' | 'outline' | 'ghost' | 'danger';
   size?: 'sm' | 'md' | 'lg';
   loading?: boolean;
   children: React.ReactNode;
 }
 
 const variantClasses = {
-  primary: 'bg-blue-600 text-white hover:bg-blue-700 disabled:bg-blue-400',
-  secondary: 'bg-gray-900 text-white hover:bg-gray-800 disabled:bg-gray-500',
-  outline: 'border border-gray-300 text-gray-700 hover:bg-gray-50 disabled:bg-gray-100',
-  ghost: 'text-gray-700 hover:bg-gray-100 disabled:bg-transparent',
+  primary: 'bg-nory-yellow text-nory-black border-2 border-nory-border shadow-brutal hover:-translate-x-0.5 hover:-translate-y-0.5 hover:shadow-brutal-lg active:translate-x-0.5 active:translate-y-0.5 active:shadow-brutal-sm',
+  secondary: 'bg-nory-black text-white border-2 border-nory-border shadow-brutal dark:bg-nory-text dark:text-nory-bg hover:-translate-x-0.5 hover:-translate-y-0.5 hover:shadow-brutal-lg active:translate-x-0.5 active:translate-y-0.5 active:shadow-brutal-sm',
+  outline: 'bg-nory-card text-nory-text border-2 border-nory-border shadow-brutal-sm hover:-translate-x-0.5 hover:-translate-y-0.5 hover:shadow-brutal active:translate-x-0 active:translate-y-0 active:shadow-brutal-sm',
+  ghost: 'text-nory-text hover:bg-nory-yellow/20 border-2 border-transparent',
+  danger: 'bg-red-500 text-white border-2 border-nory-border shadow-brutal hover:-translate-x-0.5 hover:-translate-y-0.5 hover:shadow-brutal-lg active:translate-x-0.5 active:translate-y-0.5 active:shadow-brutal-sm',
 };
 
 const sizeClasses = {
   sm: 'px-4 py-1.5 text-sm',
-  md: 'px-6 py-2 text-sm',
-  lg: 'px-8 py-3 text-base',
+  md: 'px-6 py-2.5 text-sm',
+  lg: 'px-8 py-3.5 text-base',
 };
 
 export function Button({
@@ -37,8 +38,9 @@ export function Button({
     <button
       disabled={isDisabled}
       className={`
-        inline-flex items-center justify-center gap-2 font-medium rounded-lg
-        transition-colors disabled:opacity-50 disabled:cursor-not-allowed
+        inline-flex items-center justify-center gap-2 font-bold font-grotesk rounded-[10px]
+        transition-all duration-150
+        disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none disabled:shadow-none
         ${variantClasses[variant]}
         ${sizeClasses[size]}
         ${className}

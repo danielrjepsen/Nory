@@ -1,34 +1,66 @@
+'use client';
+
 import React from 'react';
 
 interface CheckboxProps {
   checked: boolean;
   onChange?: (checked: boolean) => void;
+  label?: string;
   size?: 'small' | 'medium' | 'large';
   className?: string;
 }
 
-export function Checkbox({ checked, onChange, size = 'medium', className = '' }: CheckboxProps) {
+export function Checkbox({ checked, onChange, label, size = 'medium', className = '' }: CheckboxProps) {
   const sizeClasses = {
-    small: 'w-4 h-4',
-    medium: 'w-5 h-5',
-    large: 'w-6 h-6',
+    small: 'w-[18px] h-[18px]',
+    medium: 'w-[22px] h-[22px]',
+    large: 'w-[26px] h-[26px]',
   };
 
-  return (
+  const iconSizes = {
+    small: 'w-2.5 h-2.5',
+    medium: 'w-3.5 h-3.5',
+    large: 'w-4 h-4',
+  };
+
+  const checkboxElement = (
     <button
       type="button"
-      className={`${sizeClasses[size]} rounded border-2 flex items-center justify-center transition-all duration-200 ${
+      className={`${sizeClasses[size]} rounded-md border-2 border-nory-border flex items-center justify-center transition-colors ${
         checked
-          ? 'bg-black border-black text-white'
-          : 'bg-white border-gray-300 hover:border-gray-400'
-      } ${className}`}
+          ? 'bg-nory-yellow'
+          : 'bg-nory-card hover:bg-nory-bg'
+      } ${!label ? className : ''}`}
       onClick={() => onChange?.(!checked)}
     >
-      {checked && (
-        <svg className="w-3 h-3" viewBox="0 0 12 12" fill="none" stroke="currentColor" strokeWidth="2">
-          <polyline points="2,6 5,9 10,3" />
-        </svg>
-      )}
+      <svg
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth="3"
+        className={`${iconSizes[size]} transition-opacity ${checked ? 'opacity-100 text-nory-black' : 'opacity-0'}`}
+      >
+        <polyline points="20 6 9 17 4 12" />
+      </svg>
     </button>
   );
+
+  if (label) {
+    return (
+      <label
+        className={`flex items-center gap-2.5 cursor-pointer ${className}`}
+        onClick={(e) => {
+          e.preventDefault();
+          onChange?.(!checked);
+        }}
+      >
+        {checkboxElement}
+        <span className="text-[0.85rem] font-medium text-nory-text font-grotesk">
+          {label}
+        </span>
+      </label>
+    );
+  }
+
+  return checkboxElement;
 }
