@@ -20,11 +20,6 @@ public class CreateEventDtoValidator : AbstractValidator<CreateEventDto>
             .WithMessage("Description cannot exceed 2000 characters")
             .When(x => x.Description is not null);
 
-        RuleFor(x => x.StartsAt)
-            .GreaterThan(DateTime.UtcNow.AddMinutes(-5))
-            .WithMessage("Start date cannot be in the past")
-            .When(x => x.StartsAt.HasValue);
-
         RuleFor(x => x.EndsAt)
             .GreaterThan(x => x.StartsAt!.Value)
             .WithMessage("End date must be after start date")
