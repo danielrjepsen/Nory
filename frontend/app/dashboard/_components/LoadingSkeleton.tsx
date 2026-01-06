@@ -1,31 +1,21 @@
 import React from 'react';
 
-const PHOTO_SKELETON_COUNT = 6;
-
 export function LoadingSkeleton() {
     return (
-        <div className="bg-white/75 backdrop-blur-xl rounded-[26px] p-6 shadow-[0_8px_32px_rgba(0,0,0,0.1)] min-h-[320px] animate-pulse">
-            {/* head status badge and menu */}
-            <div className="flex justify-between mb-5">
-                <div className="w-[60px] h-6 bg-gray-200 rounded-xl" />
-                <div className="w-6 h-6 bg-gray-200 rounded" />
+        <div className="bg-nory-card rounded-card overflow-hidden animate-pulse">
+            <div className="h-[160px] grid grid-cols-3 gap-1.5 p-3">
+                <div className="rounded-img bg-nory-bg" />
+                <div className="rounded-img bg-nory-bg" />
+                <div className="rounded-img bg-nory-bg" />
             </div>
 
-            {/* event info */}
-            <div className="mb-6">
-                <div className="w-4/5 h-6 bg-gray-200 rounded mb-2" />
-                <div className="w-3/5 h-4 bg-gray-200 rounded mb-1" />
-                <div className="w-1/2 h-4 bg-gray-200 rounded" />
-            </div>
-
-            {/* photo grid */}
-            <div className="grid grid-cols-3 gap-2 mb-5">
-                {Array.from({ length: PHOTO_SKELETON_COUNT }).map((_, index) => (
-                    <div
-                        key={index}
-                        className="aspect-square bg-gray-200 rounded-lg"
-                    />
-                ))}
+            <div className="px-6 py-5 pb-6">
+                <div className="w-14 h-5 bg-nory-bg rounded-badge mb-2.5" />
+                <div className="w-4/5 h-5 bg-nory-bg rounded-[4px] mb-3" />
+                <div className="flex justify-between items-center">
+                    <div className="w-2/5 h-3.5 bg-nory-bg rounded-[4px]" />
+                    <div className="w-16 h-3.5 bg-nory-bg rounded-[4px]" />
+                </div>
             </div>
         </div>
     );
