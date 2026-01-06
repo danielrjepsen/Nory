@@ -1,5 +1,3 @@
-// Guest app specific types
-
 export interface GuestbookEntry {
   id: string;
   eventId: string;
@@ -72,7 +70,6 @@ export interface UpdateConsentRequest {
   email: string;
 }
 
-// Re-export event types that are used in guest context
 import type { EventPhoto, EventStatus } from '@/app/dashboard/_types/events';
 export type { EventPhoto, EventStatus };
 
