@@ -21,5 +21,4 @@ export interface LoginData {
     password: string;
 }
 
-// Alias for compatibility
 export type LoginCredentials = LoginData;

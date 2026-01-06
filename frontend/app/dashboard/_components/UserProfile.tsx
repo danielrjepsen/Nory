@@ -1,7 +1,6 @@
 'use client';
 
 import { useTranslation } from 'react-i18next';
-import { LogoutIcon } from './icons';
 import type { User } from '../_types';
 
 interface UserProfileProps {
@@ -14,27 +13,21 @@ export const UserProfile = ({ user, onLogout }: UserProfileProps) => {
   const initial = user?.name?.charAt(0).toUpperCase() || 'U';
 
   return (
-    <div className="border-t border-black/10 pt-5 mt-5">
-      <div className="flex items-center gap-3 p-3 rounded-xl bg-white/50">
-        <div className="w-10 h-10 rounded-full bg-gray-900 text-white flex items-center justify-center font-semibold">
-          {initial}
+    <button
+      onClick={onLogout}
+      className="flex items-center gap-3 w-full px-4 py-3 bg-nory-card border-2 border-nory-border rounded-[14px] shadow-brutal-sm transition-all duration-150 hover:shadow-brutal hover:-translate-x-0.5 hover:-translate-y-0.5 active:translate-x-0.5 active:translate-y-0.5 active:shadow-none"
+    >
+      <div className="w-9 h-9 rounded-btn bg-nory-yellow text-nory-black border-2 border-nory-border flex items-center justify-center font-bold text-[0.85rem] font-grotesk flex-shrink-0">
+        {initial}
+      </div>
+      <div className="flex-1 min-w-0 text-left">
+        <div className="text-[0.85rem] font-semibold text-nory-text truncate font-grotesk">
+          {user?.name || t('user.profile.defaultName')}
         </div>
-        <div className="flex-1 min-w-0">
-          <div className="text-sm font-semibold text-gray-900 truncate">
-            {user?.name || t('user.profile.defaultName')}
-          </div>
-          <div className="text-xs text-gray-500 truncate">
-            {user?.email || ''}
-          </div>
+        <div className="text-[0.7rem] text-nory-muted truncate font-grotesk">
+          {user?.email || ''}
         </div>
       </div>
-      <button
-        onClick={onLogout}
-        className="flex items-center justify-center gap-2 w-full mt-3 px-4 py-2.5 bg-transparent text-red-600 border border-red-600 rounded-lg text-sm font-semibold transition-all hover:bg-red-600 hover:text-white"
-      >
-        <LogoutIcon />
-        {t('user.logout.button')}
-      </button>
-    </div>
+    </button>
   );
 };

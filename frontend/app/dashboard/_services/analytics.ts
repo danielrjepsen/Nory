@@ -59,6 +59,10 @@ export async function getRecentActivity(eventId: string, limit = 50, offset = 0)
     return apiClient.get<ActivityLogEntry[]>(Endpoints.activity(eventId), { params: { limit, offset } });
 }
 
+export async function getEventActivity(eventId: string, limit = 10): Promise<ActivityLogEntry[]> {
+    return getRecentActivity(eventId, limit, 0);
+}
+
 export async function trackEvent(eventId: string, payload: TrackEventPayload): Promise<TrackEventResponse> {
     return apiClient.post<TrackEventResponse>(Endpoints.track(eventId), {
         eventType: payload.eventType,
