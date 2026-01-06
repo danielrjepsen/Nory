@@ -1,0 +1,129 @@
+{
+  "title": "Events",
+  "filters": {
+    "all": "All",
+    "active": "Active",
+    "ended": "Ended",
+    "archived": "Archived"
+  },
+  "stats": {
+    "activeEvents": "Active Events",
+    "photos": "Photos",
+    "guests": "Guests"
+  },
+  "createNew": "Create New Event",
+  "createNewDescription": "Start collecting photos for your next event",
+  "noEvents": "No events yet",
+  "noEventsDescription": "Create your first event to get started!",
+  "createButton": "Create Event",
+  "empty": {
+    "title": "No events yet",
+    "description": "Create your first event and let your guests share their photos and videos. Display them live on a slideshow!",
+    "cta": "Create your first event",
+    "feature": {
+      "photos": "Collect photos",
+      "slideshow": "Live slideshow",
+      "app": "Guest app"
+    }
+  },
+  "locationTbd": "Location TBD",
+  "viewQRCode": "View QR Code",
+  "noPhotos": "No photos yet",
+  "photosCount": "{{count}} photos",
+  "photosCount_one": "{{count}} photo",
+  "guestsCount": "{{count}} guests",
+  "guestsCount_one": "{{count}} guest",
+  "status": {
+    "live": "Active",
+    "ended": "Ended",
+    "draft": "Upcoming",
+    "scheduled": "Scheduled",
+    "archived": "Archived"
+  },
+  "header": {
+    "status": {
+      "live": "Live now",
+      "draft": "Draft",
+      "ended": "Ended",
+      "scheduled": "Scheduled"
+    },
+    "settings": "Settings",
+    "openGuestApp": "Open Guest App"
+  },
+  "card": {
+    "photos": "Photos",
+    "guests": "Guests"
+  },
+  "actions": {
+    "edit": "Edit",
+    "delete": "Delete",
+    "duplicate": "Duplicate",
+    "share": "Share",
+    "viewGallery": "View Gallery",
+    "manageGuests": "Manage Guests",
+    "downloadPhotos": "Download Photos"
+  },
+  "editEvent": {
+    "title": "Edit Event",
+    "fields": {
+      "name": "Event Name",
+      "description": "Description"
+    },
+    "placeholders": {
+      "name": "Enter event name",
+      "description": "Enter event description (optional)"
+    },
+    "errors": {
+      "nameRequired": "Event name is required",
+      "updateFailed": "Could not update event"
+    },
+    "saveChanges": "Save Changes"
+  },
+  "manage": {
+    "loading": "Loading event...",
+    "backToDashboard": "Back to Dashboard",
+    "hasContent": "Has content",
+    "errors": {
+      "notFound": "Event not found"
+    },
+    "stats": {
+      "photos": "Photos",
+      "visits": "Visits",
+      "guests": "Guests",
+      "date": "Date"
+    },
+    "links": {
+      "open": "Open",
+      "copy": "Copy Link",
+      "copied": "Copied!",
+      "guestApp": {
+        "title": "Guest App",
+        "description": "Share with guests to upload photos"
+      },
+      "slideshow": {
+        "title": "Slideshow",
+        "description": "Display photos on screen or TV"
+      }
+    },
+    "controls": {
+      "goLive": "Go Live",
+      "endEvent": "End Event",
+      "updating": "Updating..."
+    },
+    "goLiveModal": {
+      "title": "Go live with {{name}}?",
+      "description": "Your event will be visible to guests, and they can start uploading photos immediately.",
+      "notYet": "Not yet",
+      "goLive": "Go Live!",
+      "goingLive": "Going live..."
+    }
+  },
+  "qrCode": {
+    "title": "QR Code",
+    "guestUploadLink": "Guest Upload Link",
+    "slideshowLink": "Slideshow Link",
+    "downloadQR": "Download QR",
+    "print": "Print",
+    "scanToUpload": "Scan to upload photos"
+  }
+}

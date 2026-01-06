@@ -1,0 +1,23 @@
+{
+  "dashboard": "Dashboard",
+  "events": "Events",
+  "galleries": "Photo Galleries",
+  "qrCodes": "QR Codes",
+  "guests": "Guests",
+  "analytics": "Analytics",
+  "settings": "Settings",
+  "subtitles": {
+    "overview": "Manage your events and view statistics",
+    "analytics": "View statistics and insights for your events",
+    "settings": "Manage your account and preferences"
+  },
+  "eventNavigation": {
+    "overview": "Overview",
+    "photos": "Photos",
+    "qrCode": "QR Code",
+    "guests": "Guests",
+    "analytics": "Analytics",
+    "apps": "Apps",
+    "settings": "Settings"
+  }
+}

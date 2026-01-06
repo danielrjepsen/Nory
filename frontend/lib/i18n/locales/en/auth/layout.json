@@ -1,0 +1,23 @@
+{
+  "brandName": "Nory",
+  "headline": "Create magical events",
+  "description": "Transform your events with interactive QR experiences, real-time galleries, and seamless guest engagement.",
+  "features": {
+    "liveGallery": {
+      "title": "Live Gallery",
+      "description": "Real-time photo sharing"
+    },
+    "customThemes": {
+      "title": "Custom Themes",
+      "description": "Match your brand"
+    },
+    "instantSetup": {
+      "title": "Quick Setup",
+      "description": "Go live in minutes"
+    },
+    "analytics": {
+      "title": "Analytics",
+      "description": "Track engagement"
+    }
+  }
+}

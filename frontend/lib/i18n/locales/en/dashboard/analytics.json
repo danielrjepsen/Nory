@@ -1,0 +1,80 @@
+{
+  "title": "Analytics",
+  "overview": "Overview",
+  "photos": "Photos",
+  "guests": "Guests",
+  "engagement": "Engagement",
+  "stats": {
+    "photosUploaded": "Photos Uploaded",
+    "qrScans": "QR Scans",
+    "slideshowViews": "Slideshow Views",
+    "guestAppVisits": "Guest App Visits",
+    "galleryViews": "Gallery Views",
+    "guestbookEntries": "Guestbook Entries",
+    "registrations": "Registrations",
+    "vsPreviousWeek": "vs previous week"
+  },
+  "chart": {
+    "title": "Activity Over Time",
+    "total": "Total",
+    "average": "Average",
+    "noData": "No data for this period",
+    "periods": {
+      "week": "Week",
+      "month": "Month",
+      "year": "Year"
+    }
+  },
+  "activity": {
+    "title": "Recent Activity",
+    "empty": "No activity yet",
+    "showAll": "Show all",
+    "showLess": "Show less",
+    "types": {
+      "photosUploaded": "New photos uploaded",
+      "photoViewed": "Photo viewed",
+      "photoDownloaded": "Photo downloaded",
+      "photoLiked": "Photo liked",
+      "photoShared": "Photo shared",
+      "guestRegistered": "New guest registered",
+      "guestAppOpened": "Guest app opened",
+      "appOpened": "App opened",
+      "eventJoined": "Participant joined",
+      "qrScanned": "QR code scanned",
+      "slideshowStarted": "Slideshow started",
+      "galleryViewed": "Gallery viewed",
+      "guestbookEntry": "New guestbook entry",
+      "default": "Activity"
+    },
+    "time": {
+      "now": "Just now",
+      "minute": "min",
+      "hour": "hour",
+      "hours": "hours",
+      "day": "day",
+      "days": "days",
+      "ago": "ago"
+    }
+  },
+  "metrics": {
+    "totalPhotos": "Total Photos",
+    "totalGuests": "Total Guests",
+    "activeEvents": "Active Events",
+    "peakHours": "Peak Hours"
+  },
+  "sections": {
+    "popularEvents": "Popular Events",
+    "recentActivity": "Recent Activity",
+    "uploadTrends": "Upload Trends",
+    "guestActivity": "Guest Activity"
+  },
+  "noData": "No data available",
+  "retry": "Try Again",
+  "timeRanges": {
+    "today": "Today",
+    "week": "This Week",
+    "month": "This Month",
+    "year": "This Year",
+    "all": "All"
+  }
+}

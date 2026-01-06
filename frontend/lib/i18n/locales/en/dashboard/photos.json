@@ -1,0 +1,22 @@
+{
+  "noPhotos": "No photos yet",
+  "grid": {
+    "noPhotos": "No photos yet",
+    "loadMore": "Load More",
+    "downloading": "Downloading...",
+    "download": "Download",
+    "delete": "Delete",
+    "deleteConfirm": "Are you sure you want to delete this photo?",
+    "uploadedBy": "Uploaded by {{name}}",
+    "uploadedAt": "Uploaded {{date}}"
+  },
+  "upload": {
+    "title": "Upload Photos",
+    "dragDrop": "Drag and drop photos here",
+    "or": "or",
+    "browse": "Choose Files",
+    "uploading": "Uploading...",
+    "success": "Photos uploaded",
+    "error": "Error uploading"
+  }
+}

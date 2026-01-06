@@ -1,0 +1,19 @@
+{
+  "title": "Welcome back",
+  "subtitle": "Log in to access your event galleries and create shared memories.",
+  "emailLabel": "Email",
+  "emailPlaceholder": "your.email@example.com",
+  "passwordLabel": "Password",
+  "passwordPlaceholder": "Enter your password",
+  "rememberMe": "Remember me",
+  "forgotPassword": "Forgot password?",
+  "submit": "Log in",
+  "submitting": "Logging in...",
+  "noAccount": "Don't have an account?",
+  "signUp": "Create account",
+  "errors": {
+    "invalidCredentials": "Invalid email or password",
+    "accountLocked": "Account is locked. Try again later.",
+    "networkError": "Network error. Check your connection."
+  }
+}

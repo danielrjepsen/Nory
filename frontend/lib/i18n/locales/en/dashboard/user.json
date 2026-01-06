@@ -1,0 +1,13 @@
+{
+  "profile": {
+    "defaultName": "User",
+    "logout": "Log out",
+    "settings": "Settings",
+    "profile": "Profile"
+  },
+  "logout": {
+    "button": "Log out",
+    "confirmTitle": "Log out",
+    "confirmMessage": "Are you sure you want to log out?"
+  }
+}

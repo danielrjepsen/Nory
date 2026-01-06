@@ -1,0 +1,91 @@
+{
+  "builder": {
+    "title": "Guest App Builder",
+    "exportJson": "Export JSON",
+    "generateQR": "Generate QR Code",
+    "eventDetails": "Event Details",
+    "eventName": "Event Name",
+    "eventNamePlaceholder": "Sarah & John's Wedding",
+    "welcomeMessage": "Welcome Message",
+    "welcomeMessagePlaceholder": "Write a welcome message...",
+    "welcomeMessageDefault": "Welcome to our big day!",
+    "welcomeDefault": "Welcome!",
+    "eventNameDefault": "Your Event Name",
+    "exportNotice": "Configuration exported to console (check DevTools)",
+    "qrNotice": "QR code generation would be implemented here",
+    "addComponent": "Add Component",
+    "removeComponent": "Remove Component",
+    "themeColor": "Theme Color",
+    "features": "Features"
+  },
+  "colors": {
+    "yellow": "Yellow",
+    "pink": "Pink",
+    "purple": "Purple",
+    "blue": "Blue",
+    "green": "Green",
+    "orange": "Orange"
+  },
+  "features": {
+    "upload": "Upload Photos",
+    "comments": "Comments",
+    "likes": "Likes"
+  },
+  "components": {
+    "remote": {
+      "name": "TV Remote",
+      "description": "Control slideshow and media on TV"
+    },
+    "guestbook": {
+      "name": "Guestbook",
+      "description": "Collect messages and wishes from guests"
+    },
+    "lists": {
+      "name": "Smart Lists",
+      "description": "Create wish lists, registries, or checklists"
+    },
+    "gallery": {
+      "name": "Photo Gallery",
+      "description": "Beautiful photo galleries"
+    },
+    "schedule": {
+      "name": "Event Schedule",
+      "description": "Timeline and program"
+    },
+    "polls": {
+      "name": "Live Polls",
+      "description": "Real-time voting"
+    },
+    "custom": {
+      "name": "Custom API",
+      "description": "Build your own component"
+    }
+  },
+  "modal": {
+    "steps": {
+      "chooseType": "Choose Type",
+      "configure": "Configure"
+    },
+    "selectType": "Select Component Type",
+    "selectTypeDescription": "Choose which feature you want to add to your guest app",
+    "configureComponent": "Configure Component",
+    "configureComponentDescription": "Customize how this component should appear",
+    "preview": "Live Preview",
+    "previewTitle": "Component Preview",
+    "previewDescription": "See how it looks",
+    "selectPreview": "Select a component to see preview",
+    "actions": {
+      "cancel": "Cancel",
+      "back": "Back",
+      "next": "Next",
+      "add": "Add Component"
+    }
+  },
+  "form": {
+    "addItem": "Add Item",
+    "add": "Add",
+    "remove": "Remove",
+    "moveUp": "Move Up",
+    "moveDown": "Move Down"
+  }
+}

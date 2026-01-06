@@ -1,13 +1,5 @@
-/**
- * Authentication form validation utilities
- */
-
 const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
-/**
- * Validates email format
- * @returns Error message or empty string if valid
- */
 export function validateEmail(email: string): string {
     const trimmed = email.trim();
 
@@ -22,12 +14,6 @@ export function validateEmail(email: string): string {
     return '';
 }
 
-/**
- * Validates password strength
- * @param password - Password to validate
- * @param minLength - Minimum length (default: 8)
- * @returns Error message or empty string if valid
- */
 export function validatePassword(password: string, minLength: number = 8): string {
     if (!password) {
         return 'Password is required';
@@ -37,7 +23,6 @@ export function validatePassword(password: string, minLength: number = 8): strin
         return `Password must be at least ${minLength} characters`;
     }
 
-    // Only check advanced rules for registration (minLength >= 8)
     if (minLength >= 8) {
         if (!/[a-z]/.test(password)) {
             return 'Password must contain at least one lowercase letter';
@@ -59,9 +44,6 @@ export function validatePassword(password: string, minLength: number = 8): strin
     return '';
 }
 
-/**
- * Gets detailed password error for display
- */
 export function getPasswordError(password: string): string {
     if (!password) {
         return 'Password is required';
@@ -90,10 +72,6 @@ export function getPasswordError(password: string): string {
     return '';
 }
 
-/**
- * Validates name field
- * @returns Error message or empty string if valid
- */
 export function validateName(name: string): string {
     const trimmed = name.trim();
 
@@ -108,9 +86,6 @@ export function validateName(name: string): string {
     return '';
 }
 
-/**
- * Checks if a form field has an error
- */
 export function hasError(errors: Record<string, string | undefined>, field: string): boolean {
     return Boolean(errors[field]);
 }

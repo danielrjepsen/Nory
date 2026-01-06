@@ -1,0 +1,164 @@
+{
+  "loading": "Loading...",
+  "error": "An error occurred",
+  "save": "Save",
+  "cancel": "Cancel",
+  "delete": "Delete",
+  "edit": "Edit",
+  "create": "Create",
+  "back": "Back",
+  "next": "Next",
+  "submit": "Submit",
+  "confirm": "Confirm",
+  "close": "Close",
+  "yes": "Yes",
+  "no": "No",
+  "or": "or",
+  "add": "Add",
+  "remove": "Remove",
+  "search": "Search",
+  "filter": "Filter",
+  "sort": "Sort",
+  "actions": "Actions",
+  "status": "Status",
+  "date": "Date",
+  "time": "Time",
+  "name": "Name",
+  "description": "Description",
+  "email": "Email",
+  "password": "Password",
+  "phone": "Phone",
+  "address": "Address",
+  "required": "Required",
+  "optional": "Optional",
+  "selected": "Selected",
+  "all": "All",
+  "none": "None",
+  "more": "More",
+  "less": "Less",
+  "showMore": "Show more",
+  "showLess": "Show less",
+  "viewAll": "View all",
+  "noResults": "No results",
+  "tryAgain": "Try again",
+  "success": "Success",
+  "warning": "Warning",
+  "info": "Information",
+  "validation": {
+    "required": "This field is required",
+    "email": "Enter a valid email address",
+    "minLength": "Minimum {{min}} characters",
+    "maxLength": "Maximum {{max}} characters",
+    "passwordMatch": "Passwords do not match",
+    "invalidFormat": "Invalid format"
+  },
+  "brand": {
+    "name": "Nory",
+    "tagline": "Create magical events"
+  },
+  "emailProviderGuide": {
+    "title": "Choose email provider",
+    "helpButton": "Help me set up",
+    "back": "Back",
+    "next": "Next",
+    "useThisProvider": "Use this provider",
+    "providers": {
+      "gmail": {
+        "name": "Gmail",
+        "description": "Use your Gmail account with App Password"
+      },
+      "outlook": {
+        "name": "Outlook / Microsoft 365",
+        "description": "Use your Outlook or Microsoft 365 account"
+      },
+      "custom": {
+        "name": "Other SMTP server",
+        "description": "Configure your own SMTP server"
+      }
+    },
+    "gmail": {
+      "openSecurity": "Open Google security settings",
+      "openAppPasswords": "Open App Passwords",
+      "passwordTip": "Save this app password in a safe place - you can only see it once!",
+      "steps": {
+        "enableTwoFactor": {
+          "title": "1. Enable two-factor authentication",
+          "description": "Go to your Google account security page and enable 2-step verification if not already enabled."
+        },
+        "generateAppPassword": {
+          "title": "2. Create an App Password",
+          "description": "Go to App Passwords (requires 2-step verification), select \"Mail\" and your device, and click \"Generate\"."
+        },
+        "copyPassword": {
+          "title": "3. Copy your App Password",
+          "description": "Google will show a 16-character password. Copy this and use it as your password in Nory instead of your regular Google password."
+        }
+      }
+    },
+    "outlook": {
+      "smtpSettings": "SMTP settings",
+      "host": "Server",
+      "port": "Port",
+      "steps": {
+        "signIn": {
+          "title": "1. SMTP settings",
+          "description": "Outlook/Microsoft 365 uses the SMTP server smtp.office365.com on port 587 with TLS encryption."
+        },
+        "useEmailAsUsername": {
+          "title": "2. Use your email as username",
+          "description": "Enter your full email address (e.g. your@outlook.com or your@company.com) as username."
+        },
+        "useRegularPassword": {
+          "title": "3. Use your password",
+          "description": "Use your regular Outlook/Microsoft password. If you use two-factor authentication, you may need to create an app password."
+        }
+      }
+    },
+    "custom": {
+      "title": "Custom SMTP server",
+      "description": "Enter your SMTP server details manually. Contact your email provider for the correct settings.",
+      "requiredInfo": "You will need the following",
+      "smtpHost": "SMTP server address (e.g. smtp.example.com)",
+      "smtpPort": "Port number (typically 587 for TLS or 465 for SSL)",
+      "username": "Username (often your email address)",
+      "password": "Password"
+    }
+  },
+  "serviceAccountGuide": {
+    "title": "How to get your key file",
+    "helpButton": "How do I get the key file?",
+    "previous": "Previous",
+    "next": "Next",
+    "done": "Done",
+    "openConsole": "Open Google Cloud Console",
+    "openDriveApi": "Open Drive API",
+    "createAccount": "Create service account",
+    "shareTip": "Important: Copy the service account email (ending in @...iam.gserviceaccount.com) and share your Google Drive folder with this email. Give it \"Editor\" access.",
+    "steps": {
+      "createProject": {
+        "title": "1. Create a Google Cloud project",
+        "description": "Go to Google Cloud Console and create a new project. Give it a recognizable name, e.g. \"Nory Backup\"."
+      },
+      "enableApi": {
+        "title": "2. Enable Google Drive API",
+        "description": "Search for \"Google Drive API\" in the API library and click \"Enable\" to allow your project to use Google Drive."
+      },
+      "createServiceAccount": {
+        "title": "3. Create a service account",
+        "description": "Go to \"IAM & Admin\" → \"Service Accounts\" and click \"Create Service Account\". Give it a name and skip the roles."
+      },
+      "createKey": {
+        "title": "4. Create a key",
+        "description": "Click on your new service account, go to the \"Keys\" tab, click \"Add Key\" → \"Create new key\" and select JSON format."
+      },
+      "downloadKey": {
+        "title": "5. Download the key file",
+        "description": "The JSON file downloads automatically. This file is your key - store it securely and upload it here in Nory."
+      },
+      "shareFolder": {
+        "title": "6. Share your Drive folder",
+        "description": "Create a folder in Google Drive for backups. Right-click → \"Share\" and add the service account email with \"Editor\" access."
+      }
+    }
+  }
+}

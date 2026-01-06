@@ -1,7 +1,3 @@
-/**
- * Dashboard constants
- */
-
 export const LOADING_SKELETON_COUNT = 4;
 
 export const PHOTO_SKELETON_COUNT = 6;

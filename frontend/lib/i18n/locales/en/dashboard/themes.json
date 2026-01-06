@@ -1,0 +1,56 @@
+{
+  "title": "Theme Customization",
+  "loading": "Loading themes...",
+  "selectTheme": "Select Theme",
+  "preview": {
+    "eventName": "Your Event",
+    "eventDescription": "Join us to celebrate this special moment",
+    "welcomeMessage": "Welcome to our special event. Share your best moments with the features below.",
+    "welcome": "Welcome to our day!",
+    "photos": "Photos",
+    "guests": "Guests",
+    "uploadButton": "Upload Photo",
+    "uploadMedia": "Upload Media",
+    "defaultTheme": "Default",
+    "defaultDate": "September 14, 2025",
+    "livePreview": "Live Preview",
+    "colorPalette": "Color Palette",
+    "colors": {
+      "primary": "Primary",
+      "secondary": "Secondary",
+      "accent": "Accent",
+      "bg1": "BG1",
+      "bg2": "BG2"
+    }
+  },
+  "custom": {
+    "title": "Custom Theme",
+    "description": "Create your own color palette",
+    "configured": "Configured",
+    "configure": "Click to configure"
+  },
+  "editor": {
+    "title": "Custom Theme Editor",
+    "subtitle": "Create the perfect color palette for your event",
+    "colorConfiguration": "Color Configuration",
+    "primaryColor": "Primary Color",
+    "secondaryColor": "Secondary Color",
+    "accentColor": "Accent Color",
+    "backgroundColor1": "Background Color 1",
+    "backgroundColor2": "Background Color 2",
+    "textColor": "Text Color",
+    "cancel": "Cancel",
+    "save": "Save Custom Theme",
+    "reset": "Reset to Default"
+  },
+  "presets": {
+    "wedding": "Wedding",
+    "birthday": "Birthday",
+    "corporate": "Corporate",
+    "party": "Party",
+    "elegant": "Elegant",
+    "modern": "Modern",
+    "rustic": "Rustic",
+    "minimal": "Minimal"
+  }
+}

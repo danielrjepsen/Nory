@@ -26,6 +26,15 @@
     "mismatch": "Adgangskoderne matcher ikke",
     "tooShort": "Adgangskoden skal være mindst 8 tegn"
   },
+  "language": {
+    "title": "Sprog",
+    "subtitle": "Vælg dit foretrukne sprog",
+    "current": "Nuværende sprog",
+    "languages": {
+      "da": "Dansk",
+      "en": "English"
+    }
+  },
   "organization": {
     "title": "Organisation",
     "name": "Organisationsnavn",

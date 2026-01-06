@@ -1,0 +1,32 @@
+{
+  "title": "Create Account",
+  "subtitle": "Get started with Nory today and create amazing events.",
+  "fullNameLabel": "Full Name",
+  "fullNamePlaceholder": "Enter your full name",
+  "emailLabel": "Email",
+  "emailPlaceholder": "your.email@example.com",
+  "passwordLabel": "Password",
+  "passwordPlaceholder": "Min. 8 characters, uppercase, lowercase, numbers",
+  "confirmPasswordLabel": "Confirm Password",
+  "confirmPasswordPlaceholder": "Repeat your password",
+  "orgNameLabel": "Organization Name",
+  "orgNamePlaceholder": "Your company or organization",
+  "orgTypeLabel": "Organization Type",
+  "orgTypes": {
+    "individual": "Individual",
+    "company": "Company",
+    "agency": "Agency"
+  },
+  "termsAgreement": "I accept the terms and conditions and privacy policy",
+  "termsLink": "Terms and Conditions",
+  "privacyLink": "Privacy Policy",
+  "submit": "Create Account",
+  "submitting": "Creating account...",
+  "hasAccount": "Already have an account?",
+  "signIn": "Log in",
+  "errors": {
+    "termsRequired": "You must accept the terms and conditions",
+    "emailExists": "An account with this email already exists",
+    "weakPassword": "Password is too weak"
+  }
+}

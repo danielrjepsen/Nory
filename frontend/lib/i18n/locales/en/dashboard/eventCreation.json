@@ -1,0 +1,152 @@
+{
+  "modal": {
+    "title": "Create New Event",
+    "back": "Back",
+    "next": "Next",
+    "creating": "Creating...",
+    "submit": "Create Event"
+  },
+  "wizard": {
+    "steps": {
+      "step1": { "label": "Step 1", "title": "Details" },
+      "step2": { "label": "Step 2", "title": "Theme" },
+      "step3": { "label": "Step 3", "title": "Guest App" },
+      "step4": { "label": "Step 4", "title": "Create" }
+    },
+    "explanation": {
+      "step1": {
+        "tag": "Step 1 of 4",
+        "title": "Create unforgettable memories",
+        "description": "Your event collects all photos in one place, so you can relive the day together.",
+        "previewSubtitle": "A moment worth remembering",
+        "features": [
+          "Unlimited photos",
+          "QR code for easy sharing",
+          "Live slideshow on TV"
+        ]
+      },
+      "step2": {
+        "tag": "Step 2 of 4",
+        "title": "Choose your theme",
+        "description": "Your theme determines colors and style for your event and guest app.",
+        "features": [
+          "Multiple beautiful themes",
+          "Customized colors",
+          "Professional design"
+        ]
+      },
+      "step3": {
+        "tag": "Step 3 of 4",
+        "title": "Design your guest app",
+        "description": "Customize colors, features, and add components to your guest app.",
+        "features": [
+          "Choose theme and colors",
+          "Add interactive components",
+          "Live preview of your app"
+        ]
+      },
+      "step4": {
+        "tag": "Step 4 of 4",
+        "title": "Ready to go live",
+        "description": "Review your settings and create your event.",
+        "features": [
+          "Share QR code with guests",
+          "Start receiving photos",
+          "Display slideshow on big screen"
+        ]
+      }
+    },
+    "preview": {
+      "photos": "Photos",
+      "guests": "Guests",
+      "defaultTitle": "Your Event"
+    },
+    "errors": {
+      "createFailed": "Could not create event"
+    }
+  },
+  "details": {
+    "sectionTitle": "Event Info",
+    "nameLabel": "Name",
+    "namePlaceholder": "e.g. Sarah & John's Wedding",
+    "descriptionLabel": "Description",
+    "descriptionPlaceholder": "Tell guests a bit about the event...",
+    "dateLabel": "Date",
+    "multiDayCheckbox": "Event spans multiple days",
+    "endDateLabel": "End Date",
+    "publicEvent": "Public Event",
+    "publicEventDescription": "Display on front page so others can find it"
+  },
+  "eventType": {
+    "title": "What will you use Nory for?",
+    "subtitle": "Choose the solution that best fits your needs",
+    "singleEvent": {
+      "title": "Single Event",
+      "description": "I'm planning a wedding, birthday, or other celebration"
+    },
+    "eventOrganizer": {
+      "title": "Event Organizer",
+      "description": "I organize multiple events and need a professional solution"
+    }
+  },
+  "basicInfo": {
+    "title": "What is your event?",
+    "subtitle": "Tell us the basic details about your event",
+    "eventNameLabel": "Event Name",
+    "eventNamePlaceholder": "E.g. Sara's Birthday Party",
+    "descriptionLabel": "Description",
+    "descriptionPlaceholder": "Tell your guests what the event is about...",
+    "descriptionHint": "This will be visible to your guests on the event page"
+  },
+  "schedule": {
+    "title": "Schedule",
+    "subtitle": "When does your event take place?",
+    "selectDate": "Select date",
+    "selectTime": "Select time",
+    "startDate": "Start Date",
+    "endDate": "End Date",
+    "allDay": "All Day",
+    "selected": "Selected: {{date}}"
+  },
+  "settings": {
+    "title": "Event Settings",
+    "subtitle": "Configure how your event works",
+    "publicEvent": "Public Event",
+    "publicEventDescription": "When enabled, guests can find your event via search. When disabled, your event is invite-only.",
+    "allowUploads": "Allow Uploads",
+    "allowUploadsDescription": "Let guests upload photos to the gallery",
+    "moderatePhotos": "Moderate Photos",
+    "moderatePhotosDescription": "Review photos before they appear in the gallery",
+    "allowComments": "Allow Comments",
+    "allowCommentsDescription": "Let guests comment on photos"
+  },
+  "guestApp": {
+    "title": "Customize Guest App",
+    "subtitle": "Configure how your guests interact with your event"
+  },
+  "theme": {
+    "title": "Choose Theme"
+  },
+  "review": {
+    "title": "Review & Create",
+    "subtitle": "Review your event details and create your event",
+    "edit": "Edit",
+    "eventDetails": "Event Details",
+    "name": "Name",
+    "notSpecified": "Not specified",
+    "description": "Description",
+    "startDate": "Start Date",
+    "endDate": "End Date",
+    "visibility": "Visibility",
+    "publicWithLink": "Public - Anyone with link",
+    "privateInviteOnly": "Private - Invite only",
+    "theme": "Theme",
+    "defaultTheme": "Default",
+    "selectedTheme": "Selected Theme",
+    "guestApp": "Guest App",
+    "componentsConfigured": "{{count}} component(s) configured",
+    "defaultConfig": "Default configuration",
+    "readyToCreate": "Ready to create",
+    "readyToCreateDescription": "Once the event is created, you can upload photos and share with your guests."
+  }
+}
