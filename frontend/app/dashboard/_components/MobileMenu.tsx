@@ -10,13 +10,12 @@ interface MobileMenuProps {
   isOpen: boolean;
   navigationItems: NavigationItem[];
   activeNav: string;
-  onNavClick: (item: NavigationItem) => void;
   onLogout: () => void;
   onClose: () => void;
 }
 
 export const MobileMenu = forwardRef<HTMLDivElement, MobileMenuProps>(
-  ({ isOpen, navigationItems, activeNav, onNavClick, onLogout, onClose }, ref) => {
+  ({ isOpen, navigationItems, activeNav, onLogout, onClose }, ref) => {
     const { t } = useTranslation('dashboard');
 
     if (!isOpen) return null;
@@ -24,7 +23,7 @@ export const MobileMenu = forwardRef<HTMLDivElement, MobileMenuProps>(
     return (
       <div
         ref={ref}
-        className="absolute top-20 right-6 z-[99] bg-white/95 backdrop-blur-xl rounded-[20px] p-5 shadow-[0_10px_40px_rgba(0,0,0,0.15)] min-w-[200px]"
+        className="absolute top-20 right-6 z-[99] bg-nory-card border-2 border-nory-border rounded-img p-4 shadow-brutal min-w-[200px]"
       >
         {navigationItems.map((item) => (
           <NavButton
@@ -32,17 +31,15 @@ export const MobileMenu = forwardRef<HTMLDivElement, MobileMenuProps>(
             icon={item.icon}
             label={item.label}
             isActive={activeNav === item.id}
-            onClick={() => {
-              onNavClick(item);
-              onClose();
-            }}
+            href={item.path}
+            onClick={onClose}
             variant="mobile"
           />
         ))}
-        <hr className="my-4 border-gray-200" />
+        <hr className="my-4 border-nory-border/30 border-t-2" />
         <button
           onClick={onLogout}
-          className="flex items-center gap-3 w-full px-4 py-3 bg-transparent text-red-600 rounded-xl text-base font-semibold"
+          className="flex items-center gap-3 w-full px-4 py-3 bg-transparent text-red-500 rounded-[8px] text-base font-bold font-grotesk transition-all duration-150 hover:bg-red-500/10"
         >
           <LogoutIcon />
           {t('user.logout.button')}

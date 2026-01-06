@@ -15,14 +15,14 @@ export function QRButton({ onClick, className = '' }: QRButtonProps) {
     <div className={`flex justify-center ${className}`}>
       <button
         onClick={onClick}
-        className="w-12 h-12 border-2 border-gray-300 rounded-xl flex items-center justify-center transition-all duration-200 hover:border-gray-900 hover:bg-gray-900 group focus:outline-none focus:ring-2 focus:ring-gray-900 focus:ring-offset-2"
+        className="w-12 h-12 border-brutal rounded-[10px] bg-[#fffef9] flex items-center justify-center transition-all duration-150 shadow-brutal-sm hover:-translate-x-0.5 hover:-translate-y-0.5 hover:shadow-brutal hover:bg-[#ffe951] group focus:outline-none"
         aria-label={t('events.viewQRCode')}
       >
         <svg
           width="24"
           height="24"
           fill="currentColor"
-          className="text-gray-500 transition-colors duration-200 group-hover:text-white"
+          className="text-[#1a1a1a]"
           viewBox="0 0 24 24"
           aria-hidden="true"
         >
