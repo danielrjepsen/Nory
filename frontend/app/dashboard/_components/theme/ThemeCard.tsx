@@ -20,7 +20,6 @@ export function ThemeCard({ theme, isSelected, onClick }: ThemeCardProps) {
           : '0 4px 6px rgba(0, 0, 0, 0.07)',
       }}
     >
-      {/* Theme preview */}
       <div
         className="h-[120px] flex items-center justify-center relative"
         style={{
@@ -37,7 +36,6 @@ export function ThemeCard({ theme, isSelected, onClick }: ThemeCardProps) {
           {theme.icon}
         </div>
 
-        {/* Color palette previewer */}
         <div className="absolute bottom-2 right-2 flex gap-1">
           {[theme.primaryColor, theme.secondaryColor, theme.accentColor].map((color, idx) => (
             <div
@@ -69,7 +67,6 @@ export function ThemeCard({ theme, isSelected, onClick }: ThemeCardProps) {
         </div>
       </div>
 
-      {/* Theme info */}
       <div className="p-5">
         <h4
           className="text-lg font-bold mb-1 m-0 transition-all duration-300"

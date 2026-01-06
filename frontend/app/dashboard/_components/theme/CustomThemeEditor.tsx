@@ -1,6 +1,7 @@
 'use client';
 
 import React from 'react';
+import { useTranslation } from 'react-i18next';
 import { useCustomTheme } from '../../_hooks/useCustomTheme';
 import { ColorPicker } from '../form/ColorPicker';
 import { ThemeEditorPreview } from './ThemeEditorPreview';
@@ -19,6 +20,7 @@ export default function CustomThemeEditor({
   onSave,
   initialTheme,
 }: CustomThemeEditorProps) {
+  const { t } = useTranslation('dashboard', { keyPrefix: 'themes' });
   const { themeData, updateColor } = useCustomTheme(initialTheme);
 
   const handleSave = () => {
@@ -34,10 +36,10 @@ export default function CustomThemeEditor({
         <div className="px-8 py-6 border-b border-gray-200 flex justify-between items-center">
           <div>
             <h2 className="text-2xl font-bold text-gray-900 mb-1">
-              🎨 Custom Theme Editor
+              🎨 {t('editor.title')}
             </h2>
             <p className="text-sm text-gray-600 m-0">
-              Create your perfect color palette for your event
+              {t('editor.subtitle')}
             </p>
           </div>
           <button
@@ -49,38 +51,36 @@ export default function CustomThemeEditor({
         </div>
 
         <div className="p-8 grid grid-cols-2 gap-8">
-
-          {/* Color configuration */}
           <div>
-            <h3 className="text-lg font-semibold text-gray-900 mb-5">Color Configuration</h3>
+            <h3 className="text-lg font-semibold text-gray-900 mb-5">{t('editor.colorConfiguration')}</h3>
 
             <div className="flex flex-col gap-5">
               <ColorPicker
-                label="Primary Color"
+                label={t('editor.primaryColor')}
                 value={themeData.primaryColor}
                 onChange={(value) => updateColor('primaryColor', value)}
               />
 
               <ColorPicker
-                label="Secondary Color"
+                label={t('editor.secondaryColor')}
                 value={themeData.secondaryColor}
                 onChange={(value) => updateColor('secondaryColor', value)}
               />
 
               <ColorPicker
-                label="Accent Color"
+                label={t('editor.accentColor')}
                 value={themeData.accentColor}
                 onChange={(value) => updateColor('accentColor', value)}
               />
 
               <ColorPicker
-                label="Background Color 1"
+                label={t('editor.backgroundColor1')}
                 value={themeData.backgroundColor1}
                 onChange={(value) => updateColor('backgroundColor1', value)}
               />
 
               <ColorPicker
-                label="Background Color 2"
+                label={t('editor.backgroundColor2')}
                 value={themeData.backgroundColor2}
                 onChange={(value) => updateColor('backgroundColor2', value)}
               />
@@ -95,7 +95,7 @@ export default function CustomThemeEditor({
             onClick={onClose}
             className="px-6 py-3 border border-gray-300 rounded-lg bg-white text-gray-700 text-sm font-medium cursor-pointer transition-all duration-200 hover:bg-gray-50"
           >
-            Cancel
+            {t('editor.cancel')}
           </button>
           <button
             onClick={handleSave}
@@ -104,7 +104,7 @@ export default function CustomThemeEditor({
               background: `linear-gradient(135deg, ${themeData.primaryColor}, ${themeData.secondaryColor})`,
             }}
           >
-            Save Custom Theme
+            {t('editor.save')}
           </button>
         </div>
       </div>

@@ -46,7 +46,6 @@ export default function ThemePreview({
     );
   }
 
-  // Use custom theme if selected, otherwise find from presets
   const selectedTheme =
     themeName === 'custom' && customThemeData
       ? (customThemeData as Theme)

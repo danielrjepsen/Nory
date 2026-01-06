@@ -1,4 +1,5 @@
 import React from 'react';
+import { useTranslation } from 'react-i18next';
 import { Theme } from '../../_types/theme';
 
 interface PreviewCardProps {
@@ -9,6 +10,7 @@ interface PreviewCardProps {
 }
 
 export function PreviewCard({ eventName, eventDescription, startsAt, theme }: PreviewCardProps) {
+  const { t, i18n } = useTranslation('dashboard', { keyPrefix: 'themes' });
   const backgroundColor1 = theme.backgroundColor1 || '#ffffff';
   const backgroundColor2 = theme.backgroundColor2 || '#f3f4f6';
   const textPrimary = theme.textPrimary || '#111827';
@@ -32,37 +34,36 @@ export function PreviewCard({ eventName, eventDescription, startsAt, theme }: Pr
           }}
         />
 
-        {/* Content */}
         <div className="relative z-10">
           <div
             className="text-xs font-medium uppercase tracking-wider mb-4 opacity-70"
             style={{ color: textAccent }}
           >
             {startsAt
-              ? new Date(startsAt).toLocaleDateString('en-US', {
+              ? new Date(startsAt).toLocaleDateString(i18n.language, {
                 month: 'long',
                 day: 'numeric',
                 year: 'numeric',
               })
-              : 'September 14, 2025'}
+              : t('preview.defaultDate')}
           </div>
 
           <h1
             className="text-[28px] font-bold mb-2 tracking-tight"
             style={{ color: textPrimary, fontFamily: primaryFont }}
           >
-            {eventName || 'Your Event Name'}
+            {eventName || t('preview.eventName')}
           </h1>
 
           <p className="text-sm opacity-60 font-normal m-0" style={{ color: textSecondary }}>
-            {eventDescription || 'Join us in celebrating this special moment'}
+            {eventDescription || t('preview.eventDescription')}
           </p>
         </div>
       </div>
 
       <div className="p-8 bg-[#fafbfc]">
         <p className="text-gray-500 text-sm text-center mb-6 leading-relaxed m-0">
-          Welcome to our special event. Share your favorite moments using the features below.
+          {t('preview.welcomeMessage')}
         </p>
 
         <button
@@ -71,7 +72,7 @@ export function PreviewCard({ eventName, eventDescription, startsAt, theme }: Pr
             background: `linear-gradient(135deg, ${theme.primaryColor}, ${theme.secondaryColor})`,
           }}
         >
-          Upload Media
+          {t('preview.uploadMedia')}
         </button>
       </div>
     </div>

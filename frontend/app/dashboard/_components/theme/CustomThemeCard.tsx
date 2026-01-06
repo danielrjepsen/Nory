@@ -1,4 +1,5 @@
 import React from 'react';
+import { useTranslation } from 'react-i18next';
 import { Theme } from '../../_types/theme';
 
 interface CustomThemeCardProps {
@@ -8,6 +9,7 @@ interface CustomThemeCardProps {
 }
 
 export function CustomThemeCard({ isSelected, onClick, customThemeData }: CustomThemeCardProps) {
+  const { t } = useTranslation('dashboard', { keyPrefix: 'themes' });
   const hasCustomColors = customThemeData?.primaryColor && customThemeData?.secondaryColor;
 
   return (
@@ -23,7 +25,6 @@ export function CustomThemeCard({ isSelected, onClick, customThemeData }: Custom
           : '0 1px 3px 0 rgba(0, 0, 0, 0.1)',
       }}
     >
-      {/* Custom theme */}
       <div
         className="h-[120px] flex items-center justify-center relative"
         style={{
@@ -42,7 +43,6 @@ export function CustomThemeCard({ isSelected, onClick, customThemeData }: Custom
           🎨
         </div>
 
-        {/* Color palette */}
         {hasCustomColors && (
           <div className="absolute bottom-2 right-2 flex gap-1">
             <div
@@ -85,14 +85,14 @@ export function CustomThemeCard({ isSelected, onClick, customThemeData }: Custom
 
       <div className="p-4">
         <h4 className="text-base font-semibold text-gray-900 m-0 mb-1">
-          Custom Theme
+          {t('custom.title')}
         </h4>
         <p className="text-xs text-gray-600 m-0 leading-snug">
-          Create your own color palette
+          {t('custom.description')}
         </p>
 
         <div className="mt-2 pt-2 border-t border-gray-100 text-[11px] text-gray-400">
-          {customThemeData?.primaryColor ? 'Configured' : 'Click to configure'}
+          {customThemeData?.primaryColor ? t('custom.configured') : t('custom.configure')}
         </div>
       </div>
     </div>
