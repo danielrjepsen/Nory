@@ -48,7 +48,8 @@
       "scheduled": "Scheduled"
     },
     "settings": "Settings",
-    "openGuestApp": "Open Guest App"
+    "openGuestApp": "Open Guest App",
+    "publish": "Publish"
   },
   "card": {
     "photos": "Photos",
@@ -93,16 +94,43 @@
       "date": "Date"
     },
     "links": {
+      "title": "Links",
       "open": "Open",
-      "copy": "Copy Link",
+      "copy": "Copy",
       "copied": "Copied!",
       "guestApp": {
         "title": "Guest App",
-        "description": "Share with guests to upload photos"
+        "description": "Share with guests to upload photos",
+        "publishFirst": "Publish first to enable"
       },
       "slideshow": {
         "title": "Slideshow",
-        "description": "Display photos on screen or TV"
+        "description": "Display photos on screen or TV",
+        "publishFirst": "Publish first to enable"
+      }
+    },
+    "quickActions": {
+      "title": "Quick Access",
+      "guestApp": {
+        "title": "Guest App",
+        "description": "Share with guests",
+        "publishFirst": "Publish first"
+      },
+      "slideshow": {
+        "title": "Slideshow",
+        "description": "Display on screen or TV"
+      },
+      "download": {
+        "title": "Download",
+        "description": "Get all photos"
+      },
+      "upload": {
+        "title": "Upload",
+        "description": "Add photos"
+      },
+      "publish": {
+        "title": "Publish",
+        "description": "Make event live"
       }
     },
     "controls": {
@@ -120,10 +148,13 @@
   },
   "qrCode": {
     "title": "QR Code",
-    "guestUploadLink": "Guest Upload Link",
-    "slideshowLink": "Slideshow Link",
-    "downloadQR": "Download QR",
+    "shareWithGuests": "Share with guests",
+    "scanToOpen": "Scan to open guest app",
+    "download": "Download",
     "print": "Print",
-    "scanToUpload": "Scan to upload photos"
+    "howToUse": "How to use the QR code",
+    "instruction1": "Print or display the QR code at your event",
+    "instruction2": "Guests scan to upload photos",
+    "instruction3": "Photos appear instantly on the slideshow"
   }
 }

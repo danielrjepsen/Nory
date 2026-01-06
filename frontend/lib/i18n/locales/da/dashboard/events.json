@@ -48,7 +48,8 @@
       "scheduled": "Planlagt"
     },
     "settings": "Indstillinger",
-    "openGuestApp": "Åbn gæste-app"
+    "openGuestApp": "Åbn gæste-app",
+    "publish": "Publicer"
   },
   "card": {
     "photos": "Billeder",
@@ -93,16 +94,43 @@
       "date": "Dato"
     },
     "links": {
+      "title": "Links",
       "open": "Åbn",
-      "copy": "Kopier link",
+      "copy": "Kopier",
       "copied": "Kopieret!",
       "guestApp": {
         "title": "Gæste-app",
-        "description": "Del med gæster for at uploade billeder"
+        "description": "Del med gæster for at uploade billeder",
+        "publishFirst": "Publicer først for at aktivere"
       },
       "slideshow": {
         "title": "Slideshow",
-        "description": "Vis billeder på skærm eller TV"
+        "description": "Vis billeder på skærm eller TV",
+        "publishFirst": "Publicer først for at aktivere"
+      }
+    },
+    "quickActions": {
+      "title": "Hurtig adgang",
+      "guestApp": {
+        "title": "Gæste-app",
+        "description": "Del med gæster",
+        "publishFirst": "Publicer først"
+      },
+      "slideshow": {
+        "title": "Slideshow",
+        "description": "Vis på skærm eller TV"
+      },
+      "download": {
+        "title": "Download",
+        "description": "Hent alle billeder"
+      },
+      "upload": {
+        "title": "Upload",
+        "description": "Tilføj billeder"
+      },
+      "publish": {
+        "title": "Publicer",
+        "description": "Gør begivenheden live"
       }
     },
     "controls": {
@@ -120,10 +148,13 @@
   },
   "qrCode": {
     "title": "QR-kode",
-    "guestUploadLink": "Gæste upload link",
-    "slideshowLink": "Slideshow link",
-    "downloadQR": "Download QR",
+    "shareWithGuests": "Del med gæster",
+    "scanToOpen": "Scan for at åbne gæste-appen",
+    "download": "Download",
     "print": "Print",
-    "scanToUpload": "Scan for at uploade billeder"
+    "howToUse": "Sådan bruger du QR-koden",
+    "instruction1": "Print eller vis QR-koden ved dit event",
+    "instruction2": "Gæster scanner for at uploade billeder",
+    "instruction3": "Billeder vises med det samme på slideshowet"
   }
 }

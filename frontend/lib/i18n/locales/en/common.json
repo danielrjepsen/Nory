@@ -44,6 +44,12 @@
   "success": "Success",
   "warning": "Warning",
   "info": "Information",
+  "dismiss": "Dismiss",
+  "user": "User",
+  "expandSidebar": "Expand sidebar",
+  "collapseSidebar": "Collapse sidebar",
+  "createEvent": "Create event",
+  "links": "Links",
   "validation": {
     "required": "This field is required",
     "email": "Enter a valid email address",

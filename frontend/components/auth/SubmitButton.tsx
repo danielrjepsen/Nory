@@ -20,33 +20,35 @@ export function SubmitButton({
       disabled={disabled || loading}
       className={`
         w-full
-        bg-[#2d3436]
-        text-white
-        border-none
-        px-5 py-4
-        rounded-xl
-        text-base
-        font-semibold
+        bg-[#ffe951]
+        text-[#1a1a1a]
+        border-brutal
+        px-4 py-4
+        rounded-[10px]
+        text-[1.05rem]
+        font-bold
+        font-grotesk
         cursor-pointer
-        transition-all duration-300
+        shadow-brutal
+        transition-all duration-150
         mb-6
-        relative
-        overflow-hidden
         flex items-center justify-center gap-2
-        hover:bg-[#636e72]
-        hover:-translate-y-1
-        hover:shadow-[0_12px_30px_rgba(45,52,54,0.4)]
-        active:-translate-y-0.5
-        disabled:bg-[#9ca3af]
+        hover:-translate-x-0.5
+        hover:-translate-y-0.5
+        hover:shadow-[7px_7px_0_#1a1a1a]
+        active:translate-x-0.5
+        active:translate-y-0.5
+        active:shadow-[2px_2px_0_#1a1a1a]
+        disabled:bg-[#e8e8e6]
         disabled:cursor-not-allowed
         disabled:transform-none
-        disabled:shadow-none
+        disabled:shadow-brutal
         ${className}
       `}
       {...props}
     >
       {loading && (
-        <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+        <div className="w-5 h-5 border-2 border-[#1a1a1a]/30 border-t-[#1a1a1a] rounded-full animate-spin" />
       )}
       {loading ? loadingText : children}
     </button>

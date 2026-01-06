@@ -12,18 +12,18 @@ function getEventStatus(event: EventSummary): EventStatus {
     if (event.status === 'draft') return 'draft';
 
     if (event.status === 'archived' || event.status === 'ended') {
-        return 'completed';
+        return 'ended';
     }
 
-    if (event.status === 'live') return 'active';
+    if (event.status === 'live') return 'live';
 
     // check if event has ended
     const now = new Date();
     const endDate = event.endsAt ? new Date(event.endsAt) : null;
 
-    if (endDate && now > endDate) return 'completed';
+    if (endDate && now > endDate) return 'ended';
 
-    return 'active';
+    return 'live';
 }
 
 export function mapEventSummaryToEventData(event: EventSummary): EventData {

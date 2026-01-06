@@ -1,8 +1,28 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,500;12..96,600;12..96,700&family=Inter:wght@300;400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&family=Space+Mono:wght@400;700&display=swap');
 
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+/* Theme CSS Custom Properties */
+:root {
+  --nory-bg: #eeeee9;
+  --nory-card: #fffef9;
+  --nory-border: #1a1a1a;
+  --nory-text: #1a1a1a;
+  --nory-muted: #888888;
+  --nory-yellow: #ffe951;
+}
+
+.dark {
+  --nory-bg: #121210;
+  --nory-card: #1e1e1c;
+  --nory-border: #454540;
+  --nory-text: #f8f8f5;
+  --nory-muted: #9a9a95;
+  --nory-yellow: #ffe951;
+  --nory-black: #0a0a08;
+}
 
 /* Base styles */
 @layer base {
@@ -14,7 +34,7 @@
 
   body {
     font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
-    background: #fafafa;
+    background: var(--nory-bg);
     min-height: 100vh;
     position: relative;
     overflow-x: hidden;
@@ -61,6 +81,14 @@
   background: rgba(0, 0, 0, 0.3);
 }
 
+.dark ::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.15);
+}
+
+.dark ::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.25);
+}
+
 /* Smooth transitions for all interactive elements */
 * {
   transition-property: color, background-color, border-color, text-decoration-color, fill, stroke, opacity, box-shadow, transform, filter, backdrop-filter;
@@ -92,3 +120,74 @@
 .animate-ambient-glow-6 { animation: ambientGlow 8s infinite ease-in-out 3s; }
 .animate-ambient-glow-7 { animation: ambientGlow 8s infinite ease-in-out 5s; }
 .animate-ambient-glow-8 { animation: ambientGlow 8s infinite ease-in-out 7s; }
+
+/* Login image wall animations - horizontal scrolling */
+@keyframes scrollLeft {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
+}
+
+@keyframes scrollRight {
+  0% { transform: translateX(-50%); }
+  100% { transform: translateX(0); }
+}
+
+.animate-scroll-left {
+  animation: scrollLeft var(--scroll-duration, 30s) linear infinite;
+}
+
+.animate-scroll-right {
+  animation: scrollRight var(--scroll-duration, 35s) linear infinite;
+}
+
+/* Brutalist design utilities */
+.font-grotesk {
+  font-family: 'Space Grotesk', sans-serif;
+}
+
+.font-mono-space {
+  font-family: 'Space Mono', monospace;
+}
+
+.border-brutal {
+  border: 2.5px solid var(--nory-border);
+}
+
+.shadow-brutal {
+  box-shadow: 5px 5px 0 var(--nory-border);
+}
+
+.shadow-brutal-sm {
+  box-shadow: 3px 3px 0 var(--nory-border);
+}
+
+/* Bricolage Grotesque font utilities */
+.font-bricolage {
+  font-family: 'Bricolage Grotesque', sans-serif;
+}
+
+/* Animated plus button */
+@keyframes plusRotate {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(90deg); }
+}
+
+.group:hover .plus-icon-animated {
+  animation: plusRotate 0.3s ease-out forwards;
+}
+
+/* Slow bounce animation for empty state */
+@keyframes bounceSlow {
+  0%, 100% {
+    transform: translateY(0);
+    animation-timing-function: cubic-bezier(0.8, 0, 1, 1);
+  }
+  50% {
+    transform: translateY(-8px);
+    animation-timing-function: cubic-bezier(0, 0, 0.2, 1);
+  }
+}
+
+.animate-bounce-slow {
+  animation: bounceSlow 2s infinite;
+}

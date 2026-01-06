@@ -44,6 +44,12 @@
   "success": "Succes",
   "warning": "Advarsel",
   "info": "Information",
+  "dismiss": "Luk",
+  "user": "Bruger",
+  "expandSidebar": "Udvid sidepanel",
+  "collapseSidebar": "Skjul sidepanel",
+  "createEvent": "Opret begivenhed",
+  "links": "Links",
   "validation": {
     "required": "Dette felt er påkrævet",
     "email": "Indtast en gyldig e-mailadresse",
