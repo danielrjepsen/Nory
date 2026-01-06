@@ -5,16 +5,15 @@ import type { EventData } from '../../_types';
 
 interface EventGridProps {
     events: EventData[];
-    onCreateClick: () => void;
 }
 
-export function EventGrid({ events, onCreateClick }: EventGridProps) {
+export function EventGrid({ events }: EventGridProps) {
     return (
-        <div className="grid grid-cols-[repeat(auto-fit,minmax(320px,1fr))] gap-6 w-full max-w-[1200px] mx-auto">
+        <div className="grid grid-cols-[repeat(auto-fill,minmax(320px,1fr))] gap-6 w-full">
             {events.map((event) => (
                 <EventCard key={event.id} event={event} isOwner={true} />
             ))}
-            <CreateEventCard onClick={onCreateClick} />
+            <CreateEventCard />
         </div>
     );
 }

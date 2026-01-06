@@ -1,20 +1,21 @@
 'use client';
 
 import { useState } from 'react';
-import { useRouter } from 'next/navigation';
+import Link from 'next/link';
 import { useAuth } from '../../_contexts/AuthContext';
 import { MobileMenu } from '../MobileMenu';
 import { MenuIcon, PlusIcon } from '../icons';
-import { useNavigation, usePageTitle, useClickOutside, useNavigationItems } from '@/app/dashboard/_hooks';
+import { usePageTitle, useClickOutside, useNavigationItems } from '@/app/dashboard/_hooks';
+import { useActiveNav } from '@/app/dashboard/_hooks/useActiveNav';
+import { LanguageSwitcher } from '../LanguageSwitcher';
 
 interface MobileLayoutProps {
   children: React.ReactNode;
 }
 
 export const MobileLayout = ({ children }: MobileLayoutProps) => {
-  const router = useRouter();
   const { logout } = useAuth();
-  const { activeNav, handleNavClick } = useNavigation();
+  const [activeNav] = useActiveNav();
   const pageTitle = usePageTitle();
   const navigationItems = useNavigationItems();
   const [showMenu, setShowMenu] = useState(false);
@@ -29,24 +30,26 @@ export const MobileLayout = ({ children }: MobileLayoutProps) => {
   };
 
   return (
-    <div className="lg:hidden w-screen min-h-screen bg-[#e5e5ea] relative overflow-auto">
+    <div className="lg:hidden w-screen min-h-screen bg-nory-bg relative overflow-auto">
       <div className="px-6 pt-6 pb-4 flex justify-between items-center">
-        <h1 className="text-[42px] font-bold text-black m-0">
+        <h1 className="text-heading xl:text-heading-xl text-nory-text m-0 font-grotesk">
           {pageTitle}
         </h1>
-        <div className="flex gap-3">
+        <div className="flex gap-2">
+          <LanguageSwitcher />
           <button
             onClick={() => setShowMenu(!showMenu)}
-            className="bg-transparent border-0 cursor-pointer p-0"
+            className="w-11 h-11 bg-nory-card border-2 border-nory-border rounded-img flex items-center justify-center shadow-brutal-sm cursor-pointer transition-all duration-150 active:translate-x-0.5 active:translate-y-0.5 active:shadow-none"
           >
             <MenuIcon />
           </button>
-          <button
-            onClick={() => router.push('/dashboard/events/create')}
-            className="bg-transparent border-0 cursor-pointer p-0"
+          <Link
+            href="/dashboard/events/create"
+            prefetch={true}
+            className="w-11 h-11 bg-nory-yellow border-2 border-nory-border rounded-img flex items-center justify-center shadow-brutal-sm cursor-pointer transition-all duration-150 active:translate-x-0.5 active:translate-y-0.5 active:shadow-none"
           >
             <PlusIcon />
-          </button>
+          </Link>
         </div>
       </div>
 
@@ -55,7 +58,6 @@ export const MobileLayout = ({ children }: MobileLayoutProps) => {
         isOpen={showMenu}
         navigationItems={navigationItems}
         activeNav={activeNav}
-        onNavClick={handleNavClick}
         onLogout={handleLogout}
         onClose={() => setShowMenu(false)}
       />
