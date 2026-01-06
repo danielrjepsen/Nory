@@ -1,6 +1,7 @@
 'use client';
 
 import Link from 'next/link';
+import { useTranslation } from 'react-i18next';
 import { NoryCardLogo } from '@/components/icons/NoryCardLogo';
 import { UserProfile } from './UserProfile';
 import { useSidebar, COLLAPSED_WIDTH, EXPANDED_WIDTH } from '../_contexts/SidebarContext';
@@ -21,6 +22,7 @@ export const DesktopSidebar = ({
   onLogout,
   backItem,
 }: DesktopSidebarProps) => {
+  const { t } = useTranslation('common');
   const { isCollapsed, toggleCollapsed } = useSidebar();
 
   const sidebarWidth = isCollapsed ? COLLAPSED_WIDTH : EXPANDED_WIDTH;
@@ -34,7 +36,7 @@ export const DesktopSidebar = ({
       <button
         onClick={toggleCollapsed}
         className="absolute right-0 top-8 w-6 h-6 bg-nory-card border-2 border-nory-border rounded-full flex items-center justify-center z-10 hover:bg-nory-yellow transition-all duration-150 shadow-sm translate-x-1/2"
-        aria-label={isCollapsed ? 'Expand sidebar' : 'Collapse sidebar'}
+        aria-label={isCollapsed ? t('expandSidebar') : t('collapseSidebar')}
       >
         <svg
           width="12"
@@ -106,7 +108,7 @@ export const DesktopSidebar = ({
               <button
                 onClick={onLogout}
                 className="w-10 h-10 rounded-lg bg-nory-yellow text-nory-black border-2 border-nory-border flex items-center justify-center font-bold text-sm font-grotesk hover:shadow-brutal-sm transition-all"
-                title={user?.name || 'User'}
+                title={user?.name || t('user')}
               >
                 {user?.name?.charAt(0).toUpperCase() || 'U'}
               </button>

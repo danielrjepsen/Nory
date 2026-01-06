@@ -2,8 +2,9 @@
 
 import { createContext, useContext, useEffect, useState, ReactNode, useCallback } from 'react';
 import { useRouter, usePathname } from 'next/navigation';
-import { authService } from '../_services/auth';
+import * as authService from '../_services/auth';
 import { User } from '../_types/auth';
+import { getApiUrl } from '@/utils/urls';
 
 interface RegisterData {
     email: string;
@@ -16,179 +17,125 @@ interface AuthContextType {
     user: User | null;
     loading: boolean;
     isAuthenticated: boolean;
+    isSetupComplete: boolean;
     login: (email: string, password: string) => Promise<void>;
     register: (data: RegisterData) => Promise<void>;
     logout: () => Promise<void>;
-    refreshAuth: () => Promise<boolean>;
 }
 
 const AuthContext = createContext<AuthContextType | null>(null);
 
-interface AuthProviderProps {
-    children: ReactNode;
-}
-
-const PUBLIC_PATHS = ['/login', '/register'];
-const AUTH_CHECK_INTERVAL = 5 * 60 * 1000; // 5 minutes
+const PUBLIC_PATH_PREFIXES = ['/login', '/register', '/slideshow', '/remote', '/wizard'];
 
 const isPublicPath = (pathname: string): boolean => {
-    return PUBLIC_PATHS.some(path => pathname.startsWith(path));
+    if (pathname === '/') return true;
+    return PUBLIC_PATH_PREFIXES.some(path => pathname.startsWith(path));
 };
 
-const parseAuthFromHash = (): { token: string; user: User; expiresIn: number } | null => {
-    const hash = window.location.hash;
-    if (!hash.includes('#auth=')) return null;
-
-    try {
-        const authDataParam = hash.split('#auth=')[1];
-        const authData = JSON.parse(atob(authDataParam));
-
-        if (authData.token && authData.user) {
-            window.location.hash = '';
-            return authData;
-        }
-    } catch (error) {
-        console.error('Failed to parse auth data from URL:', error);
-    }
-
-    return null;
-};
-
-export function AuthProvider({ children }: AuthProviderProps) {
+export function AuthProvider({ children }: { children: ReactNode }) {
     const [user, setUser] = useState<User | null>(null);
     const [loading, setLoading] = useState(true);
+    const [isSetupComplete, setIsSetupComplete] = useState(true);
     const router = useRouter();
     const pathname = usePathname();
 
-    const initializeAuth = useCallback(async () => {
+    const checkSetupStatus = useCallback(async () => {
         try {
-            // Check for auth data in URL hash
-            const hashAuth = parseAuthFromHash();
-            if (hashAuth) {
-                authService.setAccessToken(hashAuth.token, hashAuth.expiresIn);
-                authService.setUser(hashAuth.user);
-                setUser(hashAuth.user);
-                return;
+            const response = await fetch(`${getApiUrl()}/api/v1/setup/status`, {
+                credentials: 'include',
+            });
+            if (response.ok) {
+                const status = await response.json();
+                setIsSetupComplete(status.isConfigured);
+                return status.isConfigured;
             }
+        } catch {
+        }
+        return true;
+    }, []);
 
-            // Check for stored user
-            const storedUser = authService.getUser();
-            if (storedUser) {
-                setUser(storedUser);
-                return;
-            }
-
-            // No user found
-            setUser(null);
-        } catch (error) {
-            console.error('Auth initialization error:', error);
+    const checkAuth = useCallback(async () => {
+        try {
+            const currentUser = await authService.getCurrentUser();
+            setUser(currentUser);
+        } catch {
             setUser(null);
         } finally {
             setLoading(false);
         }
     }, []);
 
-    const refreshAuth = useCallback(async (): Promise<boolean> => {
-        try {
-            const refreshed = await authService.refreshToken();
-            if (refreshed) {
-                const currentUser = authService.getUser();
-                setUser(currentUser);
-                return true;
-            }
-            setUser(null);
-            return false;
-        } catch (error) {
-            console.error('Token refresh error:', error);
-            setUser(null);
-            return false;
-        }
-    }, []);
-
     const login = useCallback(async (email: string, password: string) => {
-        try {
-            await authService.login({ email, password });
-            const currentUser = authService.getUser();
-
-            if (currentUser) {
-                setUser(currentUser);
-                router.push('/');
-            }
-        } catch (error) {
-            console.error('Login error:', error);
-            throw error;
-        }
+        const loggedInUser = await authService.login({ email, password });
+        setUser(loggedInUser);
+        setIsSetupComplete(true); // After login, setup is complete
+        router.push('/dashboard');
     }, [router]);
 
     const register = useCallback(async (data: RegisterData) => {
-        try {
-            await authService.register(data);
-            // After successful registration, redirect or auto-login handled by service
-        } catch (error) {
-            console.error('Registration error:', error);
-            throw error;
-        }
-    }, []);
+        await authService.register(data);
+        router.push('/login');
+    }, [router]);
 
     const logout = useCallback(async () => {
         try {
             await authService.logout();
-            setUser(null);
-            router.push('/login');
-        } catch (error) {
-            console.error('Logout error:', error);
-            // Still clear user even if logout fails
+        } finally {
             setUser(null);
             router.push('/login');
         }
     }, [router]);
 
-    // Initialize auth on mount
     useEffect(() => {
-        initializeAuth();
-    }, [initializeAuth]);
+        const initializeAuth = async () => {
+            const setupComplete = await checkSetupStatus();
 
-    // Handle redirects based on auth state
+            if (!setupComplete && pathname !== '/wizard') {
+                router.push('/wizard');
+                setLoading(false);
+                return;
+            }
+
+            if (isPublicPath(pathname)) {
+                setLoading(false);
+                return;
+            }
+
+            await checkAuth();
+        };
+
+        initializeAuth();
+    }, [checkAuth, checkSetupStatus, pathname, router]);
+
     useEffect(() => {
         if (loading) return;
+
+        if (!isSetupComplete) {
+            if (pathname !== '/wizard') {
+                router.push('/wizard');
+            }
+            return;
+        }
 
         const isPublic = isPublicPath(pathname);
 
         if (!user && !isPublic) {
             router.push('/login');
         } else if (user && (pathname === '/login' || pathname === '/register')) {
-            router.push('/');
+            router.push('/dashboard');
         }
-    }, [user, loading, pathname, router]);
-
-    // Periodic auth validation
-    useEffect(() => {
-        if (loading || !user) return;
-
-        const validateAuth = async () => {
-            const isValid = await refreshAuth();
-            if (!isValid) {
-                await logout();
-            }
-        };
-
-        const interval = setInterval(validateAuth, AUTH_CHECK_INTERVAL);
-
-        return () => clearInterval(interval);
-    }, [user, loading, refreshAuth, logout]);
-
-    const value: AuthContextType = {
-        user,
-        loading,
-        isAuthenticated: !!user,
-        login,
-        register,
-        logout,
-        refreshAuth,
-    };
+    }, [user, loading, pathname, router, isSetupComplete]);
 
     return (
-        <AuthContext.Provider value={value}>
+        <AuthContext.Provider value={{
+            user,
+            loading,
+            isAuthenticated: !!user,
+            isSetupComplete,
+            login,
+            register,
+            logout,
+        }}>
             {children}
         </AuthContext.Provider>
     );

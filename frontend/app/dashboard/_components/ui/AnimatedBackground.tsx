@@ -29,7 +29,6 @@ export default function AnimatedBackground({
         ...style
       }}
     >
-      {/* animated bg waves */}
       {waves.map((wave, i) => (
         <div
           key={i}

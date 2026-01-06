@@ -1,6 +1,7 @@
 'use client';
 
 import React from 'react';
+import { useTranslation } from 'react-i18next';
 import { ErrorIcon, SuccessIcon, WarningIcon, InfoIcon, CloseIcon } from './icons';
 
 interface AlertProps {
@@ -25,6 +26,7 @@ const variantIcons = {
 };
 
 export function Alert({ variant = 'info', children, className = '', onDismiss }: AlertProps) {
+  const { t } = useTranslation('common');
   const Icon = variantIcons[variant];
 
   return (
@@ -35,7 +37,7 @@ export function Alert({ variant = 'info', children, className = '', onDismiss }:
         <button
           onClick={onDismiss}
           className="flex-shrink-0 hover:opacity-70 transition-opacity p-1 rounded-[6px] hover:bg-nory-text/10"
-          aria-label="Dismiss"
+          aria-label={t('dismiss')}
         >
           <CloseIcon className="w-5 h-5" />
         </button>
