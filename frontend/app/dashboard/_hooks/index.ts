@@ -8,3 +8,4 @@ export { useIntersectionObserver } from './useIntersectionObserver';
 export { useThemes } from './useThemes';
 export { useEventForm, type EventFormData } from './useEventForm';
 export { useStepper } from './useStepper';
+export { useQRCode } from './useQRCode';

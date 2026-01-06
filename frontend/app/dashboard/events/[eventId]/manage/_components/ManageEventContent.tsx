@@ -44,16 +44,12 @@ export function ManageEventContent() {
   return (
     <>
       <div className="flex flex-col gap-5">
-        <EventOverviewHeader event={event} guestAppUrl={guestAppUrl} />
+        <EventOverviewHeader event={event} guestAppUrl={guestAppUrl} onPublish={() => setShowGoLiveModal(true)} />
         <EventStatsRow event={event} analytics={analytics} />
 
         <div className="grid grid-cols-1 xl:grid-cols-[1fr_320px] gap-4">
           <div className="flex flex-col gap-4">
-            <QuickActionsCard
-              eventId={eventId}
-              guestAppUrl={guestAppUrl}
-              slideshowUrl={slideshowUrl}
-            />
+            <QuickActionsCard eventId={eventId} />
             <RecentPhotosCard
               eventId={eventId}
               totalPhotoCount={analytics.photoCount}
@@ -63,13 +59,13 @@ export function ManageEventContent() {
 
           <div className="flex flex-col gap-4 xl:grid xl:grid-cols-1">
             <QRCodeCard
-              eventId={eventId}
               eventName={event.name}
               guestAppUrl={guestAppUrl}
             />
             <EventLinksCard
               guestAppUrl={guestAppUrl}
               slideshowUrl={slideshowUrl}
+              eventStatus={event.status}
             />
             <GuestsPreviewCard
               eventId={eventId}

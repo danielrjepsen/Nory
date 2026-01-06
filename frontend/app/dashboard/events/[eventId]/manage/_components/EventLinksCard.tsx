@@ -1,10 +1,13 @@
 'use client';
 
 import React, { useState } from 'react';
+import { useTranslation } from 'react-i18next';
+import type { EventStatus } from '../../../../_types/events';
 
 interface EventLinksCardProps {
   guestAppUrl: string;
   slideshowUrl: string;
+  eventStatus: EventStatus;
 }
 
 interface LinkItemProps {
@@ -12,9 +15,12 @@ interface LinkItemProps {
   label: string;
   url: string;
   displayUrl: string;
+  openLabel: string;
+  copyLabel: string;
+  copiedLabel: string;
 }
 
-function LinkItem({ icon, label, url, displayUrl }: LinkItemProps) {
+function LinkItem({ icon, label, url, displayUrl, openLabel, copyLabel, copiedLabel }: LinkItemProps) {
   const [copied, setCopied] = useState(false);
 
   const handleCopy = () => {
@@ -41,13 +47,13 @@ function LinkItem({ icon, label, url, displayUrl }: LinkItemProps) {
           onClick={handleOpen}
           className="px-3 py-1.5 bg-nory-card border-2 border-nory-border rounded-md text-[0.7rem] font-semibold text-nory-text transition-colors hover:bg-nory-bg"
         >
-          Åbn
+          {openLabel}
         </button>
         <button
           onClick={handleCopy}
           className="px-3 py-1.5 bg-nory-yellow border-2 border-nory-border rounded-md text-[0.7rem] font-semibold text-nory-black transition-colors hover:bg-[#f0dc4a]"
         >
-          {copied ? 'Kopieret!' : 'Kopier'}
+          {copied ? copiedLabel : copyLabel}
         </button>
       </div>
     </div>
@@ -63,24 +69,57 @@ function extractDisplayUrl(url: string): string {
   }
 }
 
-export function EventLinksCard({ guestAppUrl, slideshowUrl }: EventLinksCardProps) {
+export function EventLinksCard({ guestAppUrl, slideshowUrl, eventStatus }: EventLinksCardProps) {
+  const { t } = useTranslation('dashboard', { keyPrefix: 'events.manage.links' });
+  const isPublished = eventStatus === 'live' || eventStatus === 'ended';
+
   return (
     <div className="bg-nory-card border-2 border-nory-border rounded-2xl p-5">
-      <h3 className="text-[0.95rem] font-bold mb-3.5 text-nory-text">Links</h3>
+      <h3 className="text-[0.95rem] font-bold mb-3.5 text-nory-text">{t('title')}</h3>
 
       <div className="flex flex-col gap-2.5">
-        <LinkItem
-          icon={<MobileIcon />}
-          label="Gæste-app"
-          url={guestAppUrl}
-          displayUrl={extractDisplayUrl(guestAppUrl)}
-        />
-        <LinkItem
-          icon={<MonitorIcon />}
-          label="Slideshow"
-          url={slideshowUrl}
-          displayUrl={extractDisplayUrl(slideshowUrl)}
-        />
+        {isPublished ? (
+          <LinkItem
+            icon={<MobileIcon />}
+            label={t('guestApp.title')}
+            url={guestAppUrl}
+            displayUrl={extractDisplayUrl(guestAppUrl)}
+            openLabel={t('open')}
+            copyLabel={t('copy')}
+            copiedLabel={t('copied')}
+          />
+        ) : (
+          <div className="flex items-center gap-2.5 p-3 bg-nory-bg/50 rounded-[10px] border-2 border-dashed border-nory-border/50">
+            <div className="w-8 h-8 bg-nory-card/50 rounded-md flex items-center justify-center flex-shrink-0 text-nory-muted">
+              <MobileIcon />
+            </div>
+            <div className="flex-1 min-w-0">
+              <div className="text-[0.65rem] text-nory-muted">{t('guestApp.title')}</div>
+              <div className="text-[0.75rem] text-nory-muted italic">{t('guestApp.publishFirst')}</div>
+            </div>
+          </div>
+        )}
+        {isPublished ? (
+          <LinkItem
+            icon={<MonitorIcon />}
+            label={t('slideshow.title')}
+            url={slideshowUrl}
+            displayUrl={extractDisplayUrl(slideshowUrl)}
+            openLabel={t('open')}
+            copyLabel={t('copy')}
+            copiedLabel={t('copied')}
+          />
+        ) : (
+          <div className="flex items-center gap-2.5 p-3 bg-nory-bg/50 rounded-[10px] border-2 border-dashed border-nory-border/50">
+            <div className="w-8 h-8 bg-nory-card/50 rounded-md flex items-center justify-center flex-shrink-0 text-nory-muted">
+              <MonitorIcon />
+            </div>
+            <div className="flex-1 min-w-0">
+              <div className="text-[0.65rem] text-nory-muted">{t('slideshow.title')}</div>
+              <div className="text-[0.75rem] text-nory-muted italic">{t('slideshow.publishFirst')}</div>
+            </div>
+          </div>
+        )}
       </div>
     </div>
   );

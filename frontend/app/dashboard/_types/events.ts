@@ -20,6 +20,8 @@ export interface EventData {
   isPublic: boolean;
   hasContent?: boolean;
   analytics?: EventAnalytics;
+  theme?: string;
+  guestAppConfig?: GuestAppConfig;
 }
 
 export interface EventPhoto {

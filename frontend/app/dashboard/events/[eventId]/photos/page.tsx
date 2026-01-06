@@ -72,7 +72,7 @@ export default function EventPhotosPage() {
               <p className="text-body xl:text-body-xl text-nory-muted font-grotesk mb-4">
                 {photos.length} {t('events.photos', 'billeder')}
               </p>
-              <PhotoGrid photos={photos} eventId={eventId} />
+              <PhotoGrid photos={photos} isLoading={false} />
             </>
           ) : (
             <div className="flex flex-col items-center justify-center py-20">

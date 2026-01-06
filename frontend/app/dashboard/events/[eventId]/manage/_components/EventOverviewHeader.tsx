@@ -9,6 +9,7 @@ import type { EventData } from '../../../../_types/events';
 interface EventOverviewHeaderProps {
   event: EventData;
   guestAppUrl: string;
+  onPublish: () => void;
 }
 
 const STATUS_STYLES = {
@@ -29,16 +30,17 @@ const STATUS_STYLES = {
   },
 };
 
-export function EventOverviewHeader({ event, guestAppUrl }: EventOverviewHeaderProps) {
+export function EventOverviewHeader({ event, guestAppUrl, onPublish }: EventOverviewHeaderProps) {
   const { t, i18n } = useTranslation('dashboard', { keyPrefix: 'events' });
+  const isDraft = event.status === 'draft';
 
   const eventDate = event.startsAt ? new Date(event.startsAt) : null;
   const formattedDate = eventDate
     ? eventDate.toLocaleDateString(i18n.language, {
-        day: 'numeric',
-        month: 'long',
-        year: 'numeric',
-      })
+      day: 'numeric',
+      month: 'long',
+      year: 'numeric',
+    })
     : null;
 
   const statusStyle = STATUS_STYLES[event.status] || STATUS_STYLES.ended;
@@ -73,16 +75,34 @@ export function EventOverviewHeader({ event, guestAppUrl }: EventOverviewHeaderP
           <SettingsIcon />
           {t('header.settings')}
         </Link>
-        <a
-          href={guestAppUrl}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="flex items-center gap-1.5 px-4 py-2.5 bg-nory-yellow text-nory-black border-2 border-nory-border rounded-[10px] text-[0.8rem] font-semibold shadow-brutal transition-all hover:-translate-x-0.5 hover:-translate-y-0.5 hover:shadow-brutal-md"
-        >
-          <ExternalLinkIcon />
-          {t('header.openGuestApp')}
-        </a>
+        {isDraft ? (
+          <button
+            onClick={onPublish}
+            className="flex items-center gap-1.5 px-4 py-2.5 bg-green-500 text-black border-2 border-nory-border rounded-[10px] text-[0.8rem] font-semibold shadow-brutal transition-all hover:-translate-x-0.5 hover:-translate-y-0.5 hover:shadow-brutal-md hover:bg-green-400"
+          >
+            <PublishIcon />
+            {t('header.publish')}
+          </button>
+        ) : (
+          <a
+            href={guestAppUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="flex items-center gap-1.5 px-4 py-2.5 bg-nory-yellow text-nory-black border-2 border-nory-border rounded-[10px] text-[0.8rem] font-semibold shadow-brutal transition-all hover:-translate-x-0.5 hover:-translate-y-0.5 hover:shadow-brutal-md"
+          >
+            <ExternalLinkIcon />
+            {t('header.openGuestApp')}
+          </a>
+        )}
       </div>
     </header>
+  );
+}
+
+function PublishIcon() {
+  return (
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+      <path d="M22 12h-4l-3 9L9 3l-3 9H2" />
+    </svg>
   );
 }
