@@ -85,7 +85,7 @@ function EventSlideshowInner({ eventId }: Props) {
   const hearts = useMemo(() => animatingHearts.map(toHeart), [animatingHearts]);
 
   if (isInitialLoading) {
-    return themeLoading ? <ThemeLoadingSpinner /> : <LoadingScreen eventName={eventData?.name} eventTheme={eventTheme} eventId={eventId} />;
+    return themeLoading ? <ThemeLoadingSpinner /> : <LoadingScreen eventName={eventData?.name} eventTheme={eventTheme} />;
   }
 
   if (eventStatus) {
