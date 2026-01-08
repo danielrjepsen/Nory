@@ -1,0 +1,118 @@
+{
+  "photoBy": "Photo by {{name}}",
+  "uploadedAt": "Uploaded {{time}}",
+  "photoCount": "{{current}} of {{total}}",
+  "noPhotos": "No photos to display",
+  "noPhotosDescription": "Wait for guests to upload photos to the gallery",
+  "loading": "Loading photos...",
+  "error": "Could not load photos",
+  "activityFeed": {
+    "moreActivities": "+{{count}} more",
+    "minutesAgo": "({{minutes}}m)"
+  },
+  "fallback": {
+    "eventName": "Event",
+    "userName": "Unknown"
+  },
+  "status": {
+    "draft": {
+      "title": "Event not live yet",
+      "description": "This slideshow is not live yet. The organizer needs to activate it first."
+    },
+    "preview": {
+      "title": "Preview Mode",
+      "badge": "Preview active",
+      "description": "You are viewing the slideshow in preview mode. Changes are not final until the event goes live.",
+      "notLive": "Preview - Event is not live yet"
+    },
+    "ended": {
+      "title": "Event ended",
+      "description": "This event has ended. Thank you for joining!",
+      "endedAt": "Ended: {{date}}"
+    },
+    "error": {
+      "title": "Something went wrong",
+      "retry": "Try again"
+    },
+    "no-photos": {
+      "title": "No photos in {{event}} yet",
+      "titleGeneric": "No photos found",
+      "waiting": "Waiting for the first photos from guests!",
+      "retry": "Try again",
+      "refresh": "Refresh photos",
+      "checkNew": "Check for new photos"
+    }
+  },
+  "connectionStatus": {
+    "controlledBy": "{{name}} is controlling {{event}}",
+    "connecting": "Connecting to event...",
+    "reconnecting": "Reconnecting ({{current}}/{{max}})...",
+    "maxAttemptsReached": "Max attempts reached. Check backend server.",
+    "restartConnection": "Restart connection"
+  },
+  "qrOverlay": {
+    "title": "Share your photos!",
+    "subtitle": "Scan the QR code to upload photos",
+    "eventCode": "Event code: {{code}}",
+    "hide": "Hide QR code",
+    "show": "Show QR code"
+  },
+  "liveIndicator": {
+    "live": "LIVE",
+    "connected": "Connected",
+    "disconnected": "Disconnected",
+    "reconnecting": "Reconnecting...",
+    "newPhotos": "{{count}} new photos",
+    "newPhotos_one": "{{count}} new photo"
+  },
+  "welcome": {
+    "title": "Welcome to the slideshow",
+    "subtitle": "Photos will be displayed here when guests upload them",
+    "waitingForPhotos": "Waiting for photos...",
+    "scanToUpload": "Scan to upload photos",
+    "startSlideshow": "Start slideshow"
+  },
+  "errors": {
+    "loadFailed": "Could not load slideshow",
+    "connectionLost": "Connection was lost",
+    "tryAgain": "Try again",
+    "eventNotFound": "Event not found",
+    "accessDenied": "Access denied"
+  },
+  "loadingScreen": {
+    "defaultTitle": "TV Slideshow",
+    "preparing": "Preparing slideshow",
+    "loadingMemories": "Loading your beautiful memories",
+    "loadingMedia": "Loading photos and videos",
+    "features": {
+      "bigScreen": "Big screen",
+      "autoPlay": "Auto-play",
+      "hdQuality": "HD quality"
+    }
+  },
+  "mediaViewer": {
+    "loading": "Loading image...",
+    "photoAlt": "Photo",
+    "mute": {
+      "enable": "Enable sound",
+      "disable": "Disable sound",
+      "muted": "Muted",
+      "unmuted": "With sound"
+    },
+    "error": {
+      "video": "Video cannot be loaded",
+      "image": "Image cannot be loaded",
+      "hint": "Check CDN permissions"
+    }
+  },
+  "photoCounter": {
+    "allPhotos": "All photos",
+    "photos": "Photos",
+    "loading": "Loading..."
+  },
+  "qrCode": {
+    "title": "Remote control",
+    "alt": "Scan to upload photos",
+    "upload": "Upload photos"
+  }
+}

@@ -10,8 +10,12 @@ import dashboardGuestApp from './dashboard/guestApp.json';
 import dashboardThemes from './dashboard/themes.json';
 import dashboardPhotos from './dashboard/photos.json';
 import dashboardAnalytics from './dashboard/analytics.json';
+import dashboardGuests from './dashboard/guests.json';
 import dashboardSettings from './dashboard/settings.json';
 import dashboardUser from './dashboard/user.json';
+import slideshowControls from './slideshow/controls.json';
+import slideshowSettings from './slideshow/settings.json';
+import slideshowDisplay from './slideshow/display.json';
 
 export default {
   common,
@@ -29,13 +33,14 @@ export default {
     themes: dashboardThemes,
     photos: dashboardPhotos,
     analytics: dashboardAnalytics,
+    guests: dashboardGuests,
     settings: dashboardSettings,
     user: dashboardUser,
   },
   slideshow: {
-    controls: {},
-    settings: {},
-    display: {},
+    controls: slideshowControls,
+    settings: slideshowSettings,
+    display: slideshowDisplay,
   },
   remote: {
     common: {},

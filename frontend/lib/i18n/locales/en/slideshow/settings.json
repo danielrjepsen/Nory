@@ -1,0 +1,21 @@
+{
+  "title": "Slideshow settings",
+  "duration": "Duration per photo",
+  "durationSeconds": "{{seconds}} seconds",
+  "transition": "Transition",
+  "transitions": {
+    "fade": "Fade",
+    "slide": "Slide",
+    "zoom": "Zoom",
+    "none": "None"
+  },
+  "autoplay": "Autoplay",
+  "loop": "Loop",
+  "shuffle": "Shuffle",
+  "showCaptions": "Show captions",
+  "showTimestamps": "Show timestamps",
+  "showUploader": "Show uploader",
+  "backgroundColor": "Background color",
+  "musicEnabled": "Background music",
+  "musicVolume": "Music volume"
+}

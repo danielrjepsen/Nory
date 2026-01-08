@@ -1,0 +1,11 @@
+{
+  "play": "Play",
+  "pause": "Pause",
+  "previous": "Previous",
+  "next": "Next",
+  "fullscreen": "Fullscreen",
+  "exitFullscreen": "Exit fullscreen",
+  "settings": "Settings",
+  "mute": "Mute",
+  "unmute": "Unmute"
+}
