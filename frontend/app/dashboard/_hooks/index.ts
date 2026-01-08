@@ -9,3 +9,6 @@ export { useThemes } from './useThemes';
 export { useEventForm, type EventFormData } from './useEventForm';
 export { useStepper } from './useStepper';
 export { useQRCode } from './useQRCode';
+export { useEvent } from './useEvent';
+export { useEventAnalytics } from './useEventAnalytics';
+export { useEventPhotos } from './useEventPhotos';
