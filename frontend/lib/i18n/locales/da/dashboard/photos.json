@@ -1,5 +1,10 @@
 {
   "noPhotos": "Ingen billeder endnu",
+  "empty": {
+    "title": "Ingen billeder endnu",
+    "description": "Når gæster scanner din QR-kode og uploader billeder, vises de her.",
+    "cta": "Del QR-kode"
+  },
   "grid": {
     "noPhotos": "Ingen billeder endnu",
     "loadMore": "Indlæs flere",

@@ -3,7 +3,13 @@
   "overview": "Oversigt",
   "photos": "Billeder",
   "guests": "Gæster",
+  "visits": "Besøg",
   "engagement": "Engagement",
+  "empty": {
+    "title": "Ingen aktivitet endnu",
+    "description": "Del din QR-kode for at begynde at indsamle billeder og se statistik.",
+    "cta": "Se QR-kode"
+  },
   "stats": {
     "photosUploaded": "Fotos Uploadet",
     "qrScans": "QR Scanninger",

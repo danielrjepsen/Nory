@@ -34,7 +34,7 @@
       "title": "Noget gik galt",
       "retry": "Prøv igen"
     },
-    "noPhotos": {
+    "no-photos": {
       "title": "Ingen billeder i {{event}} endnu",
       "titleGeneric": "Ingen billeder fundet",
       "waiting": "Venter på de første billeder fra gæsterne!",

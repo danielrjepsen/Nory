@@ -3,7 +3,13 @@
   "overview": "Overview",
   "photos": "Photos",
   "guests": "Guests",
+  "visits": "Visits",
   "engagement": "Engagement",
+  "empty": {
+    "title": "No activity yet",
+    "description": "Share your event QR code to start collecting photos and seeing analytics.",
+    "cta": "View QR Code"
+  },
   "stats": {
     "photosUploaded": "Photos Uploaded",
     "qrScans": "QR Scans",

@@ -1,0 +1,14 @@
+{
+  "title": "Gæster",
+  "empty": {
+    "title": "Ingen gæster endnu",
+    "description": "Når gæster scanner din QR-kode og uploader billeder, vises de her.",
+    "cta": "Del QR-kode"
+  },
+  "list": {
+    "name": "Navn",
+    "email": "E-mail",
+    "photos": "Billeder",
+    "joined": "Tilmeldt"
+  }
+}

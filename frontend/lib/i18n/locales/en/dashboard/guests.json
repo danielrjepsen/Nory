@@ -1,0 +1,14 @@
+{
+  "title": "Guests",
+  "empty": {
+    "title": "No guests yet",
+    "description": "When guests scan your QR code and upload photos, they will appear here.",
+    "cta": "Share QR Code"
+  },
+  "list": {
+    "name": "Name",
+    "email": "Email",
+    "photos": "Photos",
+    "joined": "Joined"
+  }
+}

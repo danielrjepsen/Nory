@@ -1,5 +1,10 @@
 {
   "noPhotos": "No photos yet",
+  "empty": {
+    "title": "No photos yet",
+    "description": "When guests scan your QR code and upload photos, they will appear here.",
+    "cta": "Share QR Code"
+  },
   "grid": {
     "noPhotos": "No photos yet",
     "loadMore": "Load More",
